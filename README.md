@@ -2,6 +2,14 @@
 
 > **WARNING:** This portfolio runs on pure caffeine, shell scripts, and an unhealthy amount of orange accent colors.
 
+## WHY THIS EXISTS
+Vibe coded this when I was bored one day. Why not have a page to boast about yourself? 
+Also helps with... honestly, I don't even know who this helps. But it exists now.
+
+Is it excessive? Absolutely. 
+
+Also, I really like the color orange.
+
 ## MISSION_STATEMENT.txt
 
 A cybersecurity portfolio that actually **looks** like it belongs in the field. No boring blue gradients here—just raw cyber energy with:
