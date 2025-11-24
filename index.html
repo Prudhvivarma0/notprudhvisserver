@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prudhvi Varma</title>
+    <style>
+        /* --- 1. CORE VARIABLES --- */
+        :root {
+            --bg-color: #050505;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --accent-color: #ff8700; /* Lando Orange */
+            --card-bg: #0f0f0f;
+            --font-mono: 'Courier New', Courier, monospace;
+            --font-display: 'Arial Black', sans-serif;
+            --nav-height: 90px;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f0f0f5;
+            --text-primary: #111111;
+            --text-secondary: #444;
+            --accent-color: #ff4500; 
+            --card-bg: #ffffff;
+        }
+
+        /* --- 2. GLOBAL SETTINGS --- */
+        html { scroll-behavior: auto; }
+        * { box-sizing: border-box; margin: 0; padding: 0; cursor: none; }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            overflow-x: hidden;
+            font-size: 20px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* --- 3. BACKGROUND TEXTURE --- */
+        .cyber-grid {
+            position: fixed; top: 0; left: 0; width: 200vw; height: 200vh;
+            background-image: 
+                linear-gradient(rgba(255, 135, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 135, 0, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            transform: perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px);
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+        }
+        
+        .ambient-glow {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 800px; height: 800px;
+            background: radial-gradient(circle, rgba(255, 135, 0, 0.08) 0%, rgba(0,0,0,0) 70%);
+            z-index: -1; pointer-events: none;
+        }
+
+        @keyframes gridMove {
+            0% { transform: perspective(500px) rotateX(60deg) translateY(0) translateZ(-200px); }
+            100% { transform: perspective(500px) rotateX(60deg) translateY(50px) translateZ(-200px); }
+        }
+
+        /* --- 4. NAVIGATION --- */
+        nav {
+            display: flex; justify-content: space-between; padding: 0 4%;
+            height: var(--nav-height); align-items: center;
+            position: fixed; width: 100%; top: 0; z-index: 1000;
+            background: rgba(5, 5, 5, 0.95); backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 135, 0, 0.15);
+            transition: background 0.3s;
+        }
+        [data-theme="light"] nav { background: rgba(240, 240, 245, 0.98); }
+
+        .logo { font-weight: 800; font-size: 1.6rem; letter-spacing: 2px; color: var(--text-primary); }
+        .logo span { color: var(--accent-color); }
+        
+        .nav-links { display: flex; align-items: center; }
+        
+        .nav-links a {
+            color: var(--text-primary); text-decoration: none; 
+            font-size: 1.1rem; font-weight: bold; position: relative;
+            text-transform: uppercase; letter-spacing: 1px;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--accent-color); }
+        
+        .nav-links a::after {
+            content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0;
+            background-color: var(--accent-color); transition: width 0.3s;
+        }
+        .nav-links a:hover::after { width: 100%; }
+
+        .sep { color: var(--text-secondary); margin: 0 15px; opacity: 0.5; font-weight: normal; }
+
+        /* --- 5. HERO SECTION --- */
+        .hero {
+            min-height: 100vh; display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; text-align: center;
+            padding: 100px 20px 0; position: relative;
+        }
+        
+        .glitch-wrapper { position: relative; display: inline-block; margin-bottom: 20px;}
+        .glitch {
+            font-family: var(--font-display); font-size: 6rem; font-weight: 900;
+            text-transform: uppercase; position: relative; color: var(--text-primary); line-height: 1;
+        }
+        .glitch::before, .glitch::after { content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .glitch::before { left: 3px; text-shadow: -2px 0 #ff00c1; clip: rect(44px, 450px, 56px, 0); animation: glitch-anim 5s infinite linear alternate-reverse; }
+        .glitch::after { left: -3px; text-shadow: -2px 0 #00fff9; clip: rect(44px, 450px, 56px, 0); animation: glitch-anim2 5s infinite linear alternate-reverse; }
+        @keyframes glitch-anim { 0% { clip: rect(12px, 9999px, 5px, 0); } 5% { clip: rect(54px, 9999px, 16px, 0); } 100% { clip: rect(33px, 9999px, 11px, 0); } }
+        @keyframes glitch-anim2 { 0% { clip: rect(65px, 9999px, 100px, 0); } 100% { clip: rect(2px, 9999px, 85px, 0); } }
+
+        .hero p {
+            margin-top: 1.5rem; max-width: 900px; line-height: 1.8; 
+            color: var(--text-secondary); font-size: 1.3rem; 
+            opacity: 0; animation: fadeIn 2s forwards 0.5s;
+        }
+        
+        .btn-group {
+            margin-top: 3.5rem; display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;
+            opacity: 0; animation: fadeIn 2s forwards 1s;
+        }
+
+        .btn-glitch {
+            padding: 18px 40px; font-size: 1.1rem; cursor: none;
+            background: transparent; border: 2px solid var(--accent-color); 
+            color: var(--accent-color); font-family: var(--font-mono); 
+            font-weight: bold; letter-spacing: 2px; transition: 0.3s;
+            text-decoration: none;
+        }
+        .btn-glitch:hover { background: var(--accent-color); color: #000; box-shadow: 0 0 35px var(--accent-color); }
+        .btn-secondary {
+            padding: 18px 40px; font-size: 1.1rem; cursor: none;
+            background: transparent; border: 2px solid var(--text-secondary); 
+            color: var(--text-secondary); font-family: var(--font-mono); 
+            font-weight: bold; letter-spacing: 2px; transition: 0.3s;
+            text-decoration: none;
+        }
+        .btn-secondary:hover { border-color: var(--accent-color); color: var(--accent-color); }
+
+        /* --- 6. SECTIONS --- */
+        .section-header {
+            font-size: 2.2rem; text-align: center; margin: 9rem 0 4rem; 
+            color: var(--accent-color); text-transform: uppercase; letter-spacing: 5px;
+        }
+
+        /* --- 7. CARDS (Grid) --- */
+        .grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* Wide cards */
+            gap: 2.5rem; padding: 0 8%;
+        }
+        .card-link { text-decoration: none; display: block; }
+        
+        .card {
+            background: var(--card-bg); border: 1px solid #222; padding: 3rem; height: 100%;
+            position: relative; overflow: hidden; transition: transform 0.3s;
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+        [data-theme="light"] .card { border-color: #ddd; }
+        .card:hover { transform: translateY(-7px); border-color: var(--accent-color); }
+        .card h3 { font-size: 1.6rem; margin: 0 0 15px 0; color: var(--text-primary); }
+        .card p { font-size: 1.1rem; color: var(--text-secondary); line-height: 1.7; }
+        
+        /* Tags removed as requested */
+
+        /* --- 8. EXPERIENCE TIMELINE --- */
+        .timeline {
+            max-width: 900px; margin: 0 auto; padding: 0 20px;
+            border-left: 2px solid #222; position: relative;
+        }
+        .timeline-item {
+            margin-bottom: 3rem; padding-left: 40px; position: relative;
+        }
+        .timeline-item::before {
+            content: ''; position: absolute; left: -11px; top: 5px;
+            width: 20px; height: 20px; background: var(--bg-color);
+            border: 2px solid var(--accent-color); border-radius: 50%;
+        }
+        .timeline-item h3 { color: var(--text-primary); font-size: 1.6rem; margin-bottom: 5px;}
+        .timeline-item span { color: var(--accent-color); font-size: 1rem; font-weight: bold; display: block; }
+
+        /* --- 9. SKILLS & ACHIEVEMENTS --- */
+        .hex-container { display: flex; justify-content: center; flex-wrap: wrap; gap: 30px; padding-bottom: 0rem; }
+        .hex {
+            width: 160px; height: 140px; background: #111; 
+            display: flex; align-items: center; justify-content: center; text-align: center;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            transition: 0.3s; border: 1px solid #333; 
+            color: #ffffff;
+        }
+        .hex:hover { color: #000; background: var(--accent-color); transform: scale(1.1); }
+        .hex-content { z-index: 2; font-weight: bold; font-size: 0.9rem; padding: 5px;}
+
+        /* ACHIEVEMENT GRID */
+        .achievements-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px; padding: 0 10%; margin-bottom: 5rem;
+        }
+        .achievement-card {
+            background: #111; border: 1px solid #222; padding: 30px; text-align: center;
+            transition: 0.3s;
+        }
+        .achievement-card:hover { border-color: var(--accent-color); transform: translateY(-5px); }
+        .trophy { font-size: 2.5rem; margin-bottom: 15px; display: block; }
+        
+        .achievement-card h3, .achievement-card p { color: #ffffff; }
+
+        /* --- 10. FOOTER --- */
+        footer { 
+            text-align: center; padding: 6rem 2rem; border-top: 1px solid #222; margin-top: 6rem;
+            background: #020202;
+        }
+        
+        /* --- 11. SHUTTER TRANSITION + LOADING BOX --- */
+        .shutter-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999;
+        }
+        
+        .shutter {
+            position: absolute; left: 0; width: 100%; height: 50%; 
+            background: var(--accent-color);
+            transition: transform 0.4s cubic-bezier(0.8, 0, 0.2, 1);
+            z-index: 100;
+        }
+        
+        .s-top { top: 0; transform: translateY(-100%); border-bottom: 5px solid #000; }
+        .s-bottom { bottom: 0; transform: translateY(100%); border-top: 5px solid #000; }
+        
+        .shutter-overlay.active .s-top { transform: translateY(0); }
+        .shutter-overlay.active .s-bottom { transform: translateY(0); }
+
+        /* LOADING BOX (BLACK BACKGROUND FIX) */
+        .loader-box {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            display: flex; flex-direction: column; align-items: center; gap: 10px;
+            opacity: 0; z-index: 200; transition: opacity 0.1s;
+            
+            /* Solid Black Box to hide the seam */
+            background: #000; 
+            padding: 30px 50px;
+            border: 2px solid #000;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+        }
+
+        .shutter-overlay.active .loader-box { 
+            opacity: 1; transition-delay: 0.3s; 
+        }
+
+        .loader-text {
+            color: var(--accent-color); 
+            font-family: 'Arial Black', sans-serif;
+            font-size: 1.5rem; font-weight: 900; letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .progress-container {
+            width: 250px; height: 6px; background: #222;
+            overflow: hidden; margin-top: 10px;
+        }
+        
+        .progress-bar {
+            height: 100%; width: 0%; background: var(--accent-color);
+            transition: width 0.1s;
+        }
+        
+        .shutter-overlay.active .progress-bar {
+            width: 100%; transition: width 0.4s ease-in-out 0.3s;
+        }
+
+        /* CIRCULAR CURSOR */
+        .cursor-dot {
+            width: 8px; height: 8px; background-color: var(--accent-color);
+            position: fixed; top: 0; left: 0;
+            transform: translate(-50%, -50%); border-radius: 50%;
+            pointer-events: none; z-index: 10002;
+        }
+        .cursor-outline {
+            width: 40px; height: 40px; border: 1px solid var(--accent-color);
+            position: fixed; top: 0; left: 0;
+            transform: translate(-50%, -50%); border-radius: 50%;
+            transition: width 0.1s, height 0.1s;
+            pointer-events: none; z-index: 10002;
+        }
+
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .glitch { font-size: 3.5rem; }
+            .nav-links { display: none; }
+            .grid { padding: 0 5%; }
+            .cyber-grid { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cyber-grid"></div>
+
+    <div class="shutter-overlay">
+        <div class="shutter s-top"></div>
+        <div class="shutter s-bottom"></div>
+        <div class="loader-box">
+            <div class="loader-text">[ ACCESSING_SERVER ]</div>
+            <div class="progress-container">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="cursor-dot" data-cursor-dot></div>
+    <div class="cursor-outline" data-cursor-outline></div>
+
+    <nav>
+        <div class="logo">NOT<span>PRUDHVIS</span>SERVER.ORG</div>
+        <div class="nav-links">
+            <a href="#work" onclick="handleNav(event, '#work')">PROJECTS</a>
+            <span class="sep">|</span>
+            <a href="#experience" onclick="handleNav(event, '#experience')">EXPERIENCE</a>
+            <span class="sep">|</span>
+            <a href="#certifications" onclick="handleNav(event, '#certifications')">CERTIFICATIONS</a>
+            <span class="sep">|</span>
+            <a href="#achievements" onclick="handleNav(event, '#achievements')">ACHIEVEMENTS</a>
+            <span class="sep">|</span>
+            <a href="#contact" onclick="handleNav(event, '#contact')">CONTACT</a>
+            <span class="sep">|</span>
+            <a href="#" onclick="toggleTheme()">[ ☀ / ☾ ]</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="ambient-glow"></div>
+
+        <div class="glitch-wrapper">
+            <div class="glitch" data-text="PRUDHVI VARMA">PRUDHVI VARMA</div>
+        </div>
+        <p>
+            // SYSTEM STATUS: <strong style="color: var(--accent-color)">RUNNING ON CAFFEINE & SHELL SCRIPTS</strong><br>
+            // MISSION: <strong style="color: var(--accent-color)">OFFENSIVE MINDSET // DEFENSIVE STRATEGY</strong><br>
+            // CURRENT LOCATION: DUBAI
+        </p>
+        
+        <div class="btn-group">
+            <a href="#work" class="btn-glitch" onclick="handleNav(event, '#work')">INITIALIZE_PORTFOLIO.EXE</a>
+            <a href="Prudhvi_Resume.pdf" download class="btn-secondary">[DOWNLOAD_RESUME.PDF]</a>
+        </div>
+    </section>
+
+    <h2 class="section-header" id="work">&lt; PROJECTS /&gt;</h2>
+    <div class="grid">
+        
+        <a href="https://github.com/Prudhvivarma0?tab=repositories" target="_blank" class="card-link">
+            <div class="card">
+                <div>
+                    <h3>Web App Penetration Test</h3>
+                    <p>Conducted penetration tests on <strong>DVWA</strong> using <strong>Kali Linux</strong> and <strong>Burp Suite</strong>. Intercepted and manipulated traffic to exploit <strong>OWASP Top 10</strong> vulnerabilities (SQLi, XSS, CSRF) and recommended mitigation strategies.</p>
+                </div>
+            </div>
+        </a>
+
+        <a href="https://github.com/Prudhvivarma0?tab=repositories" target="_blank" class="card-link">
+            <div class="card">
+                <div>
+                    <h3>Enterprise Job Simulations</h3>
+                    <p>Performed advanced vulnerability research and threat analysis for <strong style="color: var(--accent-color);">AIG, ANZ, Mastercard, & Telstra</strong>. Mitigated <strong>Zero-Day Log4j</strong> exploits and conducted enterprise-grade risk assessments.</p>
+                </div>
+            </div>
+        </a>
+
+        <a href="https://github.com/Prudhvivarma0?tab=repositories" target="_blank" class="card-link">
+            <div class="card">
+                <div>
+                    <h3>AWS Threat Monitoring</h3>
+                    <p>Built a cloud surveillance system using <strong>CloudTrail</strong>, <strong>EventBridge</strong>, and <strong>SNS</strong>. Secured EC2 instances by automating the detection of root user anomalies for compliance and incident response.</p>
+                </div>
+            </div>
+        </a>
+
+        <a href="https://github.com/Prudhvivarma0?tab=repositories" target="_blank" class="card-link">
+            <div class="card">
+                <div>
+                    <h3>Firewall & Encryption Sys</h3>
+                    <p>Engineered a rule-based firewall with <strong>IP access control</strong> and implemented a <strong>public-key encryption</strong> system based on super-increasing sequences to secure data transmission.</p>
+                </div>
+            </div>
+        </a>
+
+        <a href="https://github.com/Prudhvivarma0?tab=repositories" target="_blank" class="card-link">
+            <div class="card">
+                <div>
+                    <h3>Deep Learning IDS</h3>
+                    <p>Thesis Project: Developed an <strong>Intrusion Detection System</strong> for Cyber-Physical Systems using <strong>Wi-Fi CSI</strong> and <strong>Deep Learning (Variational Autoencoders)</strong>, improving threat detection accuracy by 30%.</p>
+                </div>
+            </div>
+        </a>
+
+    </div>
+
+    <h2 class="section-header" id="experience">&lt; EXPERIENCE_LOG /&gt;</h2>
+    <div class="timeline">
+        <div class="timeline-item">
+            <h3>MCN - IT Intern</h3>
+            <span>APR 2025 - PRESENT // DUBAI</span>
+        </div>
+        <div class="timeline-item">
+            <h3>Greenhouse Foodstuff - IT Intern</h3>
+            <span>JAN 2025 - MAY 2025 // DUBAI</span>
+        </div>
+        <div class="timeline-item">
+            <h3>Urbizassist - AI & IT Intern</h3>
+            <span>DEC 2024 - FEB 2025 // DUBAI</span>
+        </div>
+    </div>
+
+    <h2 class="section-header" id="certifications">&lt; CERTIFICATIONS /&gt;</h2>
+    <div class="hex-container">
+        <div class="hex"><div class="hex-content">BTL1<br>Level 1</div></div>
+        <div class="hex"><div class="hex-content">ISC2 CC<br>Certified</div></div>
+        <div class="hex"><div class="hex-content">SOC Analyst<br>Udemy</div></div>
+        <div class="hex"><div class="hex-content">Intro to<br>Splunk</div></div>
+        <div class="hex"><div class="hex-content">Splunk<br>SOAR</div></div>
+        <div class="hex"><div class="hex-content">Security<br>Ops</div></div>
+        <div class="hex"><div class="hex-content">Art of<br>Investigation</div></div>
+    </div>
+
+    <h2 class="section-header" id="achievements">&lt; ACHIEVEMENTS /&gt;</h2>
+    <div class="achievements-grid">
+        <div class="achievement-card">
+            <span class="trophy">🏆</span>
+            <h3>1st Place Qualifier</h3>
+            <p>Zayed University x Exploiters CTF</p>
+            <span style="color: var(--accent-color); font-size: 0.9rem; font-weight: bold;">FEB 2025</span>
+        </div>
+        <div class="achievement-card">
+            <span class="trophy">🥉</span>
+            <h3>3rd Place Winner</h3>
+            <p>REDTEAM Cyber Hack CTF</p>
+            <span style="color: var(--accent-color); font-size: 0.9rem; font-weight: bold;">FEB 2025</span>
+        </div>
+    </div>
+
+    <footer id="contact">
+        <h2 style="color: var(--accent-color); margin-bottom: 20px;">// TERMINATE_SESSION</h2>
+        <p style="font-size: 1.2rem; color: #fff;">prudhvivarma31@gmail.com | Dubai, UAE</p>
+        <div style="margin-top: 30px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+            <a href="mailto:prudhvivarma31@gmail.com" class="btn-glitch" style="margin: 5px;">SEND_EMAIL</a>
+            <a href="https://www.linkedin.com/in/prudhvivarma11/" target="_blank" class="btn-glitch" style="margin: 5px;">LINKEDIN</a>
+            <a href="https://github.com/Prudhvivarma0?tab=repositories" target="_blank" class="btn-glitch" style="margin: 5px;">GITHUB</a>
+        </div>
+    </footer>
+
+    <script>
+        // THEME
+        function toggleTheme() {
+            const html = document.documentElement;
+            const theme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', theme);
+        }
+
+        // NAV TRANSITION WITH DEPTH
+        function handleNav(e, targetId) {
+            e.preventDefault();
+            const overlay = document.querySelector('.shutter-overlay');
+            const target = document.querySelector(targetId);
+            
+            // 1. Activate Shutter
+            overlay.classList.add('active');
+            
+            // 2. Wait for shutter to close (400ms) then scroll
+            setTimeout(() => {
+                const navHeight = 80;
+                const elementPosition = target.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - navHeight;
+                window.scrollTo({ top: offsetPosition, behavior: "auto" });
+                
+                // 3. Remove Shutter after short delay
+                setTimeout(() => {
+                    overlay.classList.remove('active');
+                }, 800);
+            }, 500);
+        }
+
+        // CIRCULAR CURSOR
+        const cursorDot = document.querySelector('[data-cursor-dot]');
+        const cursorOutline = document.querySelector('[data-cursor-outline]');
+        
+        window.addEventListener("mousemove", function(e) {
+            const posX = e.clientX; 
+            const posY = e.clientY;
+            
+            cursorDot.style.left = `${posX}px`; 
+            cursorDot.style.top = `${posY}px`;
+            
+            cursorOutline.animate({
+                left: `${posX}px`,
+                top: `${posY}px`
+            }, { duration: 500, fill: "forwards" });
+        });
+    </script>
+</body>
+</html>
