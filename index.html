@@ -63,9 +63,9 @@
             100% { transform: perspective(500px) rotateX(60deg) translateY(50px) translateZ(-200px); }
         }
 
-        /* --- 4. NAVIGATION --- */
+        /* --- 4. NAVIGATION (FULL) --- */
         nav {
-            display: flex; justify-content: space-between; padding: 0 4%;
+            display: flex; justify-content: space-between; padding: 0 3%;
             height: var(--nav-height); align-items: center;
             position: fixed; width: 100%; top: 0; z-index: 1000;
             background: rgba(5, 5, 5, 0.95); backdrop-filter: blur(10px);
@@ -74,26 +74,25 @@
         }
         [data-theme="light"] nav { background: rgba(240, 240, 245, 0.98); }
 
-        .logo { font-weight: 800; font-size: 1.6rem; letter-spacing: 2px; color: var(--text-primary); }
+        .logo { font-weight: 800; font-size: 1.5rem; letter-spacing: 2px; color: var(--text-primary); }
         .logo span { color: var(--accent-color); }
         
         .nav-links { display: flex; align-items: center; }
         
         .nav-links a {
             color: var(--text-primary); text-decoration: none; 
-            font-size: 1.1rem; font-weight: bold; position: relative;
+            font-size: 0.9rem; font-weight: bold; position: relative;
             text-transform: uppercase; letter-spacing: 1px;
             transition: color 0.2s;
         }
         .nav-links a:hover { color: var(--accent-color); }
-        
         .nav-links a::after {
             content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0;
             background-color: var(--accent-color); transition: width 0.3s;
         }
         .nav-links a:hover::after { width: 100%; }
 
-        .sep { color: var(--text-secondary); margin: 0 15px; opacity: 0.5; font-weight: normal; }
+        .sep { color: var(--text-secondary); margin: 0 15px; opacity: 0.5; font-weight: normal; font-size: 0.8rem; }
 
         /* --- 5. HERO SECTION --- */
         .hero {
@@ -147,9 +146,9 @@
             color: var(--accent-color); text-transform: uppercase; letter-spacing: 5px;
         }
 
-        /* --- 7. CARDS (Grid) --- */
+        /* --- 7. CARDS --- */
         .grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* Wide cards */
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
             gap: 2.5rem; padding: 0 8%;
         }
         .card-link { text-decoration: none; display: block; }
@@ -161,11 +160,9 @@
         }
         [data-theme="light"] .card { border-color: #ddd; }
         .card:hover { transform: translateY(-7px); border-color: var(--accent-color); }
-        .card h3 { font-size: 1.6rem; margin: 0 0 15px 0; color: var(--text-primary); }
+        .card h3 { font-size: 1.6rem; margin: 15px 0; color: var(--text-primary); }
         .card p { font-size: 1.1rem; color: var(--text-secondary); line-height: 1.7; }
         
-        /* Tags removed as requested */
-
         /* --- 8. EXPERIENCE TIMELINE --- */
         .timeline {
             max-width: 900px; margin: 0 auto; padding: 0 20px;
@@ -185,18 +182,18 @@
         /* --- 9. SKILLS & ACHIEVEMENTS --- */
         .hex-container { display: flex; justify-content: center; flex-wrap: wrap; gap: 30px; padding-bottom: 0rem; }
         .hex {
-            width: 160px; height: 140px; background: #111; 
+            width: 150px; height: 130px; background: #111; 
             display: flex; align-items: center; justify-content: center; text-align: center;
             clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
             transition: 0.3s; border: 1px solid #333; 
             color: #ffffff;
         }
         .hex:hover { color: #000; background: var(--accent-color); transform: scale(1.1); }
-        .hex-content { z-index: 2; font-weight: bold; font-size: 0.9rem; padding: 5px;}
+        .hex-content { z-index: 2; font-weight: bold; font-size: 1rem;}
 
         /* ACHIEVEMENT GRID */
         .achievements-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 30px; padding: 0 10%; margin-bottom: 5rem;
         }
         .achievement-card {
@@ -205,7 +202,6 @@
         }
         .achievement-card:hover { border-color: var(--accent-color); transform: translateY(-5px); }
         .trophy { font-size: 2.5rem; margin-bottom: 15px; display: block; }
-        
         .achievement-card h3, .achievement-card p { color: #ffffff; }
 
         /* --- 10. FOOTER --- */
@@ -214,60 +210,57 @@
             background: #020202;
         }
         
-        /* --- 11. SHUTTER TRANSITION + LOADING BOX --- */
-        .shutter-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999;
+        /* --- 11. SOPHISTICATED SLICE TRANSITION --- */
+        .loader-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 9999; pointer-events: none;
+            display: flex;
         }
         
-        .shutter {
-            position: absolute; left: 0; width: 100%; height: 50%; 
-            background: var(--accent-color);
-            transition: transform 0.4s cubic-bezier(0.8, 0, 0.2, 1);
-            z-index: 100;
+        /* The 5 vertical slices */
+        .slice {
+            flex: 1; height: 100%; background: #000;
+            transform: translateY(-100%); /* Start hidden at top */
+            transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+            border-right: 1px solid #111;
+        }
+
+        /* Active state: Slide down to cover */
+        .loader-container.active .slice { transform: translateY(0); }
+        
+        /* Staggered delays for the wave effect */
+        .slice:nth-child(1) { transition-delay: 0.0s; }
+        .slice:nth-child(2) { transition-delay: 0.05s; }
+        .slice:nth-child(3) { transition-delay: 0.1s; }
+        .slice:nth-child(4) { transition-delay: 0.15s; }
+        .slice:nth-child(5) { transition-delay: 0.2s; }
+
+        /* HUD LOADER (Centered) */
+        .hud-loader {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 10000; opacity: 0; transition: opacity 0.2s;
+            display: flex; flex-direction: column; align-items: center;
         }
         
-        .s-top { top: 0; transform: translateY(-100%); border-bottom: 5px solid #000; }
-        .s-bottom { bottom: 0; transform: translateY(100%); border-top: 5px solid #000; }
+        .loader-container.active .hud-loader { opacity: 1; transition-delay: 0.4s; }
+
+        /* Rotating Hexagon Ring */
+        .hud-ring {
+            width: 80px; height: 80px; border: 4px solid transparent;
+            border-top-color: var(--accent-color); border-bottom-color: var(--accent-color);
+            border-radius: 50%; animation: spin 1.5s linear infinite;
+            box-shadow: 0 0 20px var(--accent-color);
+        }
         
-        .shutter-overlay.active .s-top { transform: translateY(0); }
-        .shutter-overlay.active .s-bottom { transform: translateY(0); }
-
-        /* LOADING BOX (BLACK BACKGROUND FIX) */
-        .loader-box {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            display: flex; flex-direction: column; align-items: center; gap: 10px;
-            opacity: 0; z-index: 200; transition: opacity 0.1s;
-            
-            /* Solid Black Box to hide the seam */
-            background: #000; 
-            padding: 30px 50px;
-            border: 2px solid #000;
-            box-shadow: 0 0 50px rgba(0,0,0,0.8);
-        }
-
-        .shutter-overlay.active .loader-box { 
-            opacity: 1; transition-delay: 0.3s; 
-        }
-
-        .loader-text {
-            color: var(--accent-color); 
-            font-family: 'Arial Black', sans-serif;
-            font-size: 1.5rem; font-weight: 900; letter-spacing: 2px;
+        .hud-text {
+            margin-top: 20px; color: var(--accent-color);
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold; letter-spacing: 3px; font-size: 1.2rem;
             text-transform: uppercase;
         }
 
-        .progress-container {
-            width: 250px; height: 6px; background: #222;
-            overflow: hidden; margin-top: 10px;
-        }
-        
-        .progress-bar {
-            height: 100%; width: 0%; background: var(--accent-color);
-            transition: width 0.1s;
-        }
-        
-        .shutter-overlay.active .progress-bar {
-            width: 100%; transition: width 0.4s ease-in-out 0.3s;
+        @keyframes spin {
+            0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); }
         }
 
         /* CIRCULAR CURSOR */
@@ -288,9 +281,9 @@
         @keyframes fadeIn { to { opacity: 1; } }
 
         /* RESPONSIVE */
-        @media (max-width: 900px) {
-            .glitch { font-size: 3.5rem; }
-            .nav-links { display: none; }
+        @media (max-width: 1100px) {
+            .glitch { font-size: 4rem; }
+            .nav-links { display: none; } /* Hide nav on mobile */
             .grid { padding: 0 5%; }
             .cyber-grid { display: none; }
         }
@@ -300,14 +293,16 @@
 
     <div class="cyber-grid"></div>
 
-    <div class="shutter-overlay">
-        <div class="shutter s-top"></div>
-        <div class="shutter s-bottom"></div>
-        <div class="loader-box">
-            <div class="loader-text">[ ACCESSING_SERVER ]</div>
-            <div class="progress-container">
-                <div class="progress-bar"></div>
-            </div>
+    <div class="loader-container">
+        <div class="slice"></div>
+        <div class="slice"></div>
+        <div class="slice"></div>
+        <div class="slice"></div>
+        <div class="slice"></div>
+        
+        <div class="hud-loader">
+            <div class="hud-ring"></div>
+            <div class="hud-text">SYSTEM_SYNC</div>
         </div>
     </div>
     
@@ -321,7 +316,7 @@
             <span class="sep">|</span>
             <a href="#experience" onclick="handleNav(event, '#experience')">EXPERIENCE</a>
             <span class="sep">|</span>
-            <a href="#certifications" onclick="handleNav(event, '#certifications')">CERTIFICATIONS</a>
+            <a href="#skills" onclick="handleNav(event, '#skills')">CERTIFICATIONS</a>
             <span class="sep">|</span>
             <a href="#achievements" onclick="handleNav(event, '#achievements')">ACHIEVEMENTS</a>
             <span class="sep">|</span>
@@ -415,7 +410,7 @@
         </div>
     </div>
 
-    <h2 class="section-header" id="certifications">&lt; CERTIFICATIONS /&gt;</h2>
+    <h2 class="section-header" id="skills">&lt; CERTIFICATIONS /&gt;</h2>
     <div class="hex-container">
         <div class="hex"><div class="hex-content">BTL1<br>Level 1</div></div>
         <div class="hex"><div class="hex-content">ISC2 CC<br>Certified</div></div>
@@ -460,27 +455,30 @@
             html.setAttribute('data-theme', theme);
         }
 
-        // NAV TRANSITION WITH DEPTH
+        // ADVANCED TRANSITION HANDLER
         function handleNav(e, targetId) {
             e.preventDefault();
-            const overlay = document.querySelector('.shutter-overlay');
+            const loader = document.querySelector('.loader-container');
             const target = document.querySelector(targetId);
             
-            // 1. Activate Shutter
-            overlay.classList.add('active');
+            // 1. Start Transition
+            loader.classList.add('active');
             
-            // 2. Wait for shutter to close (400ms) then scroll
+            // 2. Wait for "Wipe Down" animation (600ms)
             setTimeout(() => {
-                const navHeight = 80;
+                const navHeight = 90;
                 const elementPosition = target.getBoundingClientRect().top;
                 const offsetPosition = elementPosition + window.pageYOffset - navHeight;
+                
+                // Scroll instantly while screen is covered
                 window.scrollTo({ top: offsetPosition, behavior: "auto" });
                 
-                // 3. Remove Shutter after short delay
+                // 3. Optional: Hold for a split second to show loader
                 setTimeout(() => {
-                    overlay.classList.remove('active');
-                }, 800);
-            }, 500);
+                    // 4. Remove Class -> Triggers "Wipe Up" (since transform resets)
+                    loader.classList.remove('active');
+                }, 500); 
+            }, 600);
         }
 
         // CIRCULAR CURSOR
