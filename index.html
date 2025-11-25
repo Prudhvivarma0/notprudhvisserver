@@ -21,7 +21,7 @@
             --bg-color: #f0f0f5;
             --text-primary: #111111;
             --text-secondary: #444;
-            --accent-color: #ff4500; 
+            --accent-color: #ff8700; 
             --card-bg: #ffffff;
         }
 
@@ -35,7 +35,14 @@
             font-family: var(--font-mono);
             overflow-x: hidden;
             font-size: 20px;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
+            transform-origin: center top;
+        }
+
+        /* HOLO-WARP TRANSITION STATE */
+        body.warping {
+            transform: scale(0.92) translateY(20px);
+            filter: blur(10px) opacity(0);
         }
 
         /* --- 3. BACKGROUND TEXTURE --- */
@@ -63,7 +70,7 @@
             100% { transform: perspective(500px) rotateX(60deg) translateY(50px) translateZ(-200px); }
         }
 
-        /* --- 4. NAVIGATION (FULL) --- */
+        /* --- 4. NAVIGATION --- */
         nav {
             display: flex; justify-content: space-between; padding: 0 3%;
             height: var(--nav-height); align-items: center;
@@ -77,8 +84,7 @@
         .logo { font-weight: 800; font-size: 1.5rem; letter-spacing: 2px; color: var(--text-primary); }
         .logo span { color: var(--accent-color); }
         
-        .nav-links { display: flex; align-items: center; }
-        
+        .nav-links { display: flex; gap: 20px; align-items: center; }
         .nav-links a {
             color: var(--text-primary); text-decoration: none; 
             font-size: 0.9rem; font-weight: bold; position: relative;
@@ -91,8 +97,7 @@
             background-color: var(--accent-color); transition: width 0.3s;
         }
         .nav-links a:hover::after { width: 100%; }
-
-        .sep { color: var(--text-secondary); margin: 0 15px; opacity: 0.5; font-weight: normal; font-size: 0.8rem; }
+        .sep { color: var(--text-secondary); margin: 0 10px; opacity: 0.5; font-weight: normal; font-size: 0.8rem; }
 
         /* --- 5. HERO SECTION --- */
         .hero {
@@ -209,59 +214,6 @@
             text-align: center; padding: 6rem 2rem; border-top: 1px solid #222; margin-top: 6rem;
             background: #020202;
         }
-        
-        /* --- 11. SOPHISTICATED SLICE TRANSITION --- */
-        .loader-container {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 9999; pointer-events: none;
-            display: flex;
-        }
-        
-        /* The 5 vertical slices */
-        .slice {
-            flex: 1; height: 100%; background: #000;
-            transform: translateY(-100%); /* Start hidden at top */
-            transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
-            border-right: 1px solid #111;
-        }
-
-        /* Active state: Slide down to cover */
-        .loader-container.active .slice { transform: translateY(0); }
-        
-        /* Staggered delays for the wave effect */
-        .slice:nth-child(1) { transition-delay: 0.0s; }
-        .slice:nth-child(2) { transition-delay: 0.05s; }
-        .slice:nth-child(3) { transition-delay: 0.1s; }
-        .slice:nth-child(4) { transition-delay: 0.15s; }
-        .slice:nth-child(5) { transition-delay: 0.2s; }
-
-        /* HUD LOADER (Centered) */
-        .hud-loader {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            z-index: 10000; opacity: 0; transition: opacity 0.2s;
-            display: flex; flex-direction: column; align-items: center;
-        }
-        
-        .loader-container.active .hud-loader { opacity: 1; transition-delay: 0.4s; }
-
-        /* Rotating Hexagon Ring */
-        .hud-ring {
-            width: 80px; height: 80px; border: 4px solid transparent;
-            border-top-color: var(--accent-color); border-bottom-color: var(--accent-color);
-            border-radius: 50%; animation: spin 1.5s linear infinite;
-            box-shadow: 0 0 20px var(--accent-color);
-        }
-        
-        .hud-text {
-            margin-top: 20px; color: var(--accent-color);
-            font-family: 'Courier New', Courier, monospace;
-            font-weight: bold; letter-spacing: 3px; font-size: 1.2rem;
-            text-transform: uppercase;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); }
-        }
 
         /* CIRCULAR CURSOR */
         .cursor-dot {
@@ -281,9 +233,9 @@
         @keyframes fadeIn { to { opacity: 1; } }
 
         /* RESPONSIVE */
-        @media (max-width: 1100px) {
-            .glitch { font-size: 4rem; }
-            .nav-links { display: none; } /* Hide nav on mobile */
+        @media (max-width: 900px) {
+            .glitch { font-size: 3.5rem; }
+            .nav-links { display: none; }
             .grid { padding: 0 5%; }
             .cyber-grid { display: none; }
         }
@@ -293,19 +245,6 @@
 
     <div class="cyber-grid"></div>
 
-    <div class="loader-container">
-        <div class="slice"></div>
-        <div class="slice"></div>
-        <div class="slice"></div>
-        <div class="slice"></div>
-        <div class="slice"></div>
-        
-        <div class="hud-loader">
-            <div class="hud-ring"></div>
-            <div class="hud-text">SYSTEM_SYNC</div>
-        </div>
-    </div>
-    
     <div class="cursor-dot" data-cursor-dot></div>
     <div class="cursor-outline" data-cursor-outline></div>
 
@@ -347,11 +286,11 @@
     <h2 class="section-header" id="work">&lt; PROJECTS /&gt;</h2>
     <div class="grid">
         
-        <a href="https://github.com/Prudhvivarma0?tab=repositories" target="_blank" class="card-link">
+        <a href="https://github.com/Prudhvivarma0/Vigenere-Cipher-Key-Length-Verification-Tool" target="_blank" class="card-link">
             <div class="card">
                 <div>
-                    <h3>Web App Penetration Test</h3>
-                    <p>Conducted penetration tests on <strong>DVWA</strong> using <strong>Kali Linux</strong> and <strong>Burp Suite</strong>. Intercepted and manipulated traffic to exploit <strong>OWASP Top 10</strong> vulnerabilities (SQLi, XSS, CSRF) and recommended mitigation strategies.</p>
+                    <h3>Vigenere Cipher Verification Tool</h3>
+                    <p>Developed a cryptographic tool to verify Vigenere Cipher key lengths using statistical analysis (Kasiski Examination & Index of Coincidence) to automate decryption processes.</p>
                 </div>
             </div>
         </a>
@@ -365,7 +304,7 @@
             </div>
         </a>
 
-        <a href="https://github.com/Prudhvivarma0?tab=repositories" target="_blank" class="card-link">
+        <a href="https://github.com/Prudhvivarma0/AWS-Cloud-monitoring" target="_blank" class="card-link">
             <div class="card">
                 <div>
                     <h3>AWS Threat Monitoring</h3>
@@ -374,7 +313,7 @@
             </div>
         </a>
 
-        <a href="https://github.com/Prudhvivarma0?tab=repositories" target="_blank" class="card-link">
+        <a href="https://github.com/Prudhvivarma0/Public-Key-Encryption-and-Firewall-Management-System" target="_blank" class="card-link">
             <div class="card">
                 <div>
                     <h3>Firewall & Encryption Sys</h3>
@@ -383,11 +322,11 @@
             </div>
         </a>
 
-        <a href="https://github.com/Prudhvivarma0?tab=repositories" target="_blank" class="card-link">
+        <a href="https://github.com/Prudhvivarma0/WiFiGuard" target="_blank" class="card-link">
             <div class="card">
                 <div>
-                    <h3>Deep Learning IDS</h3>
-                    <p>Thesis Project: Developed an <strong>Intrusion Detection System</strong> for Cyber-Physical Systems using <strong>Wi-Fi CSI</strong> and <strong>Deep Learning (Variational Autoencoders)</strong>, improving threat detection accuracy by 30%.</p>
+                    <h3>WiFiGuard (Thesis)</h3>
+                    <p>Developed an <strong>Intrusion Detection System</strong> for Cyber-Physical Systems using <strong>Wi-Fi CSI</strong> and <strong>Deep Learning (Variational Autoencoders)</strong>, improving threat detection accuracy by 30%.</p>
                 </div>
             </div>
         </a>
@@ -417,7 +356,7 @@
         <div class="hex"><div class="hex-content">SOC Analyst<br>Udemy</div></div>
         <div class="hex"><div class="hex-content">Intro to<br>Splunk</div></div>
         <div class="hex"><div class="hex-content">Splunk<br>SOAR</div></div>
-        <div class="hex"><div class="hex-content">Security<br>Ops</div></div>
+        <div class="hex"><div class="hex-content">Security Ops<br>Splunk</div></div>
         <div class="hex"><div class="hex-content">Art of<br>Investigation</div></div>
     </div>
 
@@ -455,30 +394,29 @@
             html.setAttribute('data-theme', theme);
         }
 
-        // ADVANCED TRANSITION HANDLER
+        // SOPHISTICATED HOLO-WARP TRANSITION
         function handleNav(e, targetId) {
             e.preventDefault();
-            const loader = document.querySelector('.loader-container');
+            const body = document.body;
             const target = document.querySelector(targetId);
             
-            // 1. Start Transition
-            loader.classList.add('active');
+            // 1. Start Warp
+            body.classList.add('warping');
             
-            // 2. Wait for "Wipe Down" animation (600ms)
+            // 2. Wait for blur/scale out (600ms)
             setTimeout(() => {
                 const navHeight = 90;
                 const elementPosition = target.getBoundingClientRect().top;
                 const offsetPosition = elementPosition + window.pageYOffset - navHeight;
                 
-                // Scroll instantly while screen is covered
+                // Instant Jump while blurred
                 window.scrollTo({ top: offsetPosition, behavior: "auto" });
                 
-                // 3. Optional: Hold for a split second to show loader
+                // 3. Snap back
                 setTimeout(() => {
-                    // 4. Remove Class -> Triggers "Wipe Up" (since transform resets)
-                    loader.classList.remove('active');
-                }, 500); 
-            }, 600);
+                    body.classList.remove('warping');
+                }, 100);
+            }, 500);
         }
 
         // CIRCULAR CURSOR
