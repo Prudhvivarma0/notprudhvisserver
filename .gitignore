@@ -1,0 +1,20 @@
+# dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# Cloudflare / Vercel
+.vercel/
+.wrangler/
+
+# env
+.env
+.env.local
+.env.production
+
+# misc
+.DS_Store
+*.pem
+npm-debug.log*
