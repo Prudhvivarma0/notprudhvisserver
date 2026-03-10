@@ -4,7 +4,11 @@ import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
 const navLinks: { label: string; href: string }[] = [
-  // sections will be added here as they're built
+  { label: "About", href: "#about" },
+  { label: "Projects", href: "#projects" },
+  { label: "Experience", href: "#experience" },
+  { label: "Achievements", href: "#achievements" },
+  { label: "Contact", href: "#contact" },
 ];
 
 export function Navbar() {

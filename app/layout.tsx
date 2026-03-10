@@ -3,6 +3,7 @@ import { Syne, Fira_Code, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Navbar } from "@/components/Navbar";
+import { ScrollReset } from "@/components/ScrollReset";
 
 const syne = Syne({
   subsets: ["latin"],
@@ -45,6 +46,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <ScrollReset />
           <Navbar />
           {children}
         </ThemeProvider>
