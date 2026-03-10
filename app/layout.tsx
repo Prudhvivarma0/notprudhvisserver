@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Syne, Fira_Code, DM_Sans } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/ThemeProvider";
-import { Navbar } from "@/components/Navbar";
-import { ScrollReset } from "@/components/ScrollReset";
+import { ThemeProvider }    from "@/components/ThemeProvider";
+import { Navbar }           from "@/components/Navbar";
+import { ScrollReset }      from "@/components/ScrollReset";
+import { ScrollAnimations } from "@/components/ScrollAnimations";
 
 const syne = Syne({
   subsets: ["latin"],
@@ -25,7 +26,7 @@ const dmSans = DM_Sans({
 
 export const metadata: Metadata = {
   title: "Prudhvi Varma",
-  description: "Portfolio",
+  description: "Cybersecurity engineer and full-stack developer.",
 };
 
 export default function RootLayout({
@@ -47,6 +48,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <ScrollReset />
+          <ScrollAnimations />
           <Navbar />
           {children}
         </ThemeProvider>

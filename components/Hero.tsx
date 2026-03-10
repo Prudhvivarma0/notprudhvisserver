@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { MagneticButton } from "@/components/MagneticButton";
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
@@ -557,7 +558,7 @@ export function Hero() {
       <div className="relative z-10 w-full max-w-5xl mx-auto px-6 py-20 flex flex-wrap items-center gap-12 lg:gap-20">
 
         {/* ── Left ─────────────────────────────────────────────────────── */}
-        <div className="flex-1 min-w-[280px]">
+        <div className="flex-1 min-w-[280px] reveal">
           <h1
             className="font-display font-extrabold leading-[0.93] tracking-tight mb-5"
             style={{ fontSize: "clamp(40px, 8vw, 96px)", color: "var(--text)" }}
@@ -575,27 +576,31 @@ export function Hero() {
           </p>
 
           <div className="flex flex-wrap gap-4">
-            <a
-              href="#projects"
-              className="px-6 py-2.5 font-sans font-semibold text-sm rounded transition-opacity hover:opacity-75"
-              style={{ background: "var(--accent)", color: "var(--bg)" }}
-            >
-              Projects
-            </a>
-            <a
-              href="#contact"
-              className="px-6 py-2.5 font-sans font-semibold text-sm rounded"
-              style={{ border: "1px solid var(--accent)", color: "var(--accent)" }}
-              onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "var(--accent)"; el.style.color = "var(--bg)"; }}
-              onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "transparent"; el.style.color = "var(--accent)"; }}
-            >
-              Contact
-            </a>
+            <MagneticButton>
+              <a
+                href="#projects"
+                className="px-6 py-2.5 font-sans font-semibold text-sm rounded transition-opacity hover:opacity-75"
+                style={{ background: "var(--accent)", color: "var(--bg)", display: "block" }}
+              >
+                Projects
+              </a>
+            </MagneticButton>
+            <MagneticButton>
+              <a
+                href="#contact"
+                className="px-6 py-2.5 font-sans font-semibold text-sm rounded"
+                style={{ border: "1px solid var(--accent)", color: "var(--accent)", display: "block" }}
+                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "var(--accent)"; el.style.color = "var(--bg)"; }}
+                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "transparent"; el.style.color = "var(--accent)"; }}
+              >
+                Contact
+              </a>
+            </MagneticButton>
           </div>
         </div>
 
         {/* ── Right ────────────────────────────────────────────────────── */}
-        <div className="flex-1 min-w-[280px] flex justify-center">
+        <div className="flex-1 min-w-[280px] flex justify-center reveal-right">
           <div className="relative">
             <GlobeCanvas nodes={nodes} onHoverChange={handleHoverChange} />
 

@@ -188,6 +188,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         href={project.href}
         target="_blank"
         rel="noopener noreferrer"
+        className="reveal-stagger"
         style={sharedStyle}
         {...handlers}
       >
@@ -197,7 +198,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
   }
 
   return (
-    <div style={sharedStyle} {...handlers}>
+    <div className="reveal-stagger" style={sharedStyle} {...handlers}>
       {inner}
     </div>
   );

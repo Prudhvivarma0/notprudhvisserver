@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Themes ──────────────────────────────────────────────────────────────── */
+
 :root {
   --bg: #f5f4f0;
   --text: #0a0a0a;
@@ -18,8 +20,11 @@
   --bg-card: rgba(6, 8, 12, 0.75);
 }
 
+/* ── Base ─────────────────────────────────────────────────────────────────── */
+
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 64px;
 }
 
 body {
@@ -28,7 +33,38 @@ body {
   font-family: var(--font-dm-sans), sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  animation: page-fade-in 0.5s ease forwards;
 }
+
+@keyframes page-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Scrollbar ────────────────────────────────────────────────────────────── */
 
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Micro-interaction utilities ─────────────────────────────────────────── */
+
+.hover-lift {
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.hover-lift:hover {
+  transform: translateY(-4px);
+}
+
+.hover-glow {
+  transition: box-shadow 0.2s ease;
+}
+.hover-glow:hover {
+  box-shadow: 0 0 20px color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+.hover-border-accent {
+  transition: border-color 0.2s ease;
+}
+.hover-border-accent:hover {
+  border-color: var(--accent);
+}
