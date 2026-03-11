@@ -18,12 +18,13 @@ const LINKS: Link[] = [
 function ContactLink({ link }: { link: Link }) {
   const [hovered, setHovered] = useState(false);
   return (
+    <div className="reveal-stagger">
     <MagneticButton>
       <a
         href={link.href}
         target={link.href.startsWith("mailto") ? undefined : "_blank"}
         rel="noopener noreferrer"
-        className="reveal-stagger font-mono"
+        className="font-mono"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         style={{
@@ -52,13 +53,14 @@ function ContactLink({ link }: { link: Link }) {
         <span style={{ opacity: 0.6 }}>{link.icon}</span>
       </a>
     </MagneticButton>
+    </div>
   );
 }
 
 export function Contact() {
   return (
     <section id="contact" className="py-[clamp(60px,8vw,120px)] px-6">
-      <div className="max-w-[700px] mx-auto">
+      <div className="max-w-5xl mx-auto">
 
         <p className="font-mono text-sm mb-6" style={{ color: "var(--muted)" }}>
           // 06 ——— Get in Touch
