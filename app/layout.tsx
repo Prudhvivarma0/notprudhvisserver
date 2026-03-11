@@ -41,13 +41,13 @@ export default function RootLayout({
       className={`${syne.variable} ${firaCode.variable} ${dmSans.variable}`}
     >
       <body>
+        <ScrollReset />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          <ScrollReset />
           <ScrollAnimations />
           <Navbar />
           {children}

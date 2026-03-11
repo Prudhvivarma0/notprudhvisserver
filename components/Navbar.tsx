@@ -52,7 +52,8 @@ export function Navbar() {
         <a
           href="#"
           className="font-display text-lg font-semibold tracking-tight"
-          style={{ color: "var(--text)", textDecoration: "none", transition: "color 0.2s" }}
+          onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+          style={{ color: "var(--text)", textDecoration: "none", transition: "color 0.2s", cursor: "pointer" }}
           onMouseEnter={e => (e.currentTarget.style.color = "var(--accent)")}
           onMouseLeave={e => (e.currentTarget.style.color = "var(--text)")}
         >
@@ -65,6 +66,10 @@ export function Navbar() {
               key={link.href}
               href={link.href}
               className="font-sans text-sm"
+              onClick={(e) => {
+                e.preventDefault();
+                document.querySelector(link.href)?.scrollIntoView({ behavior: "smooth" });
+              }}
               onMouseEnter={() => setHovered(link.href)}
               onMouseLeave={() => setHovered(null)}
               style={{
@@ -73,22 +78,23 @@ export function Navbar() {
                 transition:     "color 0.2s",
                 position:       "relative",
                 paddingBottom:  "2px",
+                cursor:         "pointer",
               }}
             >
               {link.label}
               {/* Bottom glow bar */}
               <span
                 style={{
-                  position:   "absolute",
-                  bottom:     0,
-                  left:       0,
-                  right:      0,
-                  height:     "1px",
-                  background: "var(--accent)",
-                  opacity:    hovered === link.href ? 1 : 0,
-                  transform:  hovered === link.href ? "scaleX(1)" : "scaleX(0)",
+                  position:        "absolute",
+                  bottom:          0,
+                  left:            0,
+                  right:           0,
+                  height:          "1px",
+                  background:      "var(--accent)",
+                  opacity:         hovered === link.href ? 1 : 0,
+                  transform:       hovered === link.href ? "scaleX(1)" : "scaleX(0)",
                   transformOrigin: "left",
-                  transition: "opacity 0.2s, transform 0.2s",
+                  transition:      "opacity 0.2s, transform 0.2s",
                 }}
               />
             </a>

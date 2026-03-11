@@ -40,7 +40,7 @@ export function Experience() {
       <div className="max-w-[700px] mx-auto">
 
         <p className="font-mono text-sm mb-6" style={{ color: "var(--muted)" }}>
-          // 03 ——— Experience
+          // 03 ——— what i do
         </p>
 
         <h2
