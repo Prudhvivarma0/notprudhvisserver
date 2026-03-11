@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const CERTS = [
   "BTL1 Level 1",
@@ -34,35 +34,142 @@ const CTFS: CTF[] = [
   },
 ];
 
-// ── CertTag ───────────────────────────────────────────────────────────────────
+// ── Terminal Certs ─────────────────────────────────────────────────────────────
 
-function CertTag({ label }: { label: string }) {
-  const [hovered, setHovered] = useState(false);
+function TerminalCerts() {
+  const [visibleCount, setVisibleCount] = useState(0);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+    // Stagger each cert line with 120ms delay
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    CERTS.forEach((_, i) => {
+      timers.push(setTimeout(() => setVisibleCount(i + 1), 300 + i * 120));
+    });
+    return () => timers.forEach(clearTimeout);
+  }, [mounted]);
+
   return (
-    <span
-      className="reveal-stagger font-mono"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+    <div
+      className="reveal rounded-lg overflow-hidden"
       style={{
-        display:              "inline-block",
-        padding:              "6px 14px",
-        borderRadius:         "0.5rem",
-        fontSize:             "clamp(11px, 1vw, 12px)",
-        border:               `1px solid ${hovered ? "var(--accent)" : "var(--muted)"}`,
-        color:                hovered ? "var(--accent)" : "var(--muted)",
-        background:           "var(--bg-card)",
-        backdropFilter:       "blur(10px)",
-        WebkitBackdropFilter: "blur(10px)",
-        transform:            hovered ? "translateY(-3px)" : "translateY(0)",
-        boxShadow:            hovered
-          ? "0 0 18px color-mix(in srgb, var(--accent) 15%, transparent)"
-          : "none",
-        transition: "border-color 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s",
-        cursor:     "default",
+        background:  "#0a0c10",
+        border:      "1px solid rgba(0,255,180,0.15)",
+        boxShadow:   "0 0 40px rgba(0,255,180,0.04), inset 0 0 80px rgba(0,0,0,0.4)",
+        position:    "relative",
+        maxWidth:    "640px",
       }}
     >
-      {label}
-    </span>
+      {/* Scanline overlay */}
+      <div
+        style={{
+          position:        "absolute",
+          inset:           0,
+          backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.07) 2px, rgba(0,0,0,0.07) 4px)",
+          pointerEvents:   "none",
+          zIndex:          1,
+        }}
+      />
+
+      {/* Title bar */}
+      <div
+        style={{
+          display:         "flex",
+          alignItems:      "center",
+          gap:             "6px",
+          padding:         "10px 14px",
+          borderBottom:    "1px solid rgba(0,255,180,0.08)",
+          background:      "rgba(0,0,0,0.3)",
+          position:        "relative",
+          zIndex:          2,
+        }}
+      >
+        <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#ff5f57", display: "inline-block" }} />
+        <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#febc2e", display: "inline-block" }} />
+        <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#28c840", display: "inline-block" }} />
+        <span
+          className="font-mono"
+          style={{ fontSize: 11, color: "rgba(0,255,180,0.5)", marginLeft: 10 }}
+        >
+          prudhvi@cloud:~/certs
+        </span>
+      </div>
+
+      {/* Terminal body */}
+      <div style={{ padding: "16px 20px 20px", position: "relative", zIndex: 2 }}>
+        <p
+          className="font-mono mb-4"
+          style={{ fontSize: 11, color: "rgba(0,255,180,0.35)" }}
+        >
+          $ ls -la ./certifications/
+        </p>
+
+        <div className="space-y-1">
+          {CERTS.map((cert, i) => (
+            <div
+              key={cert}
+              onMouseEnter={() => setHoveredIndex(i)}
+              onMouseLeave={() => setHoveredIndex(null)}
+              style={{
+                display:         "flex",
+                alignItems:      "center",
+                justifyContent:  "space-between",
+                padding:         "4px 8px",
+                borderRadius:    "4px",
+                background:      hoveredIndex === i ? "rgba(0,255,180,0.06)" : "transparent",
+                opacity:         mounted && i < visibleCount ? 1 : 0,
+                transform:       mounted && i < visibleCount ? "translateX(0)" : "translateX(-8px)",
+                transition:      "opacity 0.3s ease, transform 0.3s ease, background 0.15s",
+                cursor:          "default",
+              }}
+            >
+              <span className="font-mono" style={{ fontSize: 12, color: "rgba(0,255,180,0.5)" }}>
+                &gt;&nbsp;
+                <span style={{ color: hoveredIndex === i ? "#e8ecf4" : "rgba(200,220,255,0.65)" }}>
+                  {cert}
+                </span>
+              </span>
+              <span
+                className="font-mono"
+                style={{
+                  fontSize:    10,
+                  color:       "#00ffb4",
+                  opacity:     mounted && i < visibleCount ? 1 : 0,
+                  transition:  "opacity 0.2s ease",
+                  transitionDelay: `${i * 120 + 200}ms`,
+                  letterSpacing: "0.05em",
+                }}
+              >
+                [VERIFIED]
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <p
+          className="font-mono mt-5"
+          style={{
+            fontSize:     11,
+            color:        "rgba(0,255,180,0.35)",
+            opacity:      mounted && visibleCount >= CERTS.length ? 1 : 0,
+            transition:   "opacity 0.4s ease",
+            transitionDelay: `${CERTS.length * 120 + 400}ms`,
+          }}
+        >
+          $ echo &quot;total: {CERTS.length} active certifications&quot;
+          <br />
+          <span style={{ color: "rgba(200,220,255,0.4)" }}>
+            total: {CERTS.length} active certifications
+          </span>
+        </p>
+      </div>
+    </div>
   );
 }
 
@@ -133,7 +240,7 @@ export function Achievements() {
       <div className="max-w-5xl mx-auto">
 
         {/* Certifications */}
-        <div className="max-w-[700px] mb-20">
+        <div className="mb-20">
           <p className="font-mono text-sm mb-6" style={{ color: "var(--muted)" }}>
             // 04 ——— Certifications
           </p>
@@ -145,11 +252,7 @@ export function Achievements() {
             Certifications
           </h2>
 
-          <div className="flex flex-wrap gap-2.5">
-            {CERTS.map(cert => (
-              <CertTag key={cert} label={cert} />
-            ))}
-          </div>
+          <TerminalCerts />
         </div>
 
         {/* CTF Achievements */}

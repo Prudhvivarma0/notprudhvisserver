@@ -44,7 +44,11 @@ export default function RootLayout({
         {/* Runs before paint — prevents browser from restoring any scroll position */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `history.scrollRestoration="manual";window.scrollTo(0,0);`,
+            __html: `
+              history.scrollRestoration="manual";
+              if(window.location.hash){history.replaceState(null,"",window.location.pathname);}
+              window.scrollTo(0,0);
+            `,
           }}
         />
       </head>

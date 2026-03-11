@@ -526,6 +526,7 @@ export function Hero() {
   const [cursorOn, setCursorOn]    = useState(true);
   const { nodes, logs }            = useCloudStatus();
   const logEndRef                  = useRef<HTMLDivElement>(null);
+  const logContainerRef            = useRef<HTMLDivElement>(null);
 
   const [hoveredNode, setHoveredNode] = useState<CloudNode | null>(null);
   const [tooltipPos,  setTooltipPos]  = useState({ x: 0, y: 0 });
@@ -543,7 +544,9 @@ export function Hero() {
   }, []);
 
   useEffect(() => {
-    logEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (logContainerRef.current) {
+      logContainerRef.current.scrollTop = logContainerRef.current.scrollHeight;
+    }
   }, [logs]);
 
   return (
@@ -618,7 +621,7 @@ export function Hero() {
                   CLOUD TELEMETRY
                 </span>
               </div>
-              <div className="h-32 overflow-y-auto p-2 space-y-1 scrollbar-hide">
+              <div ref={logContainerRef} className="h-32 overflow-y-auto p-2 space-y-1 scrollbar-hide">
                 {mounted ? logs.map((line, i) => (
                   <p key={i} className="font-mono leading-snug" style={{ fontSize: 9, color: "var(--muted)" }}>
                     {line}

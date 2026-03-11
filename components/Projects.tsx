@@ -82,7 +82,7 @@ export function Projects() {
           Projects
         </h2>
 
-        <BentoGrid className="auto-rows-[18rem]">
+        <BentoGrid className="auto-rows-[22rem]">
           {projects.map((p) => (
             <BentoCard key={p.name} {...p} />
           ))}

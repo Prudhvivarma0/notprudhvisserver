@@ -12,7 +12,7 @@ const BentoGrid = ({
   className?: string;
 }) => {
   return (
-    <div className={cn("grid w-full auto-rows-[18rem] grid-cols-3 gap-4", className)}>
+    <div className={cn("grid w-full auto-rows-[22rem] grid-cols-3 gap-4", className)}>
       {children}
     </div>
   );
@@ -51,7 +51,7 @@ const BentoCard = ({
   >
     <div>{background}</div>
 
-    <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-1 p-5 transition-all duration-300 group-hover:-translate-y-10">
+    <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-1 p-5 transition-all duration-300 group-hover:-translate-y-8">
       <Icon
         className="h-12 w-12 origin-left transform-gpu transition-all duration-300 ease-in-out group-hover:scale-75"
         style={{ color: "var(--accent)" }}
@@ -59,18 +59,21 @@ const BentoCard = ({
       <h3 className="text-xl font-semibold font-display" style={{ color: "var(--text)" }}>
         {name}
       </h3>
-      <p className="max-w-lg" style={{ color: "var(--muted)", fontSize: "clamp(12px,1.1vw,13px)" }}>
+      <p className="max-w-lg line-clamp-4" style={{ color: "var(--muted)", fontSize: "clamp(12px,1.1vw,13px)" }}>
         {description}
       </p>
     </div>
 
+    {/* Gradient overlay at bottom — fades in on hover so CTA is readable */}
+    <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-20 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+      style={{ background: "linear-gradient(to top, var(--bg-card) 60%, transparent)" }} />
+
     <div className="pointer-events-none absolute bottom-0 flex w-full translate-y-10 transform-gpu flex-row items-center p-3 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
       <Button
-        variant="ghost"
         asChild
         size="sm"
-        className="pointer-events-auto"
-        style={{ color: "var(--accent)" }}
+        className="pointer-events-auto rounded-md px-3 py-1.5 text-xs font-mono font-semibold transition-colors"
+        style={{ background: "var(--accent)", color: "var(--bg)", border: "none" }}
       >
         <a href={href} target={href === "#" ? undefined : "_blank"} rel="noopener noreferrer">
           {cta}
