@@ -3,13 +3,21 @@
 import { useTheme } from "next-themes";
 import { useEffect, useRef, useState } from "react";
 
-const navLinks: { label: string; href: string }[] = [
-  { label: "About",        href: "#about"        },
-  { label: "Projects",     href: "#projects"     },
-  { label: "Experience",   href: "#experience"   },
-  { label: "Achievements", href: "#achievements" },
-  { label: "Contact",      href: "#contact"      },
+const navLinks: { label: string; id: string }[] = [
+  { label: "About",        id: "about"        },
+  { label: "Projects",     id: "projects"     },
+  { label: "Experience",   id: "experience"   },
+  { label: "Achievements", id: "achievements" },
+  { label: "Contact",      id: "contact"      },
 ];
+
+function scrollTo(id: string) {
+  const el = document.getElementById(id);
+  if (el) {
+    const y = el.getBoundingClientRect().top + window.scrollY - 64;
+    window.scrollTo({ top: y, behavior: "smooth" });
+  }
+}
 
 export function Navbar() {
   const { theme, setTheme } = useTheme();
@@ -18,9 +26,7 @@ export function Navbar() {
   const [hovered,  setHovered]  = useState<string | null>(null);
   const lastScrollY = useRef(0);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     const onScroll = () => {
@@ -49,40 +55,43 @@ export function Navbar() {
       }}
     >
       <nav className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
-        <a
-          href="#"
+        {/* Logo — scrolls to top, no hash */}
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           className="font-display text-lg font-semibold tracking-tight"
-          onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }}
-          style={{ color: "var(--text)", textDecoration: "none", transition: "color 0.2s", cursor: "pointer" }}
+          style={{
+            color:      "var(--text)",
+            background: "none",
+            border:     "none",
+            cursor:     "pointer",
+            padding:    0,
+            transition: "color 0.2s",
+          }}
           onMouseEnter={e => (e.currentTarget.style.color = "var(--accent)")}
           onMouseLeave={e => (e.currentTarget.style.color = "var(--text)")}
         >
           prudhvi.
-        </a>
+        </button>
 
         <div className="flex items-center gap-6">
           {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="font-sans text-sm"
-              onClick={(e) => {
-                e.preventDefault();
-                document.querySelector(link.href)?.scrollIntoView({ behavior: "smooth" });
-              }}
-              onMouseEnter={() => setHovered(link.href)}
+            <button
+              key={link.id}
+              onClick={() => scrollTo(link.id)}
+              onMouseEnter={() => setHovered(link.id)}
               onMouseLeave={() => setHovered(null)}
+              className="font-sans text-sm"
               style={{
-                color:          hovered === link.href ? "var(--text)" : "var(--muted)",
-                textDecoration: "none",
-                transition:     "color 0.2s",
-                position:       "relative",
-                paddingBottom:  "2px",
-                cursor:         "pointer",
+                color:      hovered === link.id ? "var(--text)" : "var(--muted)",
+                background: "none",
+                border:     "none",
+                cursor:     "pointer",
+                padding:    "2px 0",
+                position:   "relative",
+                transition: "color 0.2s",
               }}
             >
               {link.label}
-              {/* Bottom glow bar */}
               <span
                 style={{
                   position:        "absolute",
@@ -91,13 +100,13 @@ export function Navbar() {
                   right:           0,
                   height:          "1px",
                   background:      "var(--accent)",
-                  opacity:         hovered === link.href ? 1 : 0,
-                  transform:       hovered === link.href ? "scaleX(1)" : "scaleX(0)",
+                  opacity:         hovered === link.id ? 1 : 0,
+                  transform:       hovered === link.id ? "scaleX(1)" : "scaleX(0)",
                   transformOrigin: "left",
                   transition:      "opacity 0.2s, transform 0.2s",
                 }}
               />
-            </a>
+            </button>
           ))}
 
           {/* Theme toggle */}
@@ -107,10 +116,10 @@ export function Navbar() {
             className="w-8 h-8 flex items-center justify-center rounded-md"
             style={{
               color:      "var(--muted)",
-              transition: "color 0.2s",
               background: "none",
               border:     "none",
               cursor:     "pointer",
+              transition: "color 0.2s",
             }}
             onMouseEnter={e => (e.currentTarget.style.color = "var(--accent)")}
             onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}

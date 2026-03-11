@@ -40,6 +40,14 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${syne.variable} ${firaCode.variable} ${dmSans.variable}`}
     >
+      <head>
+        {/* Runs before paint — prevents browser from restoring any scroll position */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `history.scrollRestoration="manual";window.scrollTo(0,0);`,
+          }}
+        />
+      </head>
       <body>
         <ScrollReset />
         <ThemeProvider

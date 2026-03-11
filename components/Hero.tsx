@@ -577,24 +577,24 @@ export function Hero() {
 
           <div className="flex flex-wrap gap-4">
             <MagneticButton>
-              <a
-                href="#projects"
+              <button
+                onClick={() => { const el = document.getElementById("projects"); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 64, behavior: "smooth" }); }}
                 className="px-6 py-2.5 font-sans font-semibold text-sm rounded transition-opacity hover:opacity-75"
-                style={{ background: "var(--accent)", color: "var(--bg)", display: "block" }}
+                style={{ background: "var(--accent)", color: "var(--bg)", border: "none", cursor: "pointer" }}
               >
                 Projects
-              </a>
+              </button>
             </MagneticButton>
             <MagneticButton>
-              <a
-                href="#contact"
+              <button
+                onClick={() => { const el = document.getElementById("contact"); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 64, behavior: "smooth" }); }}
                 className="px-6 py-2.5 font-sans font-semibold text-sm rounded"
-                style={{ border: "1px solid var(--accent)", color: "var(--accent)", display: "block" }}
+                style={{ border: "1px solid var(--accent)", color: "var(--accent)", background: "transparent", cursor: "pointer" }}
                 onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "var(--accent)"; el.style.color = "var(--bg)"; }}
                 onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "transparent"; el.style.color = "var(--accent)"; }}
               >
                 Contact
-              </a>
+              </button>
             </MagneticButton>
           </div>
         </div>

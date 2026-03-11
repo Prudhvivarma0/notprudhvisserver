@@ -12,7 +12,7 @@ const BentoGrid = ({
   className?: string;
 }) => {
   return (
-    <div className={cn("grid w-full auto-rows-[22rem] grid-cols-3 gap-4", className)}>
+    <div className={cn("grid w-full auto-rows-[18rem] grid-cols-3 gap-4", className)}>
       {children}
     </div>
   );
@@ -38,7 +38,7 @@ const BentoCard = ({
 }) => (
   <div
     className={cn(
-      "group relative col-span-3 flex flex-col justify-between overflow-hidden rounded-xl",
+      "group relative col-span-3 flex flex-col justify-end overflow-hidden rounded-xl h-full",
       "transform-gpu dark:[border:1px_solid_rgba(255,255,255,.1)] dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset]",
       className
     )}
@@ -51,7 +51,7 @@ const BentoCard = ({
   >
     <div>{background}</div>
 
-    <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-1 p-6 transition-all duration-300 group-hover:-translate-y-10">
+    <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-1 p-5 transition-all duration-300 group-hover:-translate-y-10">
       <Icon
         className="h-12 w-12 origin-left transform-gpu transition-all duration-300 ease-in-out group-hover:scale-75"
         style={{ color: "var(--accent)" }}
@@ -64,7 +64,7 @@ const BentoCard = ({
       </p>
     </div>
 
-    <div className="pointer-events-none absolute bottom-0 flex w-full translate-y-10 transform-gpu flex-row items-center p-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+    <div className="pointer-events-none absolute bottom-0 flex w-full translate-y-10 transform-gpu flex-row items-center p-3 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
       <Button
         variant="ghost"
         asChild
