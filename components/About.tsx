@@ -4,14 +4,15 @@ export function About() {
       <div className="max-w-[700px] mx-auto">
 
         <p className="font-mono text-sm mb-6" style={{ color: "var(--muted)" }}>
-          // 01 ——— who i am
+          // 01 ——— About
         </p>
 
         <h2
           className="font-display font-bold leading-tight mb-10 reveal"
           style={{ fontSize: "clamp(24px, 4vw, 36px)", color: "var(--text)" }}
         >
-          architect developer entrepreneur<span style={{ color: "var(--accent)" }}>?</span>
+          Cybersecurity Engineer.{" "}
+          <span style={{ color: "var(--accent)" }}>Builder.</span>
         </h2>
 
         <div className="space-y-5">
