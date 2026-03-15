@@ -142,17 +142,14 @@ export function HandGlobe() {
       ref={divRef}
       style={{
         position:      "absolute",
-        top:           "-50%",
-        left:          0,
-        right:         0,
-        bottom:        0,
+        inset:         0,
         zIndex:        0,
         overflow:      "visible",
         pointerEvents: "none",
       }}
     >
       <Canvas
-        camera={{ position: [0, 0, 8], fov: 50 }}
+        camera={{ position: [0, 1.5, 9], fov: 55 }}
         gl={{ alpha: true, antialias: true }}
         dpr={[1, 2]}
         frameloop="always"
