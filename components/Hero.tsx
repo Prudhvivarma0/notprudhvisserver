@@ -621,7 +621,7 @@ export function Hero() {
         {/* ── Right ────────────────────────────────────────────────────── */}
         <div className="flex-1 min-w-[280px] flex justify-center reveal-right">
           {/* Container — explicit size creates reliable stacking context for layers */}
-          <div className="relative" style={{ width: "min(420px, 100%)", height: "min(420px, 100vw)", isolation: "isolate" }}>
+          <div className="relative" style={{ width: "min(420px, 100%)", height: "min(520px, 120vw)", isolation: "isolate" }}>
 
             {/* Layer 0 — 3D hand (desktop only, behind everything) */}
             {showHand && mounted && <HandGlobe />}

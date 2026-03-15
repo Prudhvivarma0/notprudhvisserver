@@ -53,7 +53,7 @@ function HandMesh({
     const center = box.getCenter(new THREE.Vector3());
     const size   = box.getSize(new THREE.Vector3());
     const maxDim = Math.max(size.x, size.y, size.z);
-    const scale  = 4.0 / maxDim;
+    const scale  = 4.5 / maxDim;
     cloned.position.sub(center);
     cloned.scale.setScalar(scale);
 
@@ -66,17 +66,16 @@ function HandMesh({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scene, isDark]);
 
-  const baseRotX = Math.PI * 0.9;  // palm-down tilt
-  const baseRotZ = Math.PI;
+  const baseRotX = Math.PI * 0.9;  // palm-down tilt — never changes
+  const baseRotY = 0;
+  const baseRotZ = Math.PI;        // locked
 
   useFrame(() => {
     if (!groupRef.current) return;
-    const tx = (mouseRef.current.y - 0.5) * 0.4;
-    const ty = (mouseRef.current.x - 0.5) * 0.6;
-    rotRef.current.x += (tx - rotRef.current.x) * 0.06;
-    rotRef.current.y += (ty - rotRef.current.y) * 0.06;
-    groupRef.current.rotation.x = baseRotX + rotRef.current.x;
-    groupRef.current.rotation.y = rotRef.current.y;
+    const ty = (mouseRef.current.x - 0.5) * 0.15;  // very subtle horizontal sway only
+    rotRef.current.y += (ty - rotRef.current.y) * 0.04;
+    groupRef.current.rotation.x = baseRotX;
+    groupRef.current.rotation.y = baseRotY + rotRef.current.y;
     groupRef.current.rotation.z = baseRotZ;
   });
 
@@ -149,7 +148,7 @@ export function HandGlobe() {
       }}
     >
       <Canvas
-        camera={{ position: [0, 0, 7], fov: 55 }}
+        camera={{ position: [0, 0, 8], fov: 50 }}
         gl={{ alpha: true, antialias: true }}
         dpr={[1, 2]}
         frameloop="always"
