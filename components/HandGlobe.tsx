@@ -79,7 +79,7 @@ function HandMesh({
     groupRef.current.rotation.z = baseRotZ;
   });
 
-  return <group ref={groupRef} position={[0, 2.0, -1.0]} />;
+  return <group ref={groupRef} position={[0, 3.0, -1.0]} />;
 }
 
 // ── Error boundary ────────────────────────────────────────────────────────────
