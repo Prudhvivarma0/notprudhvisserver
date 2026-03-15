@@ -1,11 +1,21 @@
 "use client";
 
-import { useRef, useEffect, useMemo } from "react";
-import { Canvas, useFrame }           from "@react-three/fiber";
-import * as THREE                     from "three";
-import { useTheme }                   from "next-themes";
+import { Suspense, useRef, useEffect, Component, ReactNode } from "react";
+import { Canvas, useFrame }    from "@react-three/fiber";
+import { useGLTF }             from "@react-three/drei";
+import * as THREE              from "three";
+import { useTheme }            from "next-themes";
 
-// ── Hand silhouette mesh ──────────────────────────────────────────────────────
+// ── Model path — place your hand GLB at /public/models/hand.glb ──────────────
+
+const HAND_URL = "/models/hand.glb";
+
+// Preload in background (client-side only, silently ignore errors)
+if (typeof window !== "undefined") {
+  try { useGLTF.preload(HAND_URL); } catch (_) { /* ignore */ }
+}
+
+// ── Hand mesh — loads model, converts to wireframe ────────────────────────────
 
 function HandMesh({
   mouseRef,
@@ -14,67 +24,68 @@ function HandMesh({
   mouseRef: React.RefObject<{ x: number; y: number }>;
   isDark: boolean;
 }) {
-  const groupRef = useRef<THREE.Group>(null!);
-  const rotRef   = useRef({ x: 0, y: 0 });
+  const { scene } = useGLTF(HAND_URL);
+  const groupRef  = useRef<THREE.Group>(null!);
+  const rotRef    = useRef({ x: 0, y: 0 });
+  const clonedRef = useRef<THREE.Object3D | null>(null);
 
-  // Build the hand silhouette once using bezier curves
-  const geo = useMemo(() => {
-    const s = new THREE.Shape();
+  const accent  = isDark ? "#00ffb4" : "#333333";
+  const opacity = isDark ? 0.22 : 0.15;
 
-    // Wrist (bottom center)
-    s.moveTo(0, 0);
-    // Left palm edge
-    s.bezierCurveTo(-0.8, 0.2,  -1.0, 0.8,  -0.9, 1.4);
-    // Pinky finger
-    s.bezierCurveTo(-0.85, 1.8, -0.7, 2.2,  -0.65, 2.5);
-    s.bezierCurveTo(-0.6,  2.2, -0.55, 1.9, -0.55, 1.6);
-    // Ring finger
-    s.bezierCurveTo(-0.45, 2.0, -0.35, 2.5, -0.3, 2.8);
-    s.bezierCurveTo(-0.25, 2.5, -0.2,  2.1, -0.15, 1.7);
-    // Middle finger (tallest)
-    s.bezierCurveTo(-0.05, 2.2, 0.05, 2.8, 0.1, 3.1);
-    s.bezierCurveTo(0.15,  2.8, 0.2,  2.3, 0.25, 1.8);
-    // Index finger
-    s.bezierCurveTo(0.35, 2.2, 0.45, 2.6, 0.5, 2.9);
-    s.bezierCurveTo(0.55, 2.6, 0.6,  2.2, 0.65, 1.7);
-    // Right palm edge
-    s.bezierCurveTo(0.8, 1.5, 0.95, 1.0, 0.9, 0.5);
-    // Thumb
-    s.bezierCurveTo(1.1, 0.8, 1.4, 1.2, 1.5, 1.5);
-    s.bezierCurveTo(1.4, 1.1, 1.2, 0.7, 1.0, 0.4);
-    // Back to wrist
-    s.bezierCurveTo(0.8, 0.1, 0.4, 0, 0, 0);
+  // Clone scene once and apply wireframe materials
+  useEffect(() => {
+    const cloned = scene.clone(true);
+    const mats: THREE.MeshBasicMaterial[] = [];
 
-    return new THREE.ExtrudeGeometry(s, { depth: 0.02, bevelEnabled: false });
-  }, []);
+    cloned.traverse((child) => {
+      if ((child as THREE.Mesh).isMesh) {
+        const mat = new THREE.MeshBasicMaterial({
+          color:       accent,
+          wireframe:   true,
+          transparent: true,
+          opacity,
+        });
+        (child as THREE.Mesh).material = mat;
+        mats.push(mat);
+      }
+    });
 
-  // Dispose geometry on unmount to free GPU memory
-  useEffect(() => () => geo.dispose(), [geo]);
+    clonedRef.current = cloned;
+    groupRef.current?.add(cloned);
+
+    return () => {
+      mats.forEach(m => m.dispose());
+      groupRef.current?.remove(cloned);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scene, isDark]);
 
   useFrame(() => {
     if (!groupRef.current) return;
-    const tx = (mouseRef.current.y - 0.5) * 0.25;
-    const ty = (mouseRef.current.x - 0.5) * 0.40;
+    const tx = (mouseRef.current.y - 0.5) * 0.30;
+    const ty = (mouseRef.current.x - 0.5) * 0.50;
     rotRef.current.x += (tx - rotRef.current.x) * 0.06;
     rotRef.current.y += (ty - rotRef.current.y) * 0.06;
-    groupRef.current.rotation.x = rotRef.current.x;
+    groupRef.current.rotation.x = rotRef.current.x - 0.3;
     groupRef.current.rotation.y = rotRef.current.y;
   });
 
-  const color   = isDark ? "#00ffb4" : "#333333";
-  const opacity = isDark ? 0.20 : 0.15;
-
   return (
-    <group ref={groupRef}>
-      <mesh
-        geometry={geo}
-        position={[-0.8, -2.2, -0.5]}
-        scale={[1.3, 1.3, 1.3]}
-      >
-        <meshBasicMaterial wireframe transparent color={color} opacity={opacity} />
-      </mesh>
-    </group>
+    <group ref={groupRef} position={[0, -1.5, 0]} scale={[2, 2, 2]} />
   );
+}
+
+// ── Error boundary — silently swallows model load failures ───────────────────
+
+class GLTFErrorBoundary extends Component<
+  { children: ReactNode; fallback?: ReactNode },
+  { error: boolean }
+> {
+  state = { error: false };
+  static getDerivedStateFromError() { return { error: true }; }
+  render() {
+    return this.state.error ? (this.props.fallback ?? null) : this.props.children;
+  }
 }
 
 // ── R3F Scene ─────────────────────────────────────────────────────────────────
@@ -85,7 +96,17 @@ function Scene({
   mouseRef: React.RefObject<{ x: number; y: number }>;
   isDark: boolean;
 }) {
-  return <HandMesh mouseRef={mouseRef} isDark={isDark} />;
+  return (
+    <>
+      <ambientLight intensity={isDark ? 0.5 : 0.7} />
+      <directionalLight position={[3, 5, 3]} intensity={0.8} />
+      <GLTFErrorBoundary>
+        <Suspense fallback={null}>
+          <HandMesh mouseRef={mouseRef} isDark={isDark} />
+        </Suspense>
+      </GLTFErrorBoundary>
+    </>
+  );
 }
 
 // ── HandGlobe export ──────────────────────────────────────────────────────────
