@@ -53,7 +53,7 @@ function HandMesh({
     const center = box.getCenter(new THREE.Vector3());
     const size   = box.getSize(new THREE.Vector3());
     const maxDim = Math.max(size.x, size.y, size.z);
-    const scale  = 3.5 / maxDim;
+    const scale  = 3.0 / maxDim;
     cloned.position.sub(center);
     cloned.scale.setScalar(scale);
 
@@ -66,7 +66,7 @@ function HandMesh({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scene, isDark]);
 
-  const baseRotX = Math.PI * 0.9;  // palm-down tilt — never changes
+  const baseRotX = Math.PI * 0.85;  // fingers pointing down toward globe — never changes
   const baseRotY = 0;
   const baseRotZ = Math.PI;        // locked
 
@@ -79,7 +79,7 @@ function HandMesh({
     groupRef.current.rotation.z = baseRotZ;
   });
 
-  return <group ref={groupRef} position={[0, 3.0, -1.0]} />;
+  return <group ref={groupRef} position={[0, 4.0, -0.5]} />;
 }
 
 // ── Error boundary ────────────────────────────────────────────────────────────
