@@ -2,7 +2,12 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { MagneticButton } from "@/components/MagneticButton";
-import { HandGlobe }      from "@/components/HandGlobe";
+import dynamic            from "next/dynamic";
+
+const HandGlobe = dynamic(
+  () => import("@/components/HandGlobe").then(m => m.HandGlobe),
+  { ssr: false }
+);
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
