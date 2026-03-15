@@ -1,16 +1,21 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { motion } from "framer-motion";
+
+// ── Cert data ─────────────────────────────────────────────────────────────────
 
 const CERTS = [
-  "BTL1 Level 1",
-  "ISC2 CC",
-  "SOC Analyst",
-  "Intro to Splunk",
-  "Splunk SOAR",
-  "Security Ops (Splunk)",
-  "Art of Investigation",
+  { icon: "🛡️", name: "BTL1 Level 1",                issuer: "Security Blue Team" },
+  { icon: "🔐", name: "Certified in Cybersecurity",   issuer: "ISC2" },
+  { icon: "🔍", name: "SOC Analyst",                  issuer: "Udemy" },
+  { icon: "📊", name: "Intro to Splunk",              issuer: "Splunk" },
+  { icon: "📊", name: "Splunk SOAR",                  issuer: "Splunk" },
+  { icon: "📊", name: "Security Operations",          issuer: "Splunk" },
+  { icon: "🕵️", name: "Art of Investigation",         issuer: "Splunk" },
 ];
+
+// ── CTF data ──────────────────────────────────────────────────────────────────
 
 interface CTF {
   rank:  string;
@@ -34,142 +39,79 @@ const CTFS: CTF[] = [
   },
 ];
 
-// ── Terminal Certs ─────────────────────────────────────────────────────────────
+// ── CertCard ──────────────────────────────────────────────────────────────────
 
-function TerminalCerts() {
-  const [visibleCount, setVisibleCount] = useState(0);
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!mounted) return;
-    // Stagger each cert line with 120ms delay
-    const timers: ReturnType<typeof setTimeout>[] = [];
-    CERTS.forEach((_, i) => {
-      timers.push(setTimeout(() => setVisibleCount(i + 1), 300 + i * 120));
-    });
-    return () => timers.forEach(clearTimeout);
-  }, [mounted]);
+function CertCard({ cert, index }: { cert: typeof CERTS[0]; index: number }) {
+  const [hovered, setHovered] = useState(false);
 
   return (
-    <div
-      className="reveal rounded-lg overflow-hidden"
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.4, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       style={{
-        background:  "#0a0c10",
-        border:      "1px solid rgba(0,255,180,0.15)",
-        boxShadow:   "0 0 40px rgba(0,255,180,0.04), inset 0 0 80px rgba(0,0,0,0.4)",
-        position:    "relative",
-        maxWidth:    "640px",
+        position:             "relative",
+        padding:              "20px",
+        borderRadius:         "0.75rem",
+        backdropFilter:       "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
+        background:           "var(--glass)",
+        border:               `1px solid ${hovered ? "var(--accent)" : "var(--edge)"}`,
+        transform:            hovered ? "translateY(-3px)" : "translateY(0)",
+        boxShadow:            hovered
+          ? "0 0 20px color-mix(in srgb, var(--accent) 10%, transparent)"
+          : "none",
+        transition:    "border-color 0.3s cubic-bezier(0.16,1,0.3,1), transform 0.3s cubic-bezier(0.16,1,0.3,1), box-shadow 0.3s cubic-bezier(0.16,1,0.3,1)",
+        overflow:      "hidden",
+        cursor:        "default",
       }}
     >
-      {/* Scanline overlay */}
-      <div
-        style={{
-          position:        "absolute",
-          inset:           0,
-          backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.07) 2px, rgba(0,0,0,0.07) 4px)",
-          pointerEvents:   "none",
-          zIndex:          1,
-        }}
-      />
+      {/* Top accent line — expands from center on hover */}
+      <div style={{
+        position:   "absolute",
+        top:        0,
+        left:       "50%",
+        transform:  "translateX(-50%)",
+        height:     "2px",
+        background: "var(--accent)",
+        width:      hovered ? "100%" : "0%",
+        transition: "width 0.35s cubic-bezier(0.16,1,0.3,1)",
+        borderRadius: "0 0 2px 2px",
+      }} />
 
-      {/* Title bar */}
-      <div
+      {/* Icon */}
+      <div style={{ fontSize: 22, marginBottom: 10, lineHeight: 1 }}>
+        {cert.icon}
+      </div>
+
+      {/* Cert name */}
+      <p
+        className="font-mono font-bold"
         style={{
-          display:         "flex",
-          alignItems:      "center",
-          gap:             "6px",
-          padding:         "10px 14px",
-          borderBottom:    "1px solid rgba(0,255,180,0.08)",
-          background:      "rgba(0,0,0,0.3)",
-          position:        "relative",
-          zIndex:          2,
+          fontSize:     "clamp(11px, 1vw, 12px)",
+          color:        "var(--text)",
+          lineHeight:   1.4,
+          marginBottom: 6,
         }}
       >
-        <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#ff5f57", display: "inline-block" }} />
-        <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#febc2e", display: "inline-block" }} />
-        <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#28c840", display: "inline-block" }} />
-        <span
-          className="font-mono"
-          style={{ fontSize: 11, color: "rgba(0,255,180,0.5)", marginLeft: 10 }}
-        >
-          prudhvi@cloud:~/certs
-        </span>
-      </div>
+        {cert.name}
+      </p>
 
-      {/* Terminal body */}
-      <div style={{ padding: "16px 20px 20px", position: "relative", zIndex: 2 }}>
-        <p
-          className="font-mono mb-4"
-          style={{ fontSize: 11, color: "rgba(0,255,180,0.35)" }}
-        >
-          $ ls -la ./certifications/
-        </p>
-
-        <div className="space-y-1">
-          {CERTS.map((cert, i) => (
-            <div
-              key={cert}
-              onMouseEnter={() => setHoveredIndex(i)}
-              onMouseLeave={() => setHoveredIndex(null)}
-              style={{
-                display:         "flex",
-                alignItems:      "center",
-                justifyContent:  "space-between",
-                padding:         "4px 8px",
-                borderRadius:    "4px",
-                background:      hoveredIndex === i ? "rgba(0,255,180,0.06)" : "transparent",
-                opacity:         mounted && i < visibleCount ? 1 : 0,
-                transform:       mounted && i < visibleCount ? "translateX(0)" : "translateX(-8px)",
-                transition:      "opacity 0.3s ease, transform 0.3s ease, background 0.15s",
-                cursor:          "default",
-              }}
-            >
-              <span className="font-mono" style={{ fontSize: 12, color: "rgba(0,255,180,0.5)" }}>
-                &gt;&nbsp;
-                <span style={{ color: hoveredIndex === i ? "#e8ecf4" : "rgba(200,220,255,0.65)" }}>
-                  {cert}
-                </span>
-              </span>
-              <span
-                className="font-mono"
-                style={{
-                  fontSize:    10,
-                  color:       "#00ffb4",
-                  opacity:     mounted && i < visibleCount ? 1 : 0,
-                  transition:  "opacity 0.2s ease",
-                  transitionDelay: `${i * 120 + 200}ms`,
-                  letterSpacing: "0.05em",
-                }}
-              >
-                [VERIFIED]
-              </span>
-            </div>
-          ))}
-        </div>
-
-        <p
-          className="font-mono mt-5"
-          style={{
-            fontSize:     11,
-            color:        "rgba(0,255,180,0.35)",
-            opacity:      mounted && visibleCount >= CERTS.length ? 1 : 0,
-            transition:   "opacity 0.4s ease",
-            transitionDelay: `${CERTS.length * 120 + 400}ms`,
-          }}
-        >
-          $ echo &quot;total: {CERTS.length} active certifications&quot;
-          <br />
-          <span style={{ color: "rgba(200,220,255,0.4)" }}>
-            total: {CERTS.length} active certifications
-          </span>
-        </p>
-      </div>
-    </div>
+      {/* Issuer */}
+      <p
+        className="font-mono"
+        style={{
+          fontSize: "clamp(10px, 0.9vw, 11px)",
+          color:    "var(--muted)",
+          opacity:  0.8,
+        }}
+      >
+        {cert.issuer}
+      </p>
+    </motion.div>
   );
 }
 
@@ -241,24 +183,21 @@ export function Achievements() {
 
         {/* Certifications */}
         <div className="mb-20">
-          <p className="font-mono text-sm mb-6" style={{ color: "var(--muted)" }}>
-            // 04 ——— Certifications
+          <p className="font-mono text-sm mb-10" style={{ color: "var(--muted)" }}>
+            // 04 ——— certifications
           </p>
 
-          <h2
-            className="font-display font-bold mb-10 reveal"
-            style={{ fontSize: "clamp(24px, 4vw, 36px)", color: "var(--text)" }}
-          >
-            Certifications
-          </h2>
-
-          <TerminalCerts />
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            {CERTS.map((cert, i) => (
+              <CertCard key={cert.name} cert={cert} index={i} />
+            ))}
+          </div>
         </div>
 
         {/* CTF Achievements */}
         <div>
           <p className="font-mono text-sm mb-6" style={{ color: "var(--muted)" }}>
-            // 05 ——— Achievements
+            // 05 ——— achievements
           </p>
 
           <h2

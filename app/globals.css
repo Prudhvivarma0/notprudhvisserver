@@ -68,6 +68,18 @@ body {
   border-color: var(--accent);
 }
 
+/* ── Glass / edge tokens ──────────────────────────────────────────────────── */
+
+:root {
+  --glass: rgba(245, 244, 240, 0.6);
+  --edge:  rgba(0, 0, 0, 0.12);
+}
+
+.dark {
+  --glass: rgba(255, 255, 255, 0.04);
+  --edge:  rgba(255, 255, 255, 0.08);
+}
+
 /* ── Bento card background animations ────────────────────────────────────── */
 
 @keyframes bento-pulse {
