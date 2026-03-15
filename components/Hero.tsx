@@ -566,7 +566,7 @@ export function Hero() {
   }, [logs]);
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden pt-14">
+    <section className="relative min-h-screen flex items-center pt-14" style={{ overflow: "visible" }}>
       <ParticleCanvas />
 
       {/* Node tooltip — rendered at fixed viewport position */}
