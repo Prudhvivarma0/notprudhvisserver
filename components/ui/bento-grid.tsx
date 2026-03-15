@@ -49,9 +49,10 @@ const BentoCard = ({
       border:               "1px solid var(--muted)",
     }}
   >
-    <div>{background}</div>
+    {/* Background layer — fills card, sits behind content */}
+    <div className="absolute inset-0 z-0">{background}</div>
 
-    <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-1 p-5 transition-all duration-300 group-hover:-translate-y-8">
+    <div className="pointer-events-none relative z-10 flex transform-gpu flex-col gap-1 p-5 transition-all duration-300 group-hover:-translate-y-8">
       <Icon
         className="h-12 w-12 origin-left transform-gpu transition-all duration-300 ease-in-out group-hover:scale-75"
         style={{ color: "var(--accent)" }}
@@ -65,10 +66,10 @@ const BentoCard = ({
     </div>
 
     {/* Gradient overlay at bottom — fades in on hover so CTA is readable */}
-    <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-20 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+    <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-20 h-20 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
       style={{ background: "linear-gradient(to top, var(--bg-card) 60%, transparent)" }} />
 
-    <div className="pointer-events-none absolute bottom-0 flex w-full translate-y-10 transform-gpu flex-row items-center p-3 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+    <div className="pointer-events-none absolute bottom-0 z-20 flex w-full translate-y-10 transform-gpu flex-row items-center p-3 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
       <Button
         asChild
         size="sm"
@@ -82,7 +83,7 @@ const BentoCard = ({
       </Button>
     </div>
 
-    <div className="pointer-events-none absolute inset-0 transform-gpu transition-all duration-300 group-hover:bg-black/[.03] group-hover:dark:bg-neutral-800/10" />
+    <div className="pointer-events-none absolute inset-0 z-10 transform-gpu transition-all duration-300 group-hover:bg-black/[.03] group-hover:dark:bg-neutral-800/10" />
   </div>
 );
 

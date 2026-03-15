@@ -67,3 +67,26 @@ body {
 .hover-border-accent:hover {
   border-color: var(--accent);
 }
+
+/* ── Bento card background animations ────────────────────────────────────── */
+
+@keyframes bento-pulse {
+  0%, 100% { opacity: 0.25; }
+  50%       { opacity: 1; }
+}
+
+@keyframes bento-blink {
+  0%, 80%, 100% { opacity: 0.08; }
+  40%            { opacity: 0.7; }
+}
+
+@keyframes bento-char-fade {
+  0%, 100% { opacity: 0.06; }
+  50%       { opacity: 0.22; }
+}
+
+@keyframes bento-drift {
+  0%   { transform: translateY(0px); }
+  50%  { transform: translateY(-6px); }
+  100% { transform: translateY(0px); }
+}
