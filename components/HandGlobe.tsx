@@ -1,124 +1,78 @@
 "use client";
 
-import { useRef, useEffect } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import * as THREE            from "three";
-import { useTheme }          from "next-themes";
+import { useRef, useEffect, useMemo } from "react";
+import { Canvas, useFrame }           from "@react-three/fiber";
+import * as THREE                     from "three";
+import { useTheme }                   from "next-themes";
 
-// ── Wireframe segment ─────────────────────────────────────────────────────────
+// ── Hand silhouette mesh ──────────────────────────────────────────────────────
 
-function Seg({
-  r1, r2, len, color, opacity,
-}: {
-  r1: number; r2: number; len: number; color: string; opacity: number;
-}) {
-  return (
-    <mesh position={[0, len / 2, 0]}>
-      <cylinderGeometry args={[r1, r2, len, 6, 1]} />
-      <meshBasicMaterial color={color} wireframe transparent opacity={opacity} />
-    </mesh>
-  );
-}
-
-// ── Two-joint finger ──────────────────────────────────────────────────────────
-
-function Finger({
-  px, py, pz,
-  rx, ry, rz,
-  proxR, proxLen,
-  distLen,
-  curl1, curl2,
-  color, opacity,
-}: {
-  px: number; py: number; pz: number;
-  rx: number; ry: number; rz: number;
-  proxR: number; proxLen: number;
-  distLen: number;
-  curl1: number; curl2: number;
-  color: string; opacity: number;
-}) {
-  return (
-    <group position={[px, py, pz]} rotation={[rx, ry, rz]}>
-      <Seg r1={proxR * 0.85} r2={proxR} len={proxLen} color={color} opacity={opacity} />
-      <group position={[0, proxLen, 0]} rotation={[curl1, 0, 0]}>
-        <Seg r1={proxR * 0.70} r2={proxR * 0.85} len={distLen} color={color} opacity={opacity} />
-        <group position={[0, distLen, 0]} rotation={[curl2, 0, 0]}>
-          <mesh position={[0, proxR * 0.6, 0]}>
-            <sphereGeometry args={[proxR * 0.65, 5, 3]} />
-            <meshBasicMaterial color={color} wireframe transparent opacity={opacity} />
-          </mesh>
-        </group>
-      </group>
-    </group>
-  );
-}
-
-// ── Complete hand + mouse-follow ──────────────────────────────────────────────
-
-function Hand({
-  mouseRef, color, opacity,
+function HandMesh({
+  mouseRef,
+  isDark,
 }: {
   mouseRef: React.RefObject<{ x: number; y: number }>;
-  color: string; opacity: number;
+  isDark: boolean;
 }) {
   const groupRef = useRef<THREE.Group>(null!);
   const rotRef   = useRef({ x: 0, y: 0 });
 
+  // Build the hand silhouette once using bezier curves
+  const geo = useMemo(() => {
+    const s = new THREE.Shape();
+
+    // Wrist (bottom center)
+    s.moveTo(0, 0);
+    // Left palm edge
+    s.bezierCurveTo(-0.8, 0.2,  -1.0, 0.8,  -0.9, 1.4);
+    // Pinky finger
+    s.bezierCurveTo(-0.85, 1.8, -0.7, 2.2,  -0.65, 2.5);
+    s.bezierCurveTo(-0.6,  2.2, -0.55, 1.9, -0.55, 1.6);
+    // Ring finger
+    s.bezierCurveTo(-0.45, 2.0, -0.35, 2.5, -0.3, 2.8);
+    s.bezierCurveTo(-0.25, 2.5, -0.2,  2.1, -0.15, 1.7);
+    // Middle finger (tallest)
+    s.bezierCurveTo(-0.05, 2.2, 0.05, 2.8, 0.1, 3.1);
+    s.bezierCurveTo(0.15,  2.8, 0.2,  2.3, 0.25, 1.8);
+    // Index finger
+    s.bezierCurveTo(0.35, 2.2, 0.45, 2.6, 0.5, 2.9);
+    s.bezierCurveTo(0.55, 2.6, 0.6,  2.2, 0.65, 1.7);
+    // Right palm edge
+    s.bezierCurveTo(0.8, 1.5, 0.95, 1.0, 0.9, 0.5);
+    // Thumb
+    s.bezierCurveTo(1.1, 0.8, 1.4, 1.2, 1.5, 1.5);
+    s.bezierCurveTo(1.4, 1.1, 1.2, 0.7, 1.0, 0.4);
+    // Back to wrist
+    s.bezierCurveTo(0.8, 0.1, 0.4, 0, 0, 0);
+
+    return new THREE.ExtrudeGeometry(s, { depth: 0.02, bevelEnabled: false });
+  }, []);
+
+  // Dispose geometry on unmount to free GPU memory
+  useEffect(() => () => geo.dispose(), [geo]);
+
   useFrame(() => {
     if (!groupRef.current) return;
-    const tx = (mouseRef.current.y - 0.5) * 0.28;
-    const ty = (mouseRef.current.x - 0.5) * 0.45;
+    const tx = (mouseRef.current.y - 0.5) * 0.25;
+    const ty = (mouseRef.current.x - 0.5) * 0.40;
     rotRef.current.x += (tx - rotRef.current.x) * 0.06;
     rotRef.current.y += (ty - rotRef.current.y) * 0.06;
     groupRef.current.rotation.x = rotRef.current.x;
     groupRef.current.rotation.y = rotRef.current.y;
   });
 
-  const palmH   = 0.28;
-  const palmY   = -0.50;
-  const palmTop = palmY + palmH / 2;
-
-  // [x, proxLen, distLen, curl1, curl2, spread-z]
-  const fingers: [number, number, number, number, number, number][] = [
-    [ 0.40, 0.38, 0.26, 1.05, 0.80, -0.03 ],  // index
-    [ 0.13, 0.44, 0.30, 0.95, 0.72, -0.01 ],  // middle
-    [-0.13, 0.40, 0.28, 1.00, 0.76, -0.01 ],  // ring
-    [-0.40, 0.30, 0.20, 1.10, 0.85, -0.03 ],  // pinky
-  ];
+  const color   = isDark ? "#00ffb4" : "#333333";
+  const opacity = isDark ? 0.20 : 0.15;
 
   return (
-    // scale + lift the whole hand so it wraps the globe
-    <group ref={groupRef} position={[0, 0.30, 0]} scale={[2.2, 2.2, 2.2]}>
-
-      {/* Palm */}
-      <mesh position={[0, palmY, -0.28]} rotation={[0.18, 0, 0]}>
-        <boxGeometry args={[1.10, palmH, 0.62]} />
-        <meshBasicMaterial color={color} wireframe transparent opacity={opacity} />
+    <group ref={groupRef}>
+      <mesh
+        geometry={geo}
+        position={[-0.8, -2.2, -0.5]}
+        scale={[1.3, 1.3, 1.3]}
+      >
+        <meshBasicMaterial wireframe transparent color={color} opacity={opacity} />
       </mesh>
-
-      {/* Four main fingers */}
-      {fingers.map(([x, plen, dlen, c1, c2, z], i) => (
-        <Finger
-          key={i}
-          px={x}      py={palmTop}  pz={z}
-          rx={-0.12}  ry={0}        rz={0}
-          proxR={0.052}  proxLen={plen}
-          distLen={dlen}
-          curl1={c1}  curl2={c2}
-          color={color}  opacity={opacity}
-        />
-      ))}
-
-      {/* Thumb */}
-      <Finger
-        px={0.62}  py={-0.58}  pz={-0.10}
-        rx={0.22}  ry={-0.18}  rz={-0.82}
-        proxR={0.054}  proxLen={0.28}
-        distLen={0.22}
-        curl1={0.75}  curl2={0.55}
-        color={color}  opacity={opacity}
-      />
-
     </group>
   );
 }
@@ -131,14 +85,7 @@ function Scene({
   mouseRef: React.RefObject<{ x: number; y: number }>;
   isDark: boolean;
 }) {
-  const color   = isDark ? "#00ffb4" : "#333333";
-  const opacity = isDark ? 0.28 : 0.18;
-  return (
-    <>
-      {/* No lights needed — meshBasicMaterial is unlit */}
-      <Hand mouseRef={mouseRef} color={color} opacity={opacity} />
-    </>
-  );
+  return <HandMesh mouseRef={mouseRef} isDark={isDark} />;
 }
 
 // ── HandGlobe export ──────────────────────────────────────────────────────────
