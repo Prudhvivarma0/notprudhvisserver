@@ -26,14 +26,15 @@ function HandMesh({
 }) {
   const { scene } = useGLTF(HAND_URL);
   const groupRef  = useRef<THREE.Group>(null!);
+  const centerRef = useRef<THREE.Group>(null!);
   const rotRef    = useRef({ x: 0, y: 0 });
-  const clonedRef = useRef<THREE.Object3D | null>(null);
 
   const accent  = isDark ? "#00ffb4" : "#333333";
   const opacity = isDark ? 0.22 : 0.15;
 
-  // Clone scene once and apply wireframe materials
+  // Clone scene, replace all materials with wireframe, add to center group
   useEffect(() => {
+    if (!centerRef.current) return;
     const cloned = scene.clone(true);
     const mats: THREE.MeshBasicMaterial[] = [];
 
@@ -50,12 +51,10 @@ function HandMesh({
       }
     });
 
-    clonedRef.current = cloned;
-    groupRef.current?.add(cloned);
-
+    centerRef.current.add(cloned);
     return () => {
       mats.forEach(m => m.dispose());
-      groupRef.current?.remove(cloned);
+      centerRef.current?.remove(cloned);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scene, isDark]);
@@ -70,8 +69,12 @@ function HandMesh({
     groupRef.current.rotation.y = rotRef.current.y;
   });
 
+  // Outer group: rotation (mouse-follow) + position + scale
+  // Inner group: centers mesh at origin by negating bounding-box center (0.105, 0.267, -0.033)
   return (
-    <group ref={groupRef} position={[0, -1.5, 0]} scale={[2, 2, 2]} />
+    <group ref={groupRef} position={[0, -1.0, 0]} scale={[3.5, 3.5, 3.5]}>
+      <group ref={centerRef} position={[-0.105, -0.267, 0.033]} />
+    </group>
   );
 }
 
