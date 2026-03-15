@@ -26,7 +26,7 @@ function HandMesh({
   const rotRef    = useRef({ x: 0, y: 0 });
 
   const accent  = isDark ? "#00ffb4" : "#333333";
-  const opacity = isDark ? 0.18 : 0.12;
+  const opacity = isDark ? 0.15 : 0.10;
 
   useEffect(() => {
     if (!groupRef.current) return;
@@ -53,7 +53,7 @@ function HandMesh({
     const center = box.getCenter(new THREE.Vector3());
     const size   = box.getSize(new THREE.Vector3());
     const maxDim = Math.max(size.x, size.y, size.z);
-    const scale  = 3.0 / maxDim;
+    const scale  = 2.5 / maxDim;
     cloned.position.sub(center);
     cloned.scale.setScalar(scale);
 
@@ -72,12 +72,12 @@ function HandMesh({
     const ty = (mouseRef.current.x - 0.5) * 0.50;
     rotRef.current.x += (tx - rotRef.current.x) * 0.06;
     rotRef.current.y += (ty - rotRef.current.y) * 0.06;
-    groupRef.current.rotation.x = Math.PI + rotRef.current.x;
+    groupRef.current.rotation.x = Math.PI * 0.9 + rotRef.current.x;
     groupRef.current.rotation.y = rotRef.current.y;
+    groupRef.current.rotation.z = Math.PI;
   });
 
-  // Math.PI flips palm to face downward toward globe
-  return <group ref={groupRef} position={[0, 1.2, 0.5]} />;
+  return <group ref={groupRef} position={[0, 1.8, 0.3]} />;
 }
 
 // ── Error boundary ────────────────────────────────────────────────────────────
