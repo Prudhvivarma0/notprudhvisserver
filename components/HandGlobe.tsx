@@ -66,20 +66,21 @@ function HandMesh({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scene, isDark]);
 
-  const BASE_X = Math.PI * 0.9;  // preserves palm-down tilt
+  const baseRotX = Math.PI * 0.9;  // palm-down tilt
+  const baseRotZ = Math.PI;
 
   useFrame(() => {
     if (!groupRef.current) return;
-    const tx = (mouseRef.current.y - 0.5) * 0.40;
-    const ty = (mouseRef.current.x - 0.5) * 0.60;
+    const tx = (mouseRef.current.y - 0.5) * 0.4;
+    const ty = (mouseRef.current.x - 0.5) * 0.6;
     rotRef.current.x += (tx - rotRef.current.x) * 0.06;
     rotRef.current.y += (ty - rotRef.current.y) * 0.06;
-    groupRef.current.rotation.x = BASE_X + rotRef.current.x;
+    groupRef.current.rotation.x = baseRotX + rotRef.current.x;
     groupRef.current.rotation.y = rotRef.current.y;
-    groupRef.current.rotation.z = Math.PI;
+    groupRef.current.rotation.z = baseRotZ;
   });
 
-  return <group ref={groupRef} position={[0, 2.3, -1.0]} />;
+  return <group ref={groupRef} position={[0, 3.3, -1.0]} />;
 }
 
 // ── Error boundary ────────────────────────────────────────────────────────────
