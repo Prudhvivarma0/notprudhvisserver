@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { MagneticButton } from "@/components/MagneticButton";
+import { HandGlobe }      from "@/components/HandGlobe";
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
@@ -522,6 +523,7 @@ function NodeTooltip({ node, x, y }: { node: CloudNode; x: number; y: number }) 
 
 export function Hero() {
   const [mounted, setMounted]      = useState(false);
+  const [showHand, setShowHand]    = useState(false);
   const typed                      = useTypingEffect(TYPING_WORDS);
   const [cursorOn, setCursorOn]    = useState(true);
   const { nodes, logs }            = useCloudStatus();
@@ -537,6 +539,15 @@ export function Hero() {
   }, []);
 
   useEffect(() => { setMounted(true); }, []);
+
+  // Only render the heavy R3F hand on desktop (≥ 768px)
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px)");
+    setShowHand(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setShowHand(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
 
   useEffect(() => {
     const t = setInterval(() => setCursorOn(v => !v), 530);
@@ -604,13 +615,22 @@ export function Hero() {
 
         {/* ── Right ────────────────────────────────────────────────────── */}
         <div className="flex-1 min-w-[280px] flex justify-center reveal-right">
-          <div className="relative">
-            <GlobeCanvas nodes={nodes} onHoverChange={handleHoverChange} />
+          {/* Container — sized by the globe canvas, hand layers behind */}
+          <div className="relative" style={{ width: "min(420px, 100%)" }}>
 
-            {/* Glass terminal */}
+            {/* Layer 0 — 3D hand (desktop only, behind everything) */}
+            {showHand && mounted && <HandGlobe />}
+
+            {/* Layer 1 — 2D globe canvas */}
+            <div style={{ position: "relative", zIndex: 1 }}>
+              <GlobeCanvas nodes={nodes} onHoverChange={handleHoverChange} />
+            </div>
+
+            {/* Layer 2 — Glass terminal */}
             <div
               className="absolute bottom-2 right-0 w-56 rounded-lg overflow-hidden"
               style={{
+                zIndex: 2,
                 background: "var(--bg-card)", backdropFilter: "blur(14px)",
                 WebkitBackdropFilter: "blur(14px)", border: "1px solid var(--muted)",
               }}
