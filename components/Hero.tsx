@@ -574,7 +574,7 @@ export function Hero() {
         <NodeTooltip node={hoveredNode} x={tooltipPos.x} y={tooltipPos.y} />
       )}
 
-      <div className="relative z-10 w-full max-w-5xl mx-auto px-6 py-20 flex flex-wrap items-center gap-12 lg:gap-20">
+      <div className="relative z-10 w-full max-w-5xl mx-auto px-6 py-20 flex flex-wrap items-center gap-12 lg:gap-20" style={{ overflow: "visible" }}>
 
         {/* ── Left ─────────────────────────────────────────────────────── */}
         <div className="flex-1 min-w-[280px] reveal">
@@ -619,9 +619,9 @@ export function Hero() {
         </div>
 
         {/* ── Right ────────────────────────────────────────────────────── */}
-        <div className="flex-1 min-w-[280px] flex justify-center reveal-right">
+        <div className="flex-1 min-w-[280px] flex justify-center reveal-right" style={{ overflow: "visible" }}>
           {/* Container — explicit size creates reliable stacking context for layers */}
-          <div className="relative" style={{ width: "min(420px, 100%)", height: "min(520px, 120vw)", isolation: "isolate" }}>
+          <div className="relative" style={{ width: "min(420px, 100%)", height: "min(520px, 120vw)", isolation: "isolate", overflow: "visible" }}>
 
             {/* Layer 0 — 3D hand (desktop only, behind everything) */}
             {showHand && mounted && <HandGlobe />}

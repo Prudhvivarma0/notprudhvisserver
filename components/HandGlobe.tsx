@@ -142,8 +142,12 @@ export function HandGlobe() {
       ref={divRef}
       style={{
         position:      "absolute",
-        inset:         0,
+        top:           "-50%",
+        left:          0,
+        right:         0,
+        bottom:        0,
         zIndex:        0,
+        overflow:      "visible",
         pointerEvents: "none",
       }}
     >
