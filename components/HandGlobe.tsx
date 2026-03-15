@@ -26,7 +26,7 @@ function HandMesh({
   const rotRef    = useRef({ x: 0, y: 0 });
 
   const accent  = isDark ? "#00ffb4" : "#333333";
-  const opacity = isDark ? 0.15 : 0.10;
+  const opacity = isDark ? 0.12 : 0.08;
 
   useEffect(() => {
     if (!groupRef.current) return;
@@ -77,7 +77,7 @@ function HandMesh({
     groupRef.current.rotation.z = Math.PI;
   });
 
-  return <group ref={groupRef} position={[0, 1.8, 0.3]} />;
+  return <group ref={groupRef} position={[0, 1.0, -1.0]} />;
 }
 
 // ── Error boundary ────────────────────────────────────────────────────────────
@@ -141,12 +141,12 @@ export function HandGlobe() {
       style={{
         position:      "absolute",
         inset:         0,
-        zIndex:        2,
+        zIndex:        0,
         pointerEvents: "none",
       }}
     >
       <Canvas
-        camera={{ position: [0, 0, 6], fov: 45 }}
+        camera={{ position: [0, 0, 7], fov: 55 }}
         gl={{ alpha: true, antialias: true }}
         dpr={[1, 2]}
         frameloop="always"
