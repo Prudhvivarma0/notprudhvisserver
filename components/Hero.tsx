@@ -631,11 +631,11 @@ export function Hero() {
               <GlobeCanvas nodes={nodes} onHoverChange={handleHoverChange} />
             </div>
 
-            {/* Layer 2 — Glass terminal */}
+            {/* Layer 3 — Glass terminal (above hand) */}
             <div
               className="absolute bottom-2 right-0 w-56 rounded-lg overflow-hidden"
               style={{
-                zIndex: 2,
+                zIndex: 3,
                 background: "var(--bg-card)", backdropFilter: "blur(14px)",
                 WebkitBackdropFilter: "blur(14px)", border: "1px solid var(--muted)",
               }}

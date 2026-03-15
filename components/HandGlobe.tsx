@@ -6,16 +6,13 @@ import { useGLTF }             from "@react-three/drei";
 import * as THREE              from "three";
 import { useTheme }            from "next-themes";
 
-// ── Model path — place your hand GLB at /public/models/hand.glb ──────────────
-
 const HAND_URL = "/models/hand.glb";
 
-// Preload in background (client-side only, silently ignore errors)
 if (typeof window !== "undefined") {
   try { useGLTF.preload(HAND_URL); } catch (_) { /* ignore */ }
 }
 
-// ── Hand mesh — loads model, converts to wireframe ────────────────────────────
+// ── Hand mesh ─────────────────────────────────────────────────────────────────
 
 function HandMesh({
   mouseRef,
@@ -26,18 +23,18 @@ function HandMesh({
 }) {
   const { scene } = useGLTF(HAND_URL);
   const groupRef  = useRef<THREE.Group>(null!);
-  const centerRef = useRef<THREE.Group>(null!);
   const rotRef    = useRef({ x: 0, y: 0 });
 
   const accent  = isDark ? "#00ffb4" : "#333333";
-  const opacity = isDark ? 0.22 : 0.15;
+  const opacity = isDark ? 0.18 : 0.12;
 
-  // Clone scene, replace all materials with wireframe, add to center group
   useEffect(() => {
-    if (!centerRef.current) return;
+    if (!groupRef.current) return;
+
     const cloned = scene.clone(true);
     const mats: THREE.MeshBasicMaterial[] = [];
 
+    // Apply wireframe materials
     cloned.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
         const mat = new THREE.MeshBasicMaterial({
@@ -51,10 +48,20 @@ function HandMesh({
       }
     });
 
-    centerRef.current.add(cloned);
+    // Auto-fit: center and scale to 3 units across longest axis
+    const box    = new THREE.Box3().setFromObject(cloned);
+    const center = box.getCenter(new THREE.Vector3());
+    const size   = box.getSize(new THREE.Vector3());
+    const maxDim = Math.max(size.x, size.y, size.z);
+    const scale  = 3.0 / maxDim;
+    cloned.position.sub(center);
+    cloned.scale.setScalar(scale);
+
+    groupRef.current.add(cloned);
+
     return () => {
       mats.forEach(m => m.dispose());
-      centerRef.current?.remove(cloned);
+      groupRef.current?.remove(cloned);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scene, isDark]);
@@ -65,20 +72,15 @@ function HandMesh({
     const ty = (mouseRef.current.x - 0.5) * 0.50;
     rotRef.current.x += (tx - rotRef.current.x) * 0.06;
     rotRef.current.y += (ty - rotRef.current.y) * 0.06;
-    groupRef.current.rotation.x = rotRef.current.x - 0.3;
+    groupRef.current.rotation.x = Math.PI + rotRef.current.x;
     groupRef.current.rotation.y = rotRef.current.y;
   });
 
-  // Outer group: rotation (mouse-follow) + position + scale
-  // Inner group: centers mesh at origin by negating bounding-box center (0.105, 0.267, -0.033)
-  return (
-    <group ref={groupRef} position={[0, -1.0, 0]} scale={[3.5, 3.5, 3.5]}>
-      <group ref={centerRef} position={[-0.105, -0.267, 0.033]} />
-    </group>
-  );
+  // Math.PI flips palm to face downward toward globe
+  return <group ref={groupRef} position={[0, 1.2, 0.5]} />;
 }
 
-// ── Error boundary — silently swallows model load failures ───────────────────
+// ── Error boundary ────────────────────────────────────────────────────────────
 
 class GLTFErrorBoundary extends Component<
   { children: ReactNode; fallback?: ReactNode },
@@ -91,7 +93,7 @@ class GLTFErrorBoundary extends Component<
   }
 }
 
-// ── R3F Scene ─────────────────────────────────────────────────────────────────
+// ── Scene ─────────────────────────────────────────────────────────────────────
 
 function Scene({
   mouseRef, isDark,
@@ -139,7 +141,7 @@ export function HandGlobe() {
       style={{
         position:      "absolute",
         inset:         0,
-        zIndex:        0,
+        zIndex:        2,
         pointerEvents: "none",
       }}
     >
