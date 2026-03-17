@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { MagneticButton } from "@/components/MagneticButton";
+import type { HeroData } from "@/lib/db";
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
@@ -73,8 +74,8 @@ const INITIAL_NODES: CloudNode[] = [
   { id: "cf-syd",    label: "SYD",          provider: "cloudflare", lat: -33.95, lon:  151.15, status: "operational", region: "Sydney, Australia"       },
 ];
 
-const GLOBE_SIZE   = 420;
-const TYPING_WORDS = ["cloud architect", "developer", "security analyst", "maybe an entrepreneur"];
+const GLOBE_SIZE          = 420;
+const DEFAULT_TYPING_WORDS = ["cloud architect", "developer", "security analyst", "maybe an entrepreneur"];
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -629,10 +630,18 @@ function NodeTooltip({ node, x, y }: { node: CloudNode; x: number; y: number }) 
 
 // ── Hero ──────────────────────────────────────────────────────────────────────
 
-export function Hero() {
+function parseTypingWords(heroData: HeroData | null): string[] {
+  if (!heroData?.typing_words) return DEFAULT_TYPING_WORDS;
+  try { return JSON.parse(heroData.typing_words); } catch { /* not JSON */ }
+  const split = heroData.typing_words.split(",").map(s => s.trim()).filter(Boolean);
+  return split.length > 0 ? split : DEFAULT_TYPING_WORDS;
+}
+
+export function Hero({ heroData }: { heroData?: HeroData | null }) {
+  const typingWords                = parseTypingWords(heroData ?? null);
   const [mounted, setMounted]      = useState(false);
   const scrollProgressRef          = useRef<number>(0);
-  const typed                      = useTypingEffect(TYPING_WORDS);
+  const typed                      = useTypingEffect(typingWords);
   const [cursorOn, setCursorOn]    = useState(true);
   const { nodes, logs }            = useCloudStatus();
   const logEndRef                  = useRef<HTMLDivElement>(null);

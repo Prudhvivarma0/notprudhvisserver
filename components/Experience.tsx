@@ -1,4 +1,5 @@
 import { Timeline } from "@/components/ui/timeline";
+import type { ExperienceRow } from "@/lib/db";
 
 function EntryContent({
   company,
@@ -46,54 +47,26 @@ function EntryContent({
   );
 }
 
-const timelineData = [
-  {
-    title:   "Jan 2026 — Present",
-    content: (
-      <EntryContent
-        company="Art Dubai 2026"
-        role="Digital Products Consultant"
-        description="Consulting on digital product strategy and platform operations. Coordinating with external developers and internal stakeholders on feature viability, cost analysis, bug tracking, and security reviews."
-        location="Dubai"
-      />
-    ),
-  },
-  {
-    title:   "Apr 2025 — Dec 2025",
-    content: (
-      <EntryContent
-        company="MCN"
-        role="IT Intern"
-        description="Managed IT infrastructure, supported network operations, and assisted with system administration across the organization."
-        location="Dubai"
-      />
-    ),
-  },
-  {
-    title:   "Jan 2025 — May 2025",
-    content: (
-      <EntryContent
-        company="Greenhouse Foodstuff"
-        role="IT Intern"
-        description="Handled day-to-day IT support, maintained internal systems, and assisted with technology procurement and setup."
-        location="Dubai"
-      />
-    ),
-  },
-  {
-    title:   "Dec 2024 — Feb 2025",
-    content: (
-      <EntryContent
-        company="Urbizassist"
-        role="AI & IT Intern"
-        description="Worked on AI-driven solutions and IT infrastructure. Assisted with implementing automation tools and maintaining cloud services."
-        location="Dubai"
-      />
-    ),
-  },
+const DEFAULT_EXPERIENCE: ExperienceRow[] = [
+  { id: 1, company: "Art Dubai 2026",      role: "Digital Products Consultant", period: "Jan 2026 — Present",   location: "Dubai", description: "Consulting on digital product strategy and platform operations. Coordinating with external developers and internal stakeholders on feature viability, cost analysis, bug tracking, and security reviews.", sort_order: 1, visible: 1 },
+  { id: 2, company: "MCN",                 role: "IT Intern",                   period: "Apr 2025 — Dec 2025", location: "Dubai", description: "Managed IT infrastructure, supported network operations, and assisted with system administration across the organization.",                                                                    sort_order: 2, visible: 1 },
+  { id: 3, company: "Greenhouse Foodstuff",role: "IT Intern",                   period: "Jan 2025 — May 2025", location: "Dubai", description: "Handled day-to-day IT support, maintained internal systems, and assisted with technology procurement and setup.",                                                                       sort_order: 3, visible: 1 },
+  { id: 4, company: "Urbizassist",         role: "AI & IT Intern",              period: "Dec 2024 — Feb 2025", location: "Dubai", description: "Worked on AI-driven solutions and IT infrastructure. Assisted with implementing automation tools and maintaining cloud services.",                                                       sort_order: 4, visible: 1 },
 ];
 
-export function Experience() {
+export function Experience({ experience }: { experience?: ExperienceRow[] }) {
+  const rows = experience && experience.length > 0 ? experience : DEFAULT_EXPERIENCE;
+  const timelineData = rows.map(row => ({
+    title:   row.period,
+    content: (
+      <EntryContent
+        company={row.company}
+        role={row.role}
+        description={row.description}
+        location={row.location}
+      />
+    ),
+  }));
   return (
     <section id="experience" className="py-[clamp(60px,8vw,120px)] px-6">
       <div className="max-w-5xl mx-auto">

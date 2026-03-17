@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { MagneticButton } from "@/components/MagneticButton";
+import type { ContactRow } from "@/lib/db";
 
 interface Link {
   label: string;
@@ -9,11 +10,15 @@ interface Link {
   icon:  string;
 }
 
-const LINKS: Link[] = [
-  { label: "Email",    href: "mailto:prudhvivarma31@gmail.com",                     icon: "→" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/prudhvivarma11/",          icon: "↗" },
-  { label: "GitHub",   href: "https://github.com/Prudhvivarma0?tab=repositories",   icon: "↗" },
+const DEFAULT_LINKS: Link[] = [
+  { label: "Email",    href: "mailto:prudhvivarma31@gmail.com",                   icon: "→" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/prudhvivarma11/",        icon: "↗" },
+  { label: "GitHub",   href: "https://github.com/Prudhvivarma0?tab=repositories", icon: "↗" },
 ];
+
+function rowToLink(row: ContactRow): Link {
+  return { label: row.label, href: row.href, icon: row.href.startsWith("mailto") ? "→" : "↗" };
+}
 
 function ContactLink({ link }: { link: Link }) {
   const [hovered, setHovered] = useState(false);
@@ -57,7 +62,9 @@ function ContactLink({ link }: { link: Link }) {
   );
 }
 
-export function Contact() {
+export function Contact({ links }: { links?: ContactRow[] }) {
+  const displayLinks = links && links.length > 0 ? links.map(rowToLink) : DEFAULT_LINKS;
+
   return (
     <section id="contact" className="py-[clamp(60px,8vw,120px)] px-6">
       <div className="max-w-5xl mx-auto">
@@ -82,7 +89,7 @@ export function Contact() {
         </p>
 
         <div className="flex flex-wrap gap-3">
-          {LINKS.map(link => (
+          {displayLinks.map(link => (
             <ContactLink key={link.label} link={link} />
           ))}
         </div>

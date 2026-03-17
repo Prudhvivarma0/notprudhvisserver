@@ -2,17 +2,18 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import type { CertRow, AchievementRow } from "@/lib/db";
 
 // ── Cert data ─────────────────────────────────────────────────────────────────
 
-const CERTS = [
-  { icon: "🛡️", name: "BTL1 Level 1",                issuer: "Security Blue Team" },
-  { icon: "🔐", name: "Certified in Cybersecurity",   issuer: "ISC2" },
-  { icon: "🔍", name: "SOC Analyst",                  issuer: "Udemy" },
-  { icon: "📊", name: "Intro to Splunk",              issuer: "Splunk" },
-  { icon: "📊", name: "Splunk SOAR",                  issuer: "Splunk" },
-  { icon: "📊", name: "Security Operations",          issuer: "Splunk" },
-  { icon: "🕵️", name: "Art of Investigation",         issuer: "Splunk" },
+const DEFAULT_CERTS: CertRow[] = [
+  { id: 1, icon: "🛡️", name: "BTL1 Level 1",              issuer: "Security Blue Team", sort_order: 1, visible: 1 },
+  { id: 2, icon: "🔐", name: "Certified in Cybersecurity", issuer: "ISC2",               sort_order: 2, visible: 1 },
+  { id: 3, icon: "🔍", name: "SOC Analyst",                issuer: "Udemy",              sort_order: 3, visible: 1 },
+  { id: 4, icon: "📊", name: "Intro to Splunk",            issuer: "Splunk",             sort_order: 4, visible: 1 },
+  { id: 5, icon: "📊", name: "Splunk SOAR",                issuer: "Splunk",             sort_order: 5, visible: 1 },
+  { id: 6, icon: "📊", name: "Security Operations",        issuer: "Splunk",             sort_order: 6, visible: 1 },
+  { id: 7, icon: "🕵️", name: "Art of Investigation",       issuer: "Splunk",             sort_order: 7, visible: 1 },
 ];
 
 // ── CTF data ──────────────────────────────────────────────────────────────────
@@ -24,24 +25,14 @@ interface CTF {
   date:  string;
 }
 
-const CTFS: CTF[] = [
-  {
-    rank:  "🏆 1st",
-    title: "Place Qualifier",
-    event: "Zayed University × Exploiters CTF",
-    date:  "Feb 2025",
-  },
-  {
-    rank:  "🥉 3rd",
-    title: "Place Winner",
-    event: "REDTEAM Cyber Hack CTF",
-    date:  "Feb 2025",
-  },
+const DEFAULT_CTFS: CTF[] = [
+  { rank: "🏆 1st", title: "Place Qualifier", event: "Zayed University × Exploiters CTF", date: "Feb 2025" },
+  { rank: "🥉 3rd", title: "Place Winner",    event: "REDTEAM Cyber Hack CTF",            date: "Feb 2025" },
 ];
 
 // ── CertCard ──────────────────────────────────────────────────────────────────
 
-function CertCard({ cert, index }: { cert: typeof CERTS[0]; index: number }) {
+function CertCard({ cert, index }: { cert: CertRow; index: number }) {
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -176,7 +167,18 @@ function CTFCard({ ctf }: { ctf: CTF }) {
 
 // ── Achievements ──────────────────────────────────────────────────────────────
 
-export function Achievements() {
+export function Achievements({
+  certs,
+  achievements,
+}: {
+  certs?:        CertRow[];
+  achievements?: AchievementRow[];
+}) {
+  const certList = certs && certs.length > 0 ? certs : DEFAULT_CERTS;
+  const ctfList: CTF[] = achievements && achievements.length > 0
+    ? achievements.map(a => ({ rank: a.icon, title: a.title, event: a.event, date: a.date }))
+    : DEFAULT_CTFS;
+
   return (
     <section id="achievements" className="py-[clamp(60px,8vw,120px)] px-6">
       <div className="max-w-5xl mx-auto">
@@ -188,7 +190,7 @@ export function Achievements() {
           </p>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-            {CERTS.map((cert, i) => (
+            {certList.map((cert, i) => (
               <CertCard key={cert.name} cert={cert} index={i} />
             ))}
           </div>
@@ -214,7 +216,7 @@ export function Achievements() {
               gap:                 "2px",
             }}
           >
-            {CTFS.map(ctf => (
+            {ctfList.map(ctf => (
               <CTFCard key={ctf.event} ctf={ctf} />
             ))}
           </div>

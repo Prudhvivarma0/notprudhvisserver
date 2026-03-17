@@ -1,6 +1,16 @@
 import { AsciiPortrait } from "@/components/AsciiPortrait";
+import type { AboutRow } from "@/lib/db";
 
-export function About() {
+const DEFAULT_PARAGRAPHS = [
+  "I want to build products that actually help people and lead teams that can make a real dent. Startups, side projects, freelance — if there\u2019s a problem worth solving, I\u2019m in.",
+  "I live at the intersection of cyber, cloud, and development. Websites, apps, infrastructure — if it connects to the internet, I\u2019m probably interested. Curious by nature, always learning something new.",
+  "My approach is smart work over hard work. I automate everything because I\u2019m lazy, and I\u2019ve turned that into an engineering philosophy. If a task can be scripted, it will be.",
+];
+
+export function About({ paragraphs }: { paragraphs?: AboutRow[] }) {
+  const paras = paragraphs && paragraphs.length > 0
+    ? paragraphs.map(r => r.paragraph)
+    : DEFAULT_PARAGRAPHS;
   return (
     <section id="about" className="py-[clamp(60px,8vw,120px)] px-6">
       <div
@@ -28,25 +38,11 @@ export function About() {
           </h2>
 
           <div className="space-y-5">
-
-            <p className="reveal" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", lineHeight: 1.9, color: "var(--muted)" }}>
-              I want to build products that actually help people and lead teams that can make
-              a real dent. Startups, side projects, freelance — if there&apos;s a problem
-              worth solving, I&apos;m in.
-            </p>
-
-            <p className="reveal" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", lineHeight: 1.9, color: "var(--muted)" }}>
-              I live at the intersection of cyber, cloud, and development. Websites, apps,
-              infrastructure — if it connects to the internet, I&apos;m probably interested.
-              Curious by nature, always learning something new.
-            </p>
-
-            <p className="reveal" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", lineHeight: 1.9, color: "var(--muted)" }}>
-              My approach is smart work over hard work. I automate everything because I&apos;m
-              lazy, and I&apos;ve turned that into an engineering philosophy. If a task can
-              be scripted, it will be.
-            </p>
-
+            {paras.map((text, i) => (
+              <p key={i} className="reveal" style={{ fontSize: "clamp(13px, 1.3vw, 15px)", lineHeight: 1.9, color: "var(--muted)" }}>
+                {text}
+              </p>
+            ))}
           </div>
         </div>
 

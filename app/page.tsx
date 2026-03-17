@@ -14,31 +14,29 @@ import {
   getAchievements,
   getWordScroll,
   getContactLinks,
-  getTheme,
 } from "@/lib/db";
 
 export default async function Home() {
-  // Fetch from D1 if available; components fall back to hardcoded data when null/empty
-  await Promise.all([
-    getHero(),
-    getAbout(),
-    getExperience(),
-    getCertifications(),
-    getAchievements(),
-    getWordScroll(),
-    getContactLinks(),
-    getTheme(),
-  ]);
+  const [hero, about, experience, certs, achievements, words, contactLinks] =
+    await Promise.all([
+      getHero(),
+      getAbout(),
+      getExperience(),
+      getCertifications(),
+      getAchievements(),
+      getWordScroll(),
+      getContactLinks(),
+    ]);
 
   return (
     <main>
-      <Hero />
-      <WordScroll />
-      <About />
+      <Hero heroData={hero} />
+      <WordScroll words={words} />
+      <About paragraphs={about} />
       <Projects />
-      <Experience />
-      <Achievements />
-      <Contact />
+      <Experience experience={experience} />
+      <Achievements certs={certs} achievements={achievements} />
+      <Contact links={contactLinks} />
       <Footer />
     </main>
   );

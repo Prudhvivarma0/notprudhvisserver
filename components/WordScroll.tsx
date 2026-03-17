@@ -1,21 +1,23 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import type { WordRow } from "@/lib/db";
 
-const WORDS = [
-  "secure systems.",
-  "cloud infrastructure.",
-  "event platforms.",
-  "web applications.",
-  "automation pipelines.",
-  "edge networks.",
-  "threat detection tools.",
-  "developer tooling.",
-  "resilient architectures.",
-  "things that break (on purpose).",
+const DEFAULT_WORDS: { word: string; color_type: string }[] = [
+  { word: "secure systems.",              color_type: "text"   },
+  { word: "cloud infrastructure.",        color_type: "accent" },
+  { word: "event platforms.",             color_type: "text"   },
+  { word: "web applications.",            color_type: "accent" },
+  { word: "automation pipelines.",        color_type: "text"   },
+  { word: "edge networks.",               color_type: "accent" },
+  { word: "threat detection tools.",      color_type: "text"   },
+  { word: "developer tooling.",           color_type: "accent" },
+  { word: "resilient architectures.",     color_type: "text"   },
+  { word: "things that break (on purpose).", color_type: "accent" },
 ];
 
-export function WordScroll() {
+export function WordScroll({ words }: { words?: WordRow[] }) {
+  const items = words && words.length > 0 ? words : DEFAULT_WORDS;
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -76,14 +78,14 @@ export function WordScroll() {
             fontWeight: 700,
           }}
         >
-          {WORDS.map((word, i) => (
+          {items.map((item, i) => (
             <li
               key={i}
               style={{
-                color: (i === WORDS.length - 1 || i % 2 === 1) ? "var(--accent)" : "var(--text)",
+                color: item.color_type === "accent" ? "var(--accent)" : "var(--text)",
               }}
             >
-              {word}
+              {item.word}
             </li>
           ))}
         </ul>
