@@ -2,12 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { MagneticButton } from "@/components/MagneticButton";
-import dynamic            from "next/dynamic";
-
-const HandGlobe = dynamic(
-  () => import("@/components/HandGlobe").then(m => m.HandGlobe),
-  { ssr: false }
-);
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
@@ -283,9 +277,11 @@ function ParticleCanvas() {
 function GlobeCanvas({
   nodes,
   onHoverChange,
+  scrollProgressRef,
 }: {
   nodes: CloudNode[];
   onHoverChange: (node: CloudNode | null, x: number, y: number) => void;
+  scrollProgressRef: { current: number };
 }) {
   const ref      = useRef<HTMLCanvasElement>(null);
   const nodesRef = useRef<CloudNode[]>(nodes);
@@ -303,18 +299,38 @@ function GlobeCanvas({
     const ctx = raw;
 
     const S  = GLOBE_SIZE;
-    const R  = S * 0.38;
     const cx = S / 2;
     const cy = S / 2;
+    let R    = S * 0.38;  // mutable — updated each frame for scroll zoom
 
     let rafId:  number;
     let theta:  number = 0;
-    let mouseX: number = 0;   // normalized for globe rotation
+    let mouseX: number = 0;
     let mouseY: number = 0;
-    let clientX: number = -9999;  // raw client coords for hover
+    let clientX: number = -9999;
     let clientY: number = -9999;
-    let canvasRect = canvas.getBoundingClientRect();
+    let canvasRect    = canvas.getBoundingClientRect();
     let lastHoveredId: string | null = null;
+    let time       = 0;
+    let frameCount = 0;
+
+    type DataStream = {
+      fromX: number; fromY: number;
+      toX:   number; toY:   number;
+      ctrlX: number; ctrlY: number;
+      progress: number;
+      trail:    Array<{ x: number; y: number }>;
+    };
+    const dataStreams: DataStream[] = [];
+
+    function hexToRGB(hex: string): string {
+      const h = hex.replace("#", "");
+      if (h.length !== 6) return "0,255,180";
+      const r = parseInt(h.slice(0, 2), 16);
+      const g = parseInt(h.slice(2, 4), 16);
+      const b = parseInt(h.slice(4, 6), 16);
+      return `${r},${g},${b}`;
+    }
 
     function project(lat: number, lon: number) {
       const phi  = (lat * Math.PI) / 180;
@@ -356,16 +372,34 @@ function GlobeCanvas({
     window.addEventListener("resize",    onResize);
 
     const draw = () => {
+      const scroll    = scrollProgressRef.current;
+      R = S * 0.38 * (1 + scroll * 0.2);
+      const fade      = 1 - scroll * 0.4;
+
       const accent    = getCSSVar("--accent") || "#00ffb4";
       const textColor = getCSSVar("--text")   || "#e8ecf4";
-      const bgColor   = getCSSVar("--bg")     || "#06080c";
       const isDark    = document.documentElement.classList.contains("dark");
       const nodeR     = isDark ? 6 : 7;
+      const accentRGB = hexToRGB(accent);
+
       ctx.clearRect(0, 0, S, S);
-      theta += 0.003 + mouseX * 0.003;
+      theta      += 0.003 + mouseX * 0.003;
+      time       += 1;
+      frameCount += 1;
+
+      // ── Glow pulse ────────────────────────────────────────────────────────
+      const glowAlpha = (0.02 + Math.sin(time * 0.05) * 0.01) * fade;
+      const grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 1.4);
+      grd.addColorStop(0, `rgba(${accentRGB}, ${(glowAlpha * 3).toFixed(3)})`);
+      grd.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.globalAlpha = 1;
+      ctx.beginPath();
+      ctx.arc(cx, cy, R * 1.4, 0, Math.PI * 2);
+      ctx.fillStyle = grd;
+      ctx.fill();
 
       // ── Grid ──────────────────────────────────────────────────────────────
-      ctx.strokeStyle = accent; ctx.lineWidth = 0.5; ctx.globalAlpha = 0.13;
+      ctx.strokeStyle = accent; ctx.lineWidth = 0.5; ctx.globalAlpha = fade * 0.13;
       for (let lat = -80; lat <= 80; lat += 20) {
         const pts: [number, number][] = [];
         for (let lon = 0; lon <= 360; lon += 3) pts.push([lat, lon]);
@@ -376,60 +410,87 @@ function GlobeCanvas({
         for (let lat = -90; lat <= 90; lat += 3) pts.push([lat, lon]);
         strokeArc(pts);
       }
-      ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2);
-      ctx.strokeStyle = accent; ctx.globalAlpha = 0.28; ctx.lineWidth = 1; ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(cx, cy, R, 0, Math.PI * 2);
+      ctx.strokeStyle = accent; ctx.globalAlpha = fade * 0.28; ctx.lineWidth = 1; ctx.stroke();
+
+      // ── Orbit rings ───────────────────────────────────────────────────────
+      const ringSpeed = 1 + scroll * 3;
+      const orbitT    = time * 0.004 * ringSpeed;
+
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 8]);
+      ctx.globalAlpha = 1;
+
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, R * 1.3, R * 0.3, -0.2 + orbitT, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(${accentRGB}, ${(fade * 0.06).toFixed(3)})`;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, R * 1.2, R * 0.4, 0.5 + orbitT * 0.7, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(${accentRGB}, ${(fade * 0.04).toFixed(3)})`;
+      ctx.stroke();
+
+      ctx.setLineDash([]);
+
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, R * 0.4, R * 1.25, 0.3 + orbitT * 1.3, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(${accentRGB}, ${(fade * 0.05).toFixed(3)})`;
+      ctx.stroke();
 
       // ── Project all nodes ─────────────────────────────────────────────────
       const ns        = nodesRef.current;
       const projected = ns.map(n => ({ ...project(n.lat, n.lon), node: n }));
 
-      // ── Connection lines ──────────────────────────────────────────────────
+      // ── Connection lines (screen-distance capped at 10) ───────────────────
       ctx.lineWidth = 0.5;
-      for (let i = 0; i < ns.length; i++) {
+      let lineCount = 0;
+      outer: for (let i = 0; i < ns.length; i++) {
         for (let j = i + 1; j < ns.length; j++) {
-          if (projected[i].z > 0 && projected[j].z > 0 && angularDeg(ns[i], ns[j]) < 55) {
-            ctx.beginPath();
-            ctx.moveTo(projected[i].sx, projected[i].sy);
-            ctx.lineTo(projected[j].sx, projected[j].sy);
-            ctx.strokeStyle = accent; ctx.globalAlpha = 0.08; ctx.stroke();
+          if (projected[i].z > 0 && projected[j].z > 0) {
+            const dx = projected[i].sx - projected[j].sx;
+            const dy = projected[i].sy - projected[j].sy;
+            if (Math.hypot(dx, dy) < 200) {
+              ctx.beginPath();
+              ctx.moveTo(projected[i].sx, projected[i].sy);
+              ctx.lineTo(projected[j].sx, projected[j].sy);
+              ctx.strokeStyle = accent; ctx.globalAlpha = fade * 0.06; ctx.stroke();
+              if (++lineCount >= 10) break outer;
+            }
           }
         }
       }
 
       // ── Nodes + labels ────────────────────────────────────────────────────
       ctx.font = "bold 11px 'Courier New', monospace";
-      const pillBg = isDark
-        ? "rgba(6,8,12,0.85)"
-        : "rgba(245,244,240,0.9)";
+      const pillBg = isDark ? "rgba(6,8,12,0.85)" : "rgba(245,244,240,0.9)";
       for (let i = 0; i < ns.length; i++) {
         const { sx, sy, z } = projected[i];
         if (z <= 0) continue;
         const color = STATUS_COLOR[ns[i].status];
 
-        // Solid filled dot
         ctx.beginPath();
         ctx.arc(sx, sy, nodeR, 0, Math.PI * 2);
-        ctx.fillStyle = color; ctx.globalAlpha = 1; ctx.fill();
+        ctx.fillStyle = color; ctx.globalAlpha = fade; ctx.fill();
 
-        // Border ring
         ctx.beginPath();
         ctx.arc(sx, sy, nodeR, 0, Math.PI * 2);
-        ctx.strokeStyle = textColor; ctx.globalAlpha = 0.45; ctx.lineWidth = 1.5;
+        ctx.strokeStyle = textColor; ctx.globalAlpha = fade * 0.45; ctx.lineWidth = 1.5;
         ctx.stroke();
 
-        // Label: pill bg + text (12px gap from node edge)
         const labelText = ns[i].label;
-        const tw  = ctx.measureText(labelText).width;
-        const px  = sx + nodeR + 12;
-        const py  = sy + 4;
+        const tw   = ctx.measureText(labelText).width;
+        const lx   = sx + nodeR + 12;
+        const ly   = sy + 4;
         const padH = 5, padV = 4;
-        const rx  = px - padH;
-        const ry  = py - 11 - padV + 2;
-        const rw  = tw + padH * 2;
-        const rh  = 11 + padV * 2 - 2;
-        const rr  = 4;
+        const rx   = lx - padH;
+        const ry   = ly - 11 - padV + 2;
+        const rw   = tw + padH * 2;
+        const rh   = 11 + padV * 2 - 2;
+        const rr   = 4;
 
-        ctx.globalAlpha = 1; ctx.fillStyle = pillBg;
+        ctx.globalAlpha = fade; ctx.fillStyle = pillBg;
         ctx.beginPath();
         ctx.moveTo(rx + rr, ry);
         ctx.lineTo(rx + rw - rr, ry);
@@ -443,14 +504,56 @@ function GlobeCanvas({
         ctx.closePath();
         ctx.fill();
 
-        ctx.fillStyle = textColor; ctx.globalAlpha = 0.9;
-        ctx.fillText(labelText, px, py);
+        ctx.fillStyle = textColor; ctx.globalAlpha = fade * 0.9;
+        ctx.fillText(labelText, lx, ly);
+      }
+
+      // ── Data streams ──────────────────────────────────────────────────────
+      if (frameCount % 120 === 0 && dataStreams.length < 3) {
+        const visible = projected.filter(p => p.z > 0);
+        if (visible.length >= 2) {
+          const ai = Math.floor(Math.random() * visible.length);
+          let   bi = Math.floor(Math.random() * visible.length);
+          if (bi === ai) bi = (bi + 1) % visible.length;
+          const a = visible[ai], b = visible[bi];
+          dataStreams.push({
+            fromX: a.sx, fromY: a.sy,
+            toX:   b.sx, toY:   b.sy,
+            ctrlX: (a.sx + b.sx) / 2,
+            ctrlY: Math.min(a.sy, b.sy) - 50 - Math.random() * 30,
+            progress: 0,
+            trail:    [],
+          });
+        }
+      }
+
+      for (let i = dataStreams.length - 1; i >= 0; i--) {
+        const s    = dataStreams[i];
+        s.progress += 0.012;
+        const pg   = s.progress;
+        const dotX = (1-pg)*(1-pg)*s.fromX + 2*(1-pg)*pg*s.ctrlX + pg*pg*s.toX;
+        const dotY = (1-pg)*(1-pg)*s.fromY + 2*(1-pg)*pg*s.ctrlY + pg*pg*s.toY;
+        s.trail.push({ x: dotX, y: dotY });
+        if (s.trail.length > 6) s.trail.shift();
+
+        for (let j = 0; j < s.trail.length - 1; j++) {
+          ctx.beginPath();
+          ctx.arc(s.trail[j].x, s.trail[j].y, 1 + (j / s.trail.length) * 2, 0, Math.PI * 2);
+          ctx.fillStyle = accent;
+          ctx.globalAlpha = (j / s.trail.length) * 0.3 * fade;
+          ctx.fill();
+        }
+        ctx.beginPath();
+        ctx.arc(dotX, dotY, 3, 0, Math.PI * 2);
+        ctx.fillStyle = accent; ctx.globalAlpha = fade * 0.7; ctx.fill();
+
+        if (s.progress >= 1) dataStreams.splice(i, 1);
       }
 
       // ── Hover detection ───────────────────────────────────────────────────
-      const cssScale    = canvasRect.width / S;
+      const cssScale  = canvasRect.width / S;
       let nearest: CloudNode | null = null;
-      let nearestDist   = 20; // px threshold in CSS space
+      let nearestDist = 20;
 
       for (let i = 0; i < ns.length; i++) {
         const { sx, sy, z } = projected[i];
@@ -528,7 +631,7 @@ function NodeTooltip({ node, x, y }: { node: CloudNode; x: number; y: number }) 
 
 export function Hero() {
   const [mounted, setMounted]      = useState(false);
-  const [showHand, setShowHand]    = useState(false);
+  const scrollProgressRef          = useRef<number>(0);
   const typed                      = useTypingEffect(TYPING_WORDS);
   const [cursorOn, setCursorOn]    = useState(true);
   const { nodes, logs }            = useCloudStatus();
@@ -545,13 +648,13 @@ export function Hero() {
 
   useEffect(() => { setMounted(true); }, []);
 
-  // Only render the heavy R3F hand on desktop (≥ 768px)
+  // Track scroll progress for globe zoom/spin effects
   useEffect(() => {
-    const mq = window.matchMedia("(min-width: 768px)");
-    setShowHand(mq.matches);
-    const handler = (e: MediaQueryListEvent) => setShowHand(e.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
+    const onScroll = () => {
+      scrollProgressRef.current = Math.min(1, window.scrollY / window.innerHeight);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
@@ -621,14 +724,11 @@ export function Hero() {
         {/* ── Right ────────────────────────────────────────────────────── */}
         <div className="flex-1 min-w-[280px] flex justify-center reveal-right" style={{ overflow: "visible" }}>
           {/* Container — explicit size creates reliable stacking context for layers */}
-          <div className="relative" style={{ width: "min(420px, 100%)", height: "min(520px, 120vw)", isolation: "isolate", overflow: "visible" }}>
+          <div className="relative" style={{ width: "min(420px, 100%)", height: "min(420px, 100vw)", isolation: "isolate" }}>
 
-            {/* Layer 0 — 3D hand (desktop only, behind everything) */}
-            {showHand && mounted && <HandGlobe />}
-
-            {/* Layer 1 — 2D globe canvas */}
+            {/* Globe canvas */}
             <div style={{ position: "relative", zIndex: 1 }}>
-              <GlobeCanvas nodes={nodes} onHoverChange={handleHoverChange} />
+              <GlobeCanvas nodes={nodes} onHoverChange={handleHoverChange} scrollProgressRef={scrollProgressRef} />
             </div>
 
             {/* Layer 3 — Glass terminal (above hand) */}
