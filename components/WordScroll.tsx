@@ -17,8 +17,6 @@ const WORDS = [
   "things that break (on purpose).",
 ] as const;
 
-// Hue values cycling around the accent's ~165° (cyan-green family)
-const HUES = [165, 178, 155, 190, 148, 200, 140, 210, 130, 165];
 
 // ── Component ──────────────────────────────────────────────────────────────
 
@@ -108,7 +106,6 @@ export function WordScroll() {
         >
           {WORDS.map((word, i) => {
             const isLast = i === WORDS.length - 1;
-            const hue    = HUES[i];
 
             return (
               <li
@@ -118,9 +115,7 @@ export function WordScroll() {
                   fontFamily: "var(--font-syne), sans-serif",
                   fontWeight: 800,
                   lineHeight: 1.4,
-                  color: isLast
-                    ? "var(--accent)"
-                    : `oklch(0.78 0.18 ${hue})`,
+                  color:      isLast ? "var(--accent)" : "var(--text)",
                   opacity:    0.18,
                   transform:  "translateY(10px)",
                   transition: "opacity 0.15s ease, transform 0.15s ease",
