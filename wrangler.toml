@@ -2,3 +2,11 @@ name = "notprudhvisserver"
 compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = ".vercel/output/static"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "portfolio-db"
+database_id = "ae35e6ab-4706-4bb5-a581-1fa51ff89d58"
+
+[vars]
+ADMIN_SECRET = "prudhvi-cms-2025"
