@@ -80,7 +80,7 @@ export function WordScroll() {
             <li
               key={i}
               style={{
-                color: i === WORDS.length - 1 ? "var(--accent)" : "var(--text)",
+                color: (i === WORDS.length - 1 || i % 2 === 1) ? "var(--accent)" : "var(--text)",
               }}
             >
               {word}
