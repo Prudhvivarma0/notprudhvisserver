@@ -51,7 +51,7 @@ export function WordScroll() {
         <h2
           style={{
             position: "sticky",
-            top: "calc(50vh - 0.6em)",
+            top: "10vh",
             height: "fit-content",
             margin: 0,
             fontFamily: "var(--font-syne), sans-serif",
@@ -68,7 +68,7 @@ export function WordScroll() {
           style={{
             listStyle: "none",
             margin: 0,
-            paddingTop: "calc(50vh - 0.6em)",
+            paddingTop: "10vh",
             paddingBottom: "0",
             paddingLeft: 0,
             fontFamily: "var(--font-syne), sans-serif",
