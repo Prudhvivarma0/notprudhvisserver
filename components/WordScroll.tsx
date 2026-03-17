@@ -42,11 +42,16 @@ export function WordScroll() {
   }, []);
 
   return (
-    <section ref={sectionRef}>
+    <section
+      ref={sectionRef}
+      style={{ position: "relative" }}
+    >
+      {/* Outer div constrains the sticky element — sticky releases when parent scrolls out */}
       <div
         style={{
           display: "flex",
-          justifyContent: "center",
+          maxWidth: "80rem",
+          margin: "0 auto",
           padding: "0 clamp(16px, 5vw, 48px)",
         }}
       >
@@ -61,6 +66,7 @@ export function WordScroll() {
             fontWeight: 700,
             color: "var(--text)",
             whiteSpace: "nowrap",
+            flexShrink: 0,
           }}
         >
           I build&nbsp;
@@ -69,7 +75,8 @@ export function WordScroll() {
           style={{
             listStyle: "none",
             margin: 0,
-            paddingBlock: "calc(50vh - 0.6em)",
+            paddingTop: "calc(50vh - 0.6em)",
+            paddingBottom: "calc(50vh - 0.6em)",
             paddingLeft: 0,
             fontFamily: "var(--font-syne), sans-serif",
             fontSize: "clamp(2rem, 5vw, 4.5rem)",
