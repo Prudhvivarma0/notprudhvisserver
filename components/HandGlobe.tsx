@@ -79,7 +79,7 @@ function HandMesh({
     groupRef.current.rotation.z = baseRotZ;
   });
 
-  return <group ref={groupRef} position={[0, 4.0, -0.5]} />;
+  return <group ref={groupRef} position={[0, 2.5, -0.5]} />;
 }
 
 // ── Error boundary ────────────────────────────────────────────────────────────
@@ -142,14 +142,17 @@ export function HandGlobe() {
       ref={divRef}
       style={{
         position:      "absolute",
-        inset:         0,
+        width:         "100%",
+        height:        "180%",
+        top:           "-80%",
+        left:          0,
         zIndex:        0,
         overflow:      "visible",
         pointerEvents: "none",
       }}
     >
       <Canvas
-        camera={{ position: [0, 1.5, 9], fov: 55 }}
+        camera={{ position: [0, 0, 8], fov: 50 }}
         gl={{ alpha: true, antialias: true }}
         dpr={[1, 2]}
         frameloop="always"
