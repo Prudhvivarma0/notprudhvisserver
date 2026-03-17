@@ -15,6 +15,11 @@ const WORDS = [
   "things that break (on purpose).",
 ];
 
+const FONT_SIZE   = "clamp(2rem, 5vw, 4.5rem)";
+const FONT_FAMILY = "var(--font-syne), sans-serif";
+const FONT_WEIGHT = 700;
+const LINE_HEIGHT = 1.25;
+
 export function WordScroll() {
   const listRef = useRef<HTMLUListElement>(null);
 
@@ -46,46 +51,63 @@ export function WordScroll() {
   }, []);
 
   return (
-    <section style={{ width: "100%", padding: "0 clamp(16px, 5vw, 48px)" }}>
-      <div style={{ display: "flex", justifyContent: "center", lineHeight: 1.25 }}>
-        {/* Sticky "I build" */}
+    // overflow: hidden keeps the sticky h2 from bleeding into the next section
+    <section style={{ position: "relative", overflow: "hidden" }}>
+      <div
+        style={{
+          display:        "flex",
+          justifyContent: "center",
+          // minHeight gives enough room to scroll through all 10 words
+          minHeight:      "300vh",
+          position:       "relative",
+          padding:        "0 clamp(16px, 5vw, 48px)",
+        }}
+      >
+        {/* Sticky "I build" — top aligns it with the center word */}
         <h2
           style={{
-            position:     "sticky",
-            top:          "45vh",
-            height:       "fit-content",
-            margin:       0,
-            fontFamily:   "var(--font-syne), sans-serif",
-            fontSize:     "clamp(2rem, 5vw, 4.5rem)",
-            fontWeight:   700,
-            color:        "var(--text)",
-            whiteSpace:   "nowrap",
-            paddingRight: "0.3em",
+            position:   "sticky",
+            top:        "calc(50vh - 0.625em)",
+            height:     "fit-content",
+            alignSelf:  "flex-start",
+            margin:     0,
+            padding:    0,
+            fontFamily: FONT_FAMILY,
+            fontSize:   FONT_SIZE,
+            fontWeight: FONT_WEIGHT,
+            lineHeight: LINE_HEIGHT,
+            color:      "var(--text)",
+            whiteSpace: "nowrap",
           }}
         >
-          I build{"\u00A0"}
+          {"I build\u00A0"}
         </h2>
 
         {/* Scrolling word list */}
         <ul
           ref={listRef}
           style={{
-            listStyle:  "none",
-            margin:     0,
-            padding:    "45vh 0",
-            fontFamily: "var(--font-syne), sans-serif",
-            fontSize:   "clamp(2rem, 5vw, 4.5rem)",
-            fontWeight: 700,
+            listStyle:     "none",
+            margin:        0,
+            paddingTop:    "45vh",
+            paddingBottom: "45vh",
+            paddingLeft:   0,
+            paddingRight:  0,
+            fontFamily:    FONT_FAMILY,
+            fontSize:      FONT_SIZE,
+            fontWeight:    FONT_WEIGHT,
+            lineHeight:    LINE_HEIGHT,
           }}
         >
           {WORDS.map((word, i) => (
             <li
               key={i}
               style={{
+                margin:        0,
+                padding:       "0 0 0.2em 0",
                 color:         i === WORDS.length - 1 ? "var(--accent)" : "var(--text)",
                 opacity:       i === 0 ? 1 : 0.15,
                 transition:    "opacity 0.4s ease, filter 0.4s ease",
-                paddingBottom: "0.3em",
               }}
             >
               {word}
