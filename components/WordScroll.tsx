@@ -47,14 +47,7 @@ export function WordScroll() {
       style={{ position: "relative" }}
     >
       {/* Outer div constrains the sticky element — sticky releases when parent scrolls out */}
-      <div
-        style={{
-          display: "flex",
-          maxWidth: "80rem",
-          margin: "0 auto",
-          padding: "0 clamp(16px, 5vw, 48px)",
-        }}
-      >
+      <div className="max-w-5xl mx-auto px-6" style={{ display: "flex" }}>
         <h2
           style={{
             position: "sticky",
@@ -76,7 +69,7 @@ export function WordScroll() {
             listStyle: "none",
             margin: 0,
             paddingTop: "calc(50vh - 0.6em)",
-            paddingBottom: "calc(50vh - 0.6em)",
+            paddingBottom: "0",
             paddingLeft: 0,
             fontFamily: "var(--font-syne), sans-serif",
             fontSize: "clamp(2rem, 5vw, 4.5rem)",
