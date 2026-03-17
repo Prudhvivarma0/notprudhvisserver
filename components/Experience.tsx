@@ -48,7 +48,7 @@ function EntryContent({
 
 const timelineData = [
   {
-    title:   "2025 — Present",
+    title:   "Jan 2026 — Present",
     content: (
       <EntryContent
         company="Art Dubai 2026"
@@ -59,7 +59,7 @@ const timelineData = [
     ),
   },
   {
-    title:   "Apr — Dec 2025",
+    title:   "Apr 2025 — Dec 2025",
     content: (
       <EntryContent
         company="MCN"
@@ -70,7 +70,7 @@ const timelineData = [
     ),
   },
   {
-    title:   "Jan — May 2025",
+    title:   "Jan 2025 — May 2025",
     content: (
       <EntryContent
         company="Greenhouse Foodstuff"

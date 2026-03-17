@@ -14,7 +14,7 @@ export function About() {
         }}
       >
         {/* ── Left: bio text ─────────────────────────────────────────────── */}
-        <div style={{ flex: "1 1 300px", minWidth: 0 }}>
+        <div style={{ flex: "1.2 1 300px", minWidth: 0 }}>
 
           <p className="font-mono text-sm mb-6" style={{ color: "var(--muted)" }}>
             // 01 ——— who i am
@@ -53,16 +53,22 @@ export function About() {
         {/* ── Right: ASCII portrait ───────────────────────────────────────── */}
         <div
           className="portrait-col"
-          style={{ flex: "0 0 auto", display: "flex", justifyContent: "center" }}
+          style={{
+            flex:           "0.8 1 220px",
+            alignSelf:      "stretch",
+            display:        "flex",
+            alignItems:     "center",
+            justifyContent: "flex-end",
+          }}
         >
           <AsciiPortrait />
         </div>
 
       </div>
 
-      {/* Hide portrait on very small screens */}
+      {/* Hide portrait on mobile */}
       <style>{`
-        @media (max-width: 480px) { .portrait-col { display: none !important; } }
+        @media (max-width: 768px) { .portrait-col { display: none !important; } }
       `}</style>
     </section>
   );

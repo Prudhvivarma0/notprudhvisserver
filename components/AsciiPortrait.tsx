@@ -109,18 +109,7 @@ export function AsciiPortrait() {
 
   return (
     <div
-      style={{
-        background:           "var(--bg-card)",
-        backdropFilter:       "blur(12px)",
-        WebkitBackdropFilter: "blur(12px)",
-        border:               "1px solid var(--edge)",
-        borderRadius:         "12px",
-        padding:              "16px 16px 12px",
-        display:              "inline-flex",
-        flexDirection:        "column",
-        gap:                  "8px",
-        cursor:               "crosshair",
-      }}
+      style={{ cursor: "crosshair", height: "100%", display: "flex", alignItems: "stretch" }}
       onMouseEnter={handleMouseEnter}
     >
       <pre
@@ -128,10 +117,12 @@ export function AsciiPortrait() {
         style={{
           margin:        0,
           fontFamily:    "var(--font-fira-code), 'Courier New', monospace",
-          fontSize:      "clamp(3.5px, 0.52vw, 6px)",
+          fontSize:      "clamp(3px, 0.68vh, 7px)",
           lineHeight:    1.1,
           letterSpacing: 0,
           userSelect:    "none",
+          overflow:      "hidden",
+          height:        "100%",
         }}
         aria-hidden
       >
@@ -148,18 +139,6 @@ export function AsciiPortrait() {
           </span>
         ))}
       </pre>
-
-      <p
-        style={{
-          margin:     0,
-          fontFamily: "var(--font-fira-code), monospace",
-          fontSize:   "10px",
-          color:      "var(--muted)",
-          textAlign:  "right",
-        }}
-      >
-        // portrait.exe
-      </p>
     </div>
   );
 }

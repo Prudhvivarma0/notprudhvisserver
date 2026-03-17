@@ -60,13 +60,13 @@ export function WordScroll() {
   return (
     <section
       aria-label="I build"
-      style={{ position: "relative", zIndex: 1 }}
+      style={{ position: "relative", zIndex: 1, overflowX: "hidden" }}
     >
       <div
         style={{
           maxWidth:  "900px",
           margin:    "0 auto",
-          padding:   "0 1.5rem",
+          padding:   "0 1.5rem 0 1.5rem",
           display:   "flex",
           alignItems: "flex-start",
           gap: "clamp(0.75rem, 2vw, 2rem)",
@@ -80,7 +80,7 @@ export function WordScroll() {
             top:       "calc(50vh - 1.5em)",
             alignSelf: "flex-start",
             flexShrink: 0,
-            fontSize:  "clamp(2rem, 6vw, 5rem)",
+            fontSize:  "clamp(1.8rem, 4.5vw, 4rem)",
             fontFamily: "var(--font-syne), sans-serif",
             fontWeight: 800,
             lineHeight: 1.1,
@@ -111,7 +111,7 @@ export function WordScroll() {
               <li
                 key={word}
                 style={{
-                  fontSize:   "clamp(2rem, 6vw, 5rem)",
+                  fontSize:   "clamp(1.8rem, 4.5vw, 4rem)",
                   fontFamily: "var(--font-syne), sans-serif",
                   fontWeight: 800,
                   lineHeight: 1.4,

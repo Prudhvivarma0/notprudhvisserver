@@ -74,7 +74,7 @@ const INITIAL_NODES: CloudNode[] = [
 ];
 
 const GLOBE_SIZE   = 420;
-const TYPING_WORDS = ["architect", "developer", "entrepreneur"];
+const TYPING_WORDS = ["cloud architect", "developer", "security analyst", "maybe an entrepreneur"];
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
