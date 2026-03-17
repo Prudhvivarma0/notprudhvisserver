@@ -109,7 +109,7 @@ export function AsciiPortrait() {
 
   return (
     <div
-      style={{ cursor: "crosshair", height: "100%", display: "flex", alignItems: "stretch" }}
+      style={{ cursor: "crosshair" }}
       onMouseEnter={handleMouseEnter}
     >
       <pre
@@ -117,12 +117,11 @@ export function AsciiPortrait() {
         style={{
           margin:        0,
           fontFamily:    "var(--font-fira-code), 'Courier New', monospace",
-          fontSize:      "clamp(3px, 0.68vh, 7px)",
-          lineHeight:    1.1,
-          letterSpacing: 0,
+          fontSize:      "clamp(5px, 0.85vw, 8px)",
+          lineHeight:    1.15,
+          letterSpacing: "-0.5px",
+          whiteSpace:    "pre",
           userSelect:    "none",
-          overflow:      "hidden",
-          height:        "100%",
         }}
         aria-hidden
       >

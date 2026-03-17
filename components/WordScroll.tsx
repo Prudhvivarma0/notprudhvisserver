@@ -17,7 +17,6 @@ const WORDS = [
   "things that break (on purpose).",
 ] as const;
 
-
 // ── Component ──────────────────────────────────────────────────────────────
 
 export function WordScroll() {
@@ -33,24 +32,21 @@ export function WordScroll() {
     const update = () => {
       const vpCenter = window.innerHeight / 2;
       for (const item of items) {
-        const rect   = item.getBoundingClientRect();
-        const center = rect.top + rect.height / 2;
-        const dist   = Math.abs(center - vpCenter);
-        const range  = window.innerHeight * 0.38;
-        const t      = Math.max(0, 1 - dist / range);
-        // Ease: t² gives a softer falloff than linear
+        const rect    = item.getBoundingClientRect();
+        const center  = rect.top + rect.height / 2;
+        const dist    = Math.abs(center - vpCenter);
+        const range   = window.innerHeight * 0.38;
+        const t       = Math.max(0, 1 - dist / range);
         const opacity = 0.18 + t * t * 0.82;
-        const translateY = (1 - t) * 10;
-        item.style.opacity    = String(opacity.toFixed(3));
-        item.style.transform  = `translateY(${translateY.toFixed(1)}px)`;
+        const ty      = (1 - t) * 10;
+        item.style.opacity   = opacity.toFixed(3);
+        item.style.transform = `translateY(${ty.toFixed(1)}px)`;
       }
     };
 
-    update(); // initial pass
-
+    update();
     window.addEventListener("scroll", update, { passive: true });
     window.addEventListener("resize", update, { passive: true });
-
     return () => {
       window.removeEventListener("scroll", update);
       window.removeEventListener("resize", update);
@@ -62,25 +58,29 @@ export function WordScroll() {
       aria-label="I build"
       style={{ position: "relative", zIndex: 1, overflowX: "hidden" }}
     >
+      {/* Top spacer — lets the first word scroll into center */}
+      <div style={{ height: "50vh" }} />
+
       <div
         style={{
-          maxWidth:  "900px",
-          margin:    "0 auto",
-          padding:   "0 1.5rem 0 1.5rem",
-          display:   "flex",
-          alignItems: "flex-start",
-          gap: "clamp(0.75rem, 2vw, 2rem)",
+          maxWidth:       "900px",
+          margin:         "0 auto",
+          padding:        "0 1.5rem",
+          display:        "flex",
+          justifyContent: "flex-start",
+          alignItems:     "flex-start",
+          gap:            "clamp(0.75rem, 2vw, 2rem)",
         }}
       >
-        {/* ── "I build" — sticky, stays at viewport midpoint ─────────────── */}
+        {/* "I build" — sticky, stays at viewport center while words scroll */}
         <div
           aria-hidden
           style={{
-            position:  "sticky",
-            top:       "calc(50vh - 1.5em)",
-            alignSelf: "flex-start",
+            position:   "sticky",
+            top:        "45vh",
+            alignSelf:  "flex-start",
             flexShrink: 0,
-            fontSize:  "clamp(1.8rem, 4.5vw, 4rem)",
+            fontSize:   "clamp(1.8rem, 4.5vw, 4rem)",
             fontFamily: "var(--font-syne), sans-serif",
             fontWeight: 800,
             lineHeight: 1.1,
@@ -91,22 +91,20 @@ export function WordScroll() {
           I build
         </div>
 
-        {/* ── Scrolling word list ─────────────────────────────────────────── */}
+        {/* Scrolling word list — padding-block keeps first/last centerable */}
         <ul
           ref={listRef}
           style={{
-            listStyle:     "none",
-            padding:       0,
-            margin:        0,
-            paddingTop:    "50vh",
-            paddingBottom: "50vh",
-            display:       "flex",
+            listStyle:    "none",
+            padding:      0,
+            margin:       0,
+            paddingBlock: "45vh",
+            display:      "flex",
             flexDirection: "column",
           }}
         >
           {WORDS.map((word, i) => {
             const isLast = i === WORDS.length - 1;
-
             return (
               <li
                 key={word}
@@ -128,6 +126,9 @@ export function WordScroll() {
           })}
         </ul>
       </div>
+
+      {/* Bottom spacer */}
+      <div style={{ height: "50vh" }} />
     </section>
   );
 }

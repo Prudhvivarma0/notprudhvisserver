@@ -54,11 +54,10 @@ export function About() {
         <div
           className="portrait-col"
           style={{
-            flex:           "0.8 1 220px",
-            alignSelf:      "stretch",
-            display:        "flex",
-            alignItems:     "center",
-            justifyContent: "flex-end",
+            flex:        "0 0 auto",
+            display:     "flex",
+            alignItems:  "flex-start",
+            paddingTop:  "80px",
           }}
         >
           <AsciiPortrait />
