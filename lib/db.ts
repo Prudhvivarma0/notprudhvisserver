@@ -57,6 +57,18 @@ export interface WordRow {
   visible: number;
 }
 
+export interface ProjectRow {
+  id:          number;
+  title:       string;
+  description: string;
+  icon_name:   string;
+  cta_text:    string;
+  link_url:    string;
+  cover_image: string;
+  sort_order:  number;
+  visible:     number;
+}
+
 export interface ContactRow {
   id: number;
   label: string;
@@ -133,6 +145,15 @@ export async function getWordScroll(): Promise<WordRow[]> {
   if (!db) return [];
   try {
     const { results } = await db.prepare("SELECT * FROM word_scroll WHERE visible = 1 ORDER BY sort_order").all<WordRow>();
+    return results;
+  } catch { return []; }
+}
+
+export async function getProjects(): Promise<ProjectRow[]> {
+  const db = getDB();
+  if (!db) return [];
+  try {
+    const { results } = await db.prepare("SELECT * FROM projects WHERE visible = 1 ORDER BY sort_order").all<ProjectRow>();
     return results;
   } catch { return []; }
 }

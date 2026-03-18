@@ -8,5 +8,6 @@ binding = "DB"
 database_name = "portfolio-db"
 database_id = "ae35e6ab-4706-4bb5-a581-1fa51ff89d58"
 
-[vars]
-ADMIN_SECRET = "prudhvi-cms-2025"
+[[r2_buckets]]
+binding = "MEDIA_BUCKET"
+bucket_name = "portfolio-media"

@@ -6,7 +6,7 @@ export const runtime = "edge";
 const ALLOWED_TABLES = new Set([
   "hero", "about", "projects", "experience",
   "certifications", "achievements", "word_scroll",
-  "contact_links", "sections", "theme",
+  "contact_links", "sections", "theme", "custom_blocks",
 ]);
 
 // Single-row tables (no AUTOINCREMENT id, always update by id=1)
@@ -15,7 +15,7 @@ const SINGLETON_TABLES = new Set(["hero", "theme"]);
 function getEnv() {
   try {
     const ctx = getRequestContext();
-    return ctx.env as { DB?: D1Database; ADMIN_SECRET?: string };
+    return ctx.env as { DB?: D1Database; ADMIN_SECRET?: string; MEDIA_BUCKET?: R2Bucket };
   } catch {
     return {} as { DB?: D1Database; ADMIN_SECRET?: string };
   }

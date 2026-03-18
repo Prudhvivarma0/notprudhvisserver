@@ -9,6 +9,7 @@ import { Footer       } from "@/components/Footer";
 import {
   getHero,
   getAbout,
+  getProjects,
   getExperience,
   getCertifications,
   getAchievements,
@@ -17,10 +18,11 @@ import {
 } from "@/lib/db";
 
 export default async function Home() {
-  const [hero, about, experience, certs, achievements, words, contactLinks] =
+  const [hero, about, projects, experience, certs, achievements, words, contactLinks] =
     await Promise.all([
       getHero(),
       getAbout(),
+      getProjects(),
       getExperience(),
       getCertifications(),
       getAchievements(),
@@ -33,7 +35,7 @@ export default async function Home() {
       <Hero heroData={hero} />
       <WordScroll words={words} />
       <About paragraphs={about} />
-      <Projects />
+      <Projects projects={projects} />
       <Experience experience={experience} />
       <Achievements certs={certs} achievements={achievements} />
       <Contact links={contactLinks} />

@@ -1,8 +1,15 @@
 "use client";
 
 import React from "react";
-import { Shield, Cloud, Lock, Key, AlertTriangle } from "lucide-react";
+import { Shield, Cloud, Lock, Key, AlertTriangle, Globe, Terminal, Code2, Database, Server, Wifi, Monitor, Cpu, Zap, Eye, Box } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { BentoCard, BentoGrid } from "@/components/ui/bento-grid";
+import type { ProjectRow } from "@/lib/db";
+
+const ICON_MAP: Record<string, LucideIcon> = {
+  Shield, Cloud, Lock, Key, AlertTriangle, Globe, Terminal, Code2,
+  Database, Server, Wifi, Monitor, Cpu, Zap, Eye, Box,
+};
 
 // ── Backgrounds ───────────────────────────────────────────────────────────────
 
@@ -83,57 +90,43 @@ const NetworkBackground = (
   </div>
 );
 
-// ── Projects data ─────────────────────────────────────────────────────────────
+// ── Bento grid class names cycle for D1-sourced projects ─────────────────────
 
-const projects = [
-  {
-    name:        "WiFiGuard (Thesis)",
-    description: "Built an Intrusion Detection System for Cyber-Physical Systems that uses Wi-Fi Channel State Information as a sensing layer. Implemented Variational Autoencoders to model normal network behavior and detect anomalies in real-time. The system improved threat detection accuracy by 30% compared to traditional signature-based methods, without requiring any additional hardware.",
-    Icon:        Shield,
-    cta:         "View on GitHub",
-    href:        "https://github.com/Prudhvivarma0/WiFiGuard",
-    className:   "lg:col-start-1 lg:col-end-2 lg:row-start-1 lg:row-end-3",
-    background:  WifiBackground,
-  },
-  {
-    name:        "AWS Threat Monitoring",
-    description: "Designed and deployed a cloud surveillance architecture on AWS using CloudTrail for API logging, EventBridge for real-time event routing, and SNS for instant alert delivery. Built automated detection rules for root user activity anomalies, unauthorized API calls, and compliance violations.",
-    Icon:        Cloud,
-    cta:         "View on GitHub",
-    href:        "https://github.com/Prudhvivarma0/AWS-Cloud-monitoring",
-    className:   "lg:col-start-2 lg:col-end-3 lg:row-start-1 lg:row-end-2",
-    background:  AwsBackground,
-  },
-  {
-    name:        "Firewall & Encryption",
-    description: "Engineered a dual-layer security system combining a rule-based firewall with granular IP access control lists and a public-key encryption module built on super-increasing sequences. The firewall supports dynamic rule updates and logging, while the encryption system handles key generation, message encryption, and decryption with mathematical verification.",
-    Icon:        Lock,
-    cta:         "View on GitHub",
-    href:        "https://github.com/Prudhvivarma0/Public-Key-Encryption-and-Firewall-Management-System",
-    className:   "lg:col-start-2 lg:col-end-3 lg:row-start-2 lg:row-end-3",
-    background:  FirewallBackground,
-  },
-  {
-    name:        "Vigenere Cipher Tool",
-    description: "Developed a cryptographic analysis tool that automates breaking Vigenere cipher encryptions. Implements Kasiski Examination to identify probable key lengths through repeated pattern analysis, and uses Index of Coincidence for statistical verification. Outputs ranked key length candidates with confidence scores.",
-    Icon:        Key,
-    cta:         "View on GitHub",
-    href:        "https://github.com/Prudhvivarma0/Vigenere-Cipher-Key-Length-Verification-Tool",
-    className:   "lg:col-start-3 lg:col-end-4 lg:row-start-1 lg:row-end-2",
-    background:  VigenereBackground,
-  },
-  {
-    name:        "Enterprise Threat Sims",
-    description: "Performed advanced vulnerability research and threat analysis through enterprise job simulations for AIG, ANZ, Mastercard, and Telstra. Identified and mitigated Zero-Day Log4j exploits, conducted penetration testing against enterprise infrastructure, and delivered risk assessment reports with remediation strategies covering the full spectrum from reconnaissance to post-exploitation analysis.",
-    Icon:        AlertTriangle,
-    cta:         "View on GitHub",
-    href:        "https://github.com/Prudhvivarma0?tab=repositories",
-    className:   "lg:col-start-3 lg:col-end-4 lg:row-start-2 lg:row-end-3",
-    background:  NetworkBackground,
-  },
+const BENTO_CLASSES = [
+  "lg:col-start-1 lg:col-end-2 lg:row-start-1 lg:row-end-3",
+  "lg:col-start-2 lg:col-end-3 lg:row-start-1 lg:row-end-2",
+  "lg:col-start-2 lg:col-end-3 lg:row-start-2 lg:row-end-3",
+  "lg:col-start-3 lg:col-end-4 lg:row-start-1 lg:row-end-2",
+  "lg:col-start-3 lg:col-end-4 lg:row-start-2 lg:row-end-3",
 ];
 
-export function Projects() {
+const BACKGROUNDS = [WifiBackground, AwsBackground, FirewallBackground, VigenereBackground, NetworkBackground];
+
+// ── Hardcoded fallback data ───────────────────────────────────────────────────
+
+const DEFAULT_PROJECTS: ProjectRow[] = [
+  { id: 1, title: "WiFiGuard (Thesis)",     description: "Built an Intrusion Detection System for Cyber-Physical Systems that uses Wi-Fi Channel State Information as a sensing layer. Implemented Variational Autoencoders to model normal network behavior and detect anomalies in real-time. The system improved threat detection accuracy by 30% compared to traditional signature-based methods, without requiring any additional hardware.", icon_name: "Shield",        cta_text: "View on GitHub", link_url: "https://github.com/Prudhvivarma0/WiFiGuard",                                                        cover_image: "", sort_order: 1, visible: 1 },
+  { id: 2, title: "AWS Threat Monitoring",  description: "Designed and deployed a cloud surveillance architecture on AWS using CloudTrail for API logging, EventBridge for real-time event routing, and SNS for instant alert delivery. Built automated detection rules for root user activity anomalies, unauthorized API calls, and compliance violations.",                                                                                      icon_name: "Cloud",         cta_text: "View on GitHub", link_url: "https://github.com/Prudhvivarma0/AWS-Cloud-monitoring",                                              cover_image: "", sort_order: 2, visible: 1 },
+  { id: 3, title: "Firewall & Encryption",  description: "Engineered a dual-layer security system combining a rule-based firewall with granular IP access control lists and a public-key encryption module built on super-increasing sequences. The firewall supports dynamic rule updates and logging, while the encryption system handles key generation, message encryption, and decryption with mathematical verification.",       icon_name: "Lock",          cta_text: "View on GitHub", link_url: "https://github.com/Prudhvivarma0/Public-Key-Encryption-and-Firewall-Management-System",             cover_image: "", sort_order: 3, visible: 1 },
+  { id: 4, title: "Vigenere Cipher Tool",   description: "Developed a cryptographic analysis tool that automates breaking Vigenere cipher encryptions. Implements Kasiski Examination to identify probable key lengths through repeated pattern analysis, and uses Index of Coincidence for statistical verification. Outputs ranked key length candidates with confidence scores.",                                                            icon_name: "Key",           cta_text: "View on GitHub", link_url: "https://github.com/Prudhvivarma0/Vigenere-Cipher-Key-Length-Verification-Tool",                    cover_image: "", sort_order: 4, visible: 1 },
+  { id: 5, title: "Enterprise Threat Sims", description: "Performed advanced vulnerability research and threat analysis through enterprise job simulations for AIG, ANZ, Mastercard, and Telstra. Identified and mitigated Zero-Day Log4j exploits, conducted penetration testing against enterprise infrastructure, and delivered risk assessment reports with remediation strategies.",                                                  icon_name: "AlertTriangle", cta_text: "View on GitHub", link_url: "https://github.com/Prudhvivarma0?tab=repositories",                                                  cover_image: "", sort_order: 5, visible: 1 },
+];
+
+// ── Component ─────────────────────────────────────────────────────────────────
+
+export function Projects({ projects }: { projects?: ProjectRow[] }) {
+  const rows = projects && projects.length > 0 ? projects : DEFAULT_PROJECTS;
+
+  const cards = rows.map((p, i) => ({
+    name:       p.title,
+    description: p.description,
+    Icon:       ICON_MAP[p.icon_name] ?? Shield,
+    cta:        p.cta_text,
+    href:       p.link_url,
+    className:  BENTO_CLASSES[i % BENTO_CLASSES.length],
+    background: BACKGROUNDS[i % BACKGROUNDS.length],
+  }));
+
   return (
     <section id="projects" className="py-[clamp(60px,8vw,120px)] px-6">
       <div className="max-w-5xl mx-auto">
@@ -150,7 +143,7 @@ export function Projects() {
         </h2>
 
         <BentoGrid className="auto-rows-[22rem]">
-          {projects.map((p) => (
+          {cards.map((p) => (
             <BentoCard key={p.name} {...p} />
           ))}
         </BentoGrid>
