@@ -1,154 +1,166 @@
-# NOTPRUDHVISSERVER.ORG
+# notprudhvisserver
 
-> **WARNING:** This portfolio runs on pure caffeine, shell scripts, and an unhealthy amount of orange accent colors.
+> **WARNING:** This is v2. The old one was a single HTML file and 47 instances of `#ff8700`. This one has a database.
 
 ## WHY THIS EXISTS
-Vibe coded this when I was bored one day. Bought a domain randomly, so why not make use of it? And honestly, why not have a page to boast about yourself?
-Also helps with... honestly, I don't even know who this helps. But it exists now.
 
-Is it excessive? Absolutely. 
+Started as a bored-afternoon project, now has a CMS, a D1 database, R2 media storage, and a WebGL globe pulling live Cloudflare status data. Domain was bought on impulse. Portfolio was built to justify the domain. The scope has clearly gotten out of hand.
 
-Also, I really like the color orange.
-
-## MISSION_STATEMENT.txt
-
-A cybersecurity portfolio that actually **looks** like it belongs in the field. No boring blue gradients here—just raw cyber energy with:
-
-- **Lando Orange** accents (because why not?)
-- Glitch effects that would make a 2000s hacker movie jealous
-- A moving cyber grid background that serves absolutely no purpose except looking cool
-- Shutter transitions because normal page scrolls are for normies
-- A custom circular cursor that follows you around
-
-## THE VIBE
-
-This portfolio is coded with the energy of:
-- Terminal aesthetics but make it fashion
-- That "I know how to hack the mainframe" confidence
-
+Is it excessive? Absolutely.
 
 ## TECH_STACK.json
 
 ```json
 {
-  "languages": ["HTML5", "CSS3", "Vanilla JS"],
-  "frameworks": ["None. We die like real developers."],
-  "libraries": ["Courier New (the font of champions)"],
-  "external_dependencies": 0,
-  "lines_of_regret": "Many",
-  "coffee_consumed": "Yes"
+  "framework":    "Next.js 15 (App Router)",
+  "runtime":      "Cloudflare Pages (edge)",
+  "database":     "Cloudflare D1 (SQLite at the edge)",
+  "storage":      "Cloudflare R2 (media/images)",
+  "styling":      "Tailwind CSS + inline styles",
+  "fonts":        ["Syne", "Fira Code", "DM Sans"],
+  "animations":   "Framer Motion",
+  "canvas":       "Vanilla Canvas API (globe, particles)",
+  "language":     "TypeScript",
+  "deployment":   "@cloudflare/next-on-pages"
 }
 ```
 
-## FEATURES_THAT_NOBODY_ASKED_FOR
+## FEATURES
 
-### Dual Theme Support
-Toggle between:
-- **Dark Mode** 
-- **Light Mode** 
+### The Globe
+Live WebGL canvas globe in the hero section. Pulls real Cloudflare status data every 30 seconds, renders ~22 cloud nodes (AWS, GCP, Azure, Cloudflare PoPs) with actual lat/lon coordinates, connection lines, orbit rings, data stream animations, and hover tooltips. Rotates on mouse move. Zooms on scroll. No Three.js — pure Canvas 2D with manual projection math.
 
-### Shutter Transition System
-Why use normal scroll behavior when you can:
-1. Close orange shutters
-2. Show a fake "ACCESSING_SERVER" loader
-3. Scroll while nobody's watching
-4. Reopen shutters dramatically
+### Word Scroll
+"I build \_\_\_" section with IntersectionObserver-driven word highlighting. Sticky heading, scrolling word list, alternating accent/text colors per word.
 
-Unnecessary? Absolutely. Cool? Also absolutely.
+### ASCII Portrait
+Hand-generated ASCII art that glitch-animates on hover. Pre-computed character data for performance. No images needed.
 
-### Custom Cursor
-Your boring default cursor has been replaced with:
-- A small orange dot (you are here)
-- A circle that follows your every move with a slight delay 
+### Dark / Light Mode
+Proper CSS variable theming via `next-themes`. `--accent` flips from `#00ffb4` (dark) to `#0a0a0a` (light). No flash on load.
 
-### Glitch Effect Title
-Very necessary for a professional portfolio.
+### Responsive Navbar
+Desktop: inline nav links with underline-on-hover. Mobile: full-screen overlay menu with blur backdrop, Escape key, body scroll lock.
 
-### Hexagonal Certifications
-Because normal rectangles are too mainstream. These certifications are displayed in **HEXAGONS** that light up orange on hover. Peak geometry energy.
+### CMS (`/admin`)
+Full headless CMS backed by D1 + R2:
+- Edit every section: Hero, About, Projects, Experience, Certs, Achievements, Word Scroll, Contact, Theme, Sections
+- Projects: full CRUD, icon picker (16 Lucide icons), sort order, visibility toggle
+- Media library: drag-and-drop upload to R2, thumbnail grid, copy URL, delete
+- Image upload on Hero (background) and About (profile image)
+- Auth: Bearer token, secret stored in Cloudflare Pages secrets (never in the repo)
 
-## FILE_STRUCTURE
+## ARCHITECTURE
 
 ```
-portfolio/
-│
-├── index.html (the entire website. yep, just one file)
-│
-└── Prudhvi_Resume.pdf (not included but referenced like it exists)
+app/
+├── page.tsx              # Async server component — fetches from D1, passes props
+├── admin/page.tsx        # Client-side CMS panel
+└── api/
+    ├── [table]/route.ts  # Generic D1 CRUD (edge runtime, Bearer auth)
+    └── media/
+        ├── route.ts      # R2 upload / list / delete
+        └── [key]/route.ts# R2 public file serve
+
+components/               # Section components (all accept optional D1 props,
+│                         # fall back to hardcoded defaults in local dev)
+├── Hero.tsx              # Globe + typing effect + particles
+├── WordScroll.tsx        # IntersectionObserver word highlight
+├── About.tsx             # Two-column: bio + ASCII portrait
+├── Projects.tsx          # Bento grid, D1-driven
+├── Experience.tsx        # Timeline component
+├── Achievements.tsx      # Cert cards + CTF cards
+├── Contact.tsx           # Magnetic buttons
+└── Navbar.tsx            # Sticky hide-on-scroll + mobile overlay
+
+lib/db.ts                 # D1 query helpers with try/catch fallbacks
+migrations/
+├── 0001_init.sql         # Schema (11 tables)
+├── 0002_seed.sql         # Initial content
+└── 0003_images.sql       # image columns, projects, media, custom_blocks
 ```
 
-**Philosophy:** Why split into multiple files when you can have one glorious 500+ line monolith? Modular code is for people with time.
+## LOCAL DEV
 
+```bash
+# Node.js only — no D1, components use hardcoded fallbacks
+npm run dev
 
-## SECTIONS_BREAKDOWN
+# Wrangler — full D1 + R2 simulation
+npm run preview
+```
 
-| Section | Purpose | Coolness Factor |
-|---------|---------|-----------------|
-| **HERO** | Announce your presence | 5/5 |
-| **PROJECTS** || 4/5 |
-| **EXPERIENCE** | Timeline with orange dots | 4/5 |
-| **CERTIFICATIONS** | Hexagon superiority | 5/5 |
-| **ACHIEVEMENTS** |  | 4/5 |
-| **CONTACT** | | 5/5 |
+## MIGRATIONS
 
-## KNOWN_BUGS_FEATURES
+```bash
+# Local
+npx wrangler d1 execute portfolio-db --local --file=migrations/0001_init.sql
+npx wrangler d1 execute portfolio-db --local --file=migrations/0002_seed.sql
+npx wrangler d1 execute portfolio-db --local --file=migrations/0003_images.sql
 
-- Custom cursor disappears on mobile (solution: don't use mobile)
-- Over-reliance on orange (#ff8700 appears 47 times)
+# Remote (production)
+npx wrangler d1 execute portfolio-db --remote --file=migrations/0001_init.sql
+npx wrangler d1 execute portfolio-db --remote --file=migrations/0002_seed.sql
+npx wrangler d1 execute portfolio-db --remote --file=migrations/0003_images.sql
+```
+
+## SECRETS
+
+Admin password is **never** in the repo. Set it with:
+
+```bash
+# Local: create .dev.vars (already gitignored)
+echo "ADMIN_SECRET=your-password" > .dev.vars
+
+# Production
+npx wrangler pages secret put ADMIN_SECRET
+```
+
+## SECTIONS
+
+| Section | Source | Notes |
+|---|---|---|
+| Hero | D1 `hero` table | typing words, CTAs |
+| Word Scroll | D1 `word_scroll` | word + color_type per row |
+| About | D1 `about` | paragraphs + profile_image |
+| Projects | D1 `projects` | icon_name maps to Lucide |
+| Experience | D1 `experience` | feeds Timeline component |
+| Achievements | D1 `certifications` + `achievements` | cert cards + CTF cards |
+| Contact | D1 `contact_links` | icon derived from href |
+
+All sections fall back to hardcoded defaults when D1 returns empty or is unavailable.
 
 ## COLOR_PALETTE
 
 ```css
---accent-color: #ff8700  /* LANDO ORANGE (the only color that matters) */
---bg-color: #050505      /* Void black */
---card-bg: #0f0f0f       /* Slightly less void black */
---text-primary: #ffffff  /* Words you can actually read */
---text-secondary: #b0b0b0 /* Words you squint to read */
+--accent:  #00ffb4  /* dark mode — the green */
+--accent:  #0a0a0a  /* light mode — just black */
+--bg:      #06080c
+--text:    #e8ecf4
+--muted:   rgba(200,220,255,0.4)
 ```
 
-## MOBILE_SUPPORT
+Orange is gone. Mourning period was brief.
 
-**Status:** Technically yes.
+## KNOWN_ISSUES
 
-- Glitch title becomes smaller (less dramatic)
-- Navigation links disappear (use the force)
-- Cyber grid hidden (performance > aesthetics)
-- Custom cursor disabled
-
-## CONTRIBUTING
-
-
-**Pull requests rejected for:**
-- Removing animations
-- Using blue as an accent color
-- Making things "more professional"
-- Common sense improvements
+- R2 media uploads require the bucket to be created in the Cloudflare dashboard first
+- `npm run dev` has no D1/R2 — use `npm run preview` for full local testing
+- `npm run preview` builds via Vercel CLI internally (wrangler requirement), takes ~10s
 
 ## LICENSE
 
-Steal it, improve it, make it less orange, whatever. 
-
-## ACKNOWLEDGMENTS
-
-- **Caffeine:** For making this possible
-- **CSS Animations:** For making this beautiful
-- **Orange Color (#ff8700):** For making this happen
-- **Past Me:** For not using a framework
-- **Future Me:** Sorry about the technical debt
+Do whatever. Just don't make it orange again.
 
 ## CONTACT
 
-**Email:** prudhvivarma31@gmail.com  
-**Status:** Probably dozing off
+**Email:** prudhvivarma31@gmail.com
+**Status:** Probably breaking something on purpose
 
 ---
 
 <div align="center">
 
-### SYSTEM_STATUS: ONLINE
-
-Made with orange heart, terminal windows, and questionable design choices.
-
-**[ EOF ]**
+`next build && wrangler pages deploy`
 
 </div>
