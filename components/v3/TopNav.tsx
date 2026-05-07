@@ -138,19 +138,22 @@ export function TopNav({ dark, setDark, activeNav, onNavClick }: Props) {
           paddingTop: 16,
         }}
       >
-        {NAV_ITEMS.map(({ key, label }) => (
-          <a
-            key={key}
-            href={`#${key}`}
-            onClick={(e) => { e.preventDefault(); onNavClick(key, label); }}
-            style={{
-              color: activeNav === key ? "var(--ink)" : "var(--mute)",
-              textDecoration: "none",
-              transition: "color 0.3s",
-            }}
-          >
-            {label}
-          </a>
+        {NAV_ITEMS.map(({ key, label }, i) => (
+          <>
+            {i > 0 && <span key={`sep-${key}`} style={{ color: "var(--rule)" }}>|</span>}
+            <a
+              key={key}
+              href={`#${key}`}
+              onClick={(e) => { e.preventDefault(); onNavClick(key, label); }}
+              style={{
+                color: activeNav === key ? "var(--ink)" : "var(--mute)",
+                textDecoration: "none",
+                transition: "color 0.3s",
+              }}
+            >
+              {label}
+            </a>
+          </>
         ))}
       </div>
     </header>
