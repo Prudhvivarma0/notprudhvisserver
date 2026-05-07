@@ -165,7 +165,7 @@ body {
   /* TopNav */
   .v3-topnav { padding: 16px 20px !important; grid-template-columns: 1fr auto !important; }
   .v3-topnav-center { display: none !important; }
-  .v3-topnav-mobile { display: flex !important; }
+  .v3-topnav-mobile { display: flex !important; gap: 12px !important; font-size: 10px !important; letter-spacing: 0.08em !important; }
   .v3-topnav-available { display: none !important; }
 
   /* Hero */
