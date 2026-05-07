@@ -1,2 +1,158 @@
 @tailwind base;
 @tailwind utilities;
+
+/* ── Design tokens ───────────────────────────────────────────────────────── */
+
+:root {
+  --bg:         #ffffff;
+  --ink:        #0a0a0a;
+  --mute:       #8a8a8a;
+  --rule:       #e6e6e6;
+  --invert-bg:  #0a0a0a;
+  --invert-ink: #ffffff;
+}
+
+[data-theme="dark"] {
+  --bg:         #0a0a0a;
+  --ink:        #ffffff;
+  --mute:       #6a6a6a;
+  --rule:       #1f1f1f;
+  --invert-bg:  #ffffff;
+  --invert-ink: #0a0a0a;
+}
+
+/* ── Base ────────────────────────────────────────────────────────────────── */
+
+html { scroll-behavior: auto; }
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-inter-tight), 'Inter Tight', system-ui, sans-serif;
+  font-feature-settings: 'ss01', 'cv01';
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* ── Typography helpers ──────────────────────────────────────────────────── */
+
+.v3-display {
+  font-family: var(--font-anton), 'Anton', 'Bebas Neue', Impact, sans-serif;
+  letter-spacing: -0.02em;
+  line-height: 0.85;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.v3-mono {
+  font-family: var(--font-jetbrains), 'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* ── Flex letter (viscous) ───────────────────────────────────────────────── */
+
+.v3-flex-letter {
+  display: inline-block;
+  font-variation-settings: "wght" 300;
+  transition: font-variation-settings 0.3s;
+}
+
+/* ── Project rows ────────────────────────────────────────────────────────── */
+
+.v3-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 60px 1fr 200px 60px;
+  gap: 24px;
+  padding: 36px 0;
+  border-top: 1px solid var(--rule);
+  align-items: center;
+  cursor: pointer;
+  transition: padding 0.5s cubic-bezier(.2,.9,.2,1);
+}
+
+.v3-row:last-child { border-bottom: 1px solid var(--rule); }
+
+.v3-row:hover { padding-left: 32px; padding-right: 32px; }
+
+.v3-row-bg {
+  position: absolute;
+  inset: 0;
+  background: var(--invert-bg);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.5s cubic-bezier(.2,.9,.2,1);
+  z-index: 0;
+}
+
+.v3-row:hover .v3-row-bg {
+  transform: scaleY(1);
+  transform-origin: top;
+}
+
+.v3-row > * { position: relative; z-index: 1; transition: color 0.3s; }
+
+.v3-row:hover > * { color: var(--invert-ink) !important; }
+
+.v3-arrow {
+  transform: translateX(-12px);
+  opacity: 0;
+  transition: transform 0.5s cubic-bezier(.76,0,.24,1), opacity 0.5s;
+}
+
+.v3-row:hover .v3-arrow { transform: translateX(0); opacity: 1; }
+
+/* ── Magnetic button ─────────────────────────────────────────────────────── */
+
+.v3-mag-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 36px;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  font-family: var(--font-jetbrains), 'JetBrains Mono', monospace;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.3s, color 0.3s, border-color 0.3s;
+  background: transparent;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.v3-mag-btn:hover { background: var(--ink); color: var(--bg); }
+
+.v3-mag-btn-filled {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.v3-mag-btn-filled:hover { background: transparent; color: var(--ink); }
+
+/* ── Wipe overlay ────────────────────────────────────────────────────────── */
+
+.v3-wipe-panel-a {
+  position: fixed;
+  inset: 0;
+  background: var(--ink);
+  color: var(--bg);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.v3-wipe-panel-b {
+  position: fixed;
+  inset: 0;
+  background: var(--ink);
+  z-index: 99;
+  pointer-events: none;
+}
