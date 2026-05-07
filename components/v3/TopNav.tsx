@@ -16,9 +16,10 @@ interface Props {
   setDark: (d: boolean) => void;
   activeNav: NavKey;
   onNavClick: (key: NavKey, label: string) => void;
+  logo?: string;
 }
 
-export function TopNav({ dark, setDark, activeNav, onNavClick }: Props) {
+export function TopNav({ dark, setDark, activeNav, onNavClick, logo }: Props) {
   const navRef = useRef<HTMLDivElement>(null);
   const [navHover, setNavHover]   = useState<NavKey | null>(null);
   const [indicator, setIndicator] = useState({ x: 0, w: 0, opacity: 0 });
@@ -55,7 +56,11 @@ export function TopNav({ dark, setDark, activeNav, onNavClick }: Props) {
     >
       {/* Logo */}
       <div style={{ fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase" }}>
-        PV<span style={{ color: "var(--mute)" }}>—2026</span>
+        {logo ? (
+          logo
+        ) : (
+          <>PV<span style={{ color: "var(--mute)" }}>—2026</span></>
+        )}
       </div>
 
       {/* Center nav (desktop) */}

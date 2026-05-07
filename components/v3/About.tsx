@@ -3,9 +3,11 @@ import { DEFAULT_CONTENT, SiteContent } from "@/lib/content";
 
 interface Props {
   about?: SiteContent["about"];
+  portrait?: string;
 }
 
-export function About({ about = DEFAULT_CONTENT.about }: Props) {
+export function About({ about = DEFAULT_CONTENT.about, portrait = "" }: Props) {
+  const portraitSrc = portrait && portrait.length > 0 ? portrait : "/portrait.jpg";
   return (
     <section
       id="about"
@@ -43,9 +45,10 @@ export function About({ about = DEFAULT_CONTENT.about }: Props) {
           }}
         >
           <Image
-            src="/portrait.jpg"
+            src={portraitSrc}
             alt="Prudhvi Varma"
             fill
+            unoptimized={portraitSrc.startsWith("data:")}
             style={{ objectFit: "cover" }}
             onError={() => {/* shows gray bg fallback */}}
           />

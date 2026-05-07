@@ -113,6 +113,7 @@ export function V3Page({ content = DEFAULT_CONTENT }: V3PageProps) {
         setDark={setDark}
         activeNav={activeNav}
         onNavClick={navTo}
+        logo={content.appearance?.logo}
       />
 
       {/* Hero */}
@@ -125,22 +126,34 @@ export function V3Page({ content = DEFAULT_CONTENT }: V3PageProps) {
       />
 
       {/* Disciplines band */}
-      <DisciplinesGrid disciplines={content.disciplines} />
+      {content.sections?.disciplines !== false && (
+        <DisciplinesGrid disciplines={content.disciplines} />
+      )}
 
       {/* About */}
-      <About about={content.about} />
+      {content.sections?.about !== false && (
+        <About about={content.about} portrait={content.media?.portrait} />
+      )}
 
       {/* Selected Work */}
-      <WorkList projects={content.projects} />
+      {content.sections?.work !== false && (
+        <WorkList projects={content.projects} />
+      )}
 
       {/* Time / Experience */}
-      <TimelineGrid experience={content.experience} />
+      {content.sections?.timeline !== false && (
+        <TimelineGrid experience={content.experience} />
+      )}
 
       {/* Certs + Achievements */}
-      <CertsAchievements certifications={content.certifications} achievements={content.achievements} />
+      {content.sections?.certs !== false && (
+        <CertsAchievements certifications={content.certifications} achievements={content.achievements} />
+      )}
 
       {/* Contact */}
-      <Contact reduced={reduced} contact={content.contact} />
+      {content.sections?.contact !== false && (
+        <Contact reduced={reduced} contact={content.contact} />
+      )}
     </div>
   );
 }

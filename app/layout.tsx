@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Anton, Inter_Tight, JetBrains_Mono, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import { ScrollReset } from "@/components/ScrollReset";
+import { DEFAULT_CONTENT } from "@/lib/content";
 
 const anton = Anton({
   subsets: ["latin"],
@@ -31,10 +32,42 @@ const instrumentSerif = Instrument_Serif({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "Prudhvi Varma",
-  description: "Developer building secure systems, edge networks, and things that break on purpose.",
-};
+async function getSeoMeta(): Promise<{ title: string; description: string; ogImage: string }> {
+  try {
+    // Only available in Cloudflare Pages environment
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const db = (process.env as any).DB as D1Database | undefined;
+    if (!db) return DEFAULT_CONTENT.seo;
+    const row = await db
+      .prepare("SELECT data FROM v3_content WHERE id = 1")
+      .first<{ data: string }>();
+    if (!row?.data) return DEFAULT_CONTENT.seo;
+    const parsed = JSON.parse(row.data) as { seo?: { title?: string; description?: string; ogImage?: string } };
+    return {
+      title:       parsed.seo?.title       ?? DEFAULT_CONTENT.seo.title,
+      description: parsed.seo?.description ?? DEFAULT_CONTENT.seo.description,
+      ogImage:     parsed.seo?.ogImage     ?? DEFAULT_CONTENT.seo.ogImage,
+    };
+  } catch {
+    return DEFAULT_CONTENT.seo;
+  }
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getSeoMeta();
+  const meta: Metadata = {
+    title: seo.title,
+    description: seo.description,
+  };
+  if (seo.ogImage) {
+    meta.openGraph = {
+      title: seo.title,
+      description: seo.description,
+      images: [seo.ogImage],
+    };
+  }
+  return meta;
+}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

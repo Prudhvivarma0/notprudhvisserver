@@ -50,6 +50,26 @@ export interface SiteContent {
     footerRight: string;
     confession: string;
   };
+  seo: {
+    title: string;
+    description: string;
+    ogImage: string;
+  };
+  appearance: {
+    logo: string;
+    accentColor: string;
+  };
+  sections: {
+    disciplines: boolean;
+    about: boolean;
+    work: boolean;
+    timeline: boolean;
+    certs: boolean;
+    contact: boolean;
+  };
+  media: {
+    portrait: string;
+  };
 }
 
 export const DEFAULT_CONTENT: SiteContent = {
@@ -151,6 +171,26 @@ export const DEFAULT_CONTENT: SiteContent = {
     footerRight: "Last touched · today",
     confession: "yes, i asked an ai to design and build this. no, i'm not sorry. neither is claude.",
   },
+  seo: {
+    title: "Prudhvi Varma",
+    description: "Nomad building stuff that (probably) won't break. Sometimes the architect, sometimes the engineer, almost always both.",
+    ogImage: "",
+  },
+  appearance: {
+    logo: "PV—2026",
+    accentColor: "#4a7048",
+  },
+  sections: {
+    disciplines: true,
+    about: true,
+    work: true,
+    timeline: true,
+    certs: true,
+    contact: true,
+  },
+  media: {
+    portrait: "",
+  },
 };
 
 export async function fetchContent(db: D1Database): Promise<SiteContent> {
@@ -170,6 +210,10 @@ export async function fetchContent(db: D1Database): Promise<SiteContent> {
       certifications: parsed.certifications ?? DEFAULT_CONTENT.certifications,
       achievements:   parsed.achievements   ?? DEFAULT_CONTENT.achievements,
       contact:        { ...DEFAULT_CONTENT.contact,        ...(parsed.contact        ?? {}) },
+      seo:            { ...DEFAULT_CONTENT.seo,            ...(parsed.seo            ?? {}) },
+      appearance:     { ...DEFAULT_CONTENT.appearance,     ...(parsed.appearance     ?? {}) },
+      sections:       { ...DEFAULT_CONTENT.sections,       ...(parsed.sections       ?? {}) },
+      media:          { ...DEFAULT_CONTENT.media,          ...(parsed.media          ?? {}) },
     };
   } catch {
     return DEFAULT_CONTENT;
