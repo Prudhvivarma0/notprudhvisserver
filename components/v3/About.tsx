@@ -70,14 +70,10 @@ export function About() {
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48 }}>
           <p style={{ fontSize: 18, lineHeight: 1.5, margin: 0 }}>
-            I&rsquo;ve shipped systems for cloud, biometrics, payment-rails and
-            ed-tech — sometimes as the architect, sometimes as the engineer, almost
-            always as both.
+            Cloud, data security, enterprise systems, and anything that could fail any second. If it has uptime requirements and trust issues, I&rsquo;ve probably built it. Curiosity does most of the driving.
           </p>
           <p style={{ fontSize: 18, lineHeight: 1.5, margin: 0 }}>
-            I take quiet pleasure in finding the load-bearing wall of a problem and
-            removing everything else around it. Most of my work is the work of
-            removal.
+            Tech is the thing I&rsquo;d still be doing if no one paid me for it. I take quiet pleasure in finding the load-bearing wall of a problem and removing everything else around it. Most of my work is the work of removal.
           </p>
         </div>
       </div>
