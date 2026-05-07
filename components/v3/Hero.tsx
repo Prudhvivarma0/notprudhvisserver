@@ -29,10 +29,11 @@ export function Hero({ dark, reduced, onWorkClick, onContactClick }: Props) {
         className="v3-mono"
         style={{
           fontSize: 12, textTransform: "uppercase", letterSpacing: "0.16em",
-          color: "var(--mute)",
+          color: "var(--mute)", display: "flex", justifyContent: "space-between",
         }}
       >
-        (Portfolio / 2026)
+        <span>(Portfolio / 2026)</span>
+        <span>Yeah, built with Claude ✦</span>
       </div>
 
       {/* Headline + Globe */}
