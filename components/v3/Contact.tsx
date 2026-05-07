@@ -9,6 +9,7 @@ export function Contact({ reduced }: Props) {
   return (
     <section
       id="contact"
+      className="v3-pad"
       style={{
         padding: "160px 32px 80px",
         borderTop: "1px solid var(--rule)",
@@ -25,7 +26,7 @@ export function Contact({ reduced }: Props) {
       </div>
 
       <h2
-        className="v3-display"
+        className="v3-display v3-contact-heading"
         style={{ fontSize: "clamp(120px, 22vw, 360px)", margin: "0 0 60px", lineHeight: 0.85 }}
       >
         <div style={{ marginBottom: "0.18em" }}><Flex text="SAY" /></div>

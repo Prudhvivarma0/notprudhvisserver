@@ -53,7 +53,7 @@ export function TopNav({ dark, setDark, activeNav, onNavClick }: Props) {
         borderBottom: "1px solid var(--rule)",
         transition: "background 0.3s",
       }}
-      className="v3-mono"
+      className="v3-mono v3-topnav"
     >
       {/* Logo */}
       <div style={{ fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase" }}>
@@ -64,6 +64,7 @@ export function TopNav({ dark, setDark, activeNav, onNavClick }: Props) {
       <div
         ref={navRef}
         onMouseLeave={() => setNavHover(null)}
+        className="v3-topnav-center"
         style={{
           position: "relative",
           display: "flex",

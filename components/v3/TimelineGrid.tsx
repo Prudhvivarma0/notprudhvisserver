@@ -7,7 +7,7 @@ const EXP = [
 
 export function TimelineGrid() {
   return (
-    <section id="timeline" style={{ padding: "120px 32px", borderTop: "1px solid var(--rule)" }}>
+    <section id="timeline" className="v3-pad" style={{ padding: "120px 32px", borderTop: "1px solid var(--rule)" }}>
       <div
         className="v3-mono"
         style={{
@@ -18,7 +18,7 @@ export function TimelineGrid() {
         (03) Experience
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 32 }}>
+      <div className="v3-timeline-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 32 }}>
         {EXP.map(([year, org, role], i) => (
           <div key={i} style={{ borderTop: "1px solid var(--ink)", paddingTop: 24 }}>
             <div

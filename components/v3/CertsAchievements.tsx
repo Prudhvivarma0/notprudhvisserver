@@ -37,6 +37,7 @@ function CertRow({ name, issuer, label }: { name: string; issuer: string; label:
 export function CertsAchievements() {
   return (
     <section
+      className="v3-certs-grid"
       style={{
         padding: "120px 32px",
         borderTop: "1px solid var(--rule)",

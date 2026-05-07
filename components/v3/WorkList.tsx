@@ -68,7 +68,7 @@ export function WorkList({ projects = DEFAULT_PROJECTS }: { projects?: Project[]
   const [hover, setHover] = useState<number | null>(null);
 
   return (
-    <section id="work" style={{ padding: "120px 32px", borderTop: "1px solid var(--rule)" }}>
+    <section id="work" className="v3-pad" style={{ padding: "120px 32px", borderTop: "1px solid var(--rule)" }}>
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 16 }}>
         <div className="v3-mono" style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.16em", color: "var(--mute)" }}>
@@ -96,9 +96,9 @@ export function WorkList({ projects = DEFAULT_PROJECTS }: { projects?: Project[]
             onMouseLeave={() => setHover(null)}
           >
             <div className="v3-row-bg" />
-            <div className="v3-mono" style={{ fontSize: 13, color: "var(--mute)" }}>{p.n}</div>
+            <div className="v3-mono v3-row-num" style={{ fontSize: 13, color: "var(--mute)" }}>{p.n}</div>
             <div className="v3-display" style={{ fontSize: "clamp(28px, 4vw, 64px)" }}>{p.title}</div>
-            <div className="v3-mono" style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.12em", color: "var(--mute)" }}>
+            <div className="v3-mono v3-row-meta" style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.12em", color: "var(--mute)" }}>
               {p.meta}<br />{p.year}
             </div>
             <div className="v3-arrow v3-display" style={{ fontSize: 32 }}>→</div>

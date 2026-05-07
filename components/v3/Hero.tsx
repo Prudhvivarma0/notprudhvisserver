@@ -14,6 +14,7 @@ interface Props {
 export function Hero({ dark, reduced, onWorkClick, onContactClick }: Props) {
   return (
     <section
+      className="v3-pad"
       style={{
         padding: "120px 32px 80px",
         minHeight: "85vh",
@@ -36,6 +37,7 @@ export function Hero({ dark, reduced, onWorkClick, onContactClick }: Props) {
 
       {/* Headline + Globe */}
       <div
+        className="v3-hero-grid"
         style={{
           display: "grid",
           gridTemplateColumns: "1fr auto",
@@ -55,13 +57,14 @@ export function Hero({ dark, reduced, onWorkClick, onContactClick }: Props) {
           </div>
         </div>
 
-        <div style={{ width: "min(46vw, 560px)", aspectRatio: "1/1" }}>
+        <div className="v3-hero-globe" style={{ width: "min(46vw, 560px)", aspectRatio: "1/1" }}>
           <LiveGlobe size={520} dark={dark} reduced={reduced} />
         </div>
       </div>
 
       {/* Tagline + CTAs */}
       <div
+        className="v3-hero-bottom"
         style={{
           display: "grid",
           gridTemplateColumns: "1fr 1fr",

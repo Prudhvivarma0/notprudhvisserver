@@ -4,6 +4,7 @@ export function About() {
   return (
     <section
       id="about"
+      className="v3-about-grid"
       style={{
         padding: "120px 32px",
         display: "grid",
@@ -27,6 +28,7 @@ export function About() {
 
         {/* Portrait slot — 380×480, light gray fallback */}
         <div
+          className="v3-portrait-box"
           style={{
             width: 380, height: 480,
             background: "#f3f3f3",
@@ -68,7 +70,7 @@ export function About() {
           <div>Curious. <span style={{ fontSize: "0.22em", verticalAlign: "middle", color: "var(--mute)", letterSpacing: "0.04em" }}>(Pending world record verification.)</span></div>
         </h2>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48 }}>
+        <div className="v3-bio-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48 }}>
           <p style={{ fontSize: 18, lineHeight: 1.5, margin: 0 }}>
             Born and based in Dubai. Deep love for tech and building things. I work on systems that could break any second — cyber, AI, cloud, data. If it can fail, I&rsquo;ve probably touched it.
           </p>

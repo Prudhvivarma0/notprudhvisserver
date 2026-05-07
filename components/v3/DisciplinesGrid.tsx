@@ -32,7 +32,7 @@ export function DisciplinesGrid() {
       </div>
 
       {/* 4×2 grid */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)" }}>
+      <div className="v3-disciplines-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)" }}>
         {DISCIPLINES.map(([n, t], i) => (
           <div
             key={n}
