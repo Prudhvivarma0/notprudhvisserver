@@ -70,9 +70,7 @@ export function Hero({ dark, reduced, onWorkClick, onContactClick }: Props) {
         }}
       >
         <p style={{ fontSize: 22, lineHeight: 1.3, margin: 0, maxWidth: 480 }}>
-          Developer building <em>secure systems</em>, <em>edge networks</em>, and{" "}
-          <em>things that break on purpose</em>. Sometimes the architect, sometimes
-          the engineer, almost always both.
+          Nomad building stuff that <em>(probably) won&rsquo;t break</em>. Sometimes the architect, sometimes the engineer, almost always both.
         </p>
         <div style={{ display: "flex", justifyContent: "flex-end", gap: 16, flexWrap: "wrap" }}>
           <Magnetic strength={0.4} reduced={reduced}>
