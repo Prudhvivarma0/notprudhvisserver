@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 
 const NAV_ITEMS = [
-  { key: "work",     label: "Work"    },
+  { key: "work",     label: "Projects"   },
   { key: "about",    label: "About"   },
-  { key: "timeline", label: "Time"    },
+  { key: "timeline", label: "Experience" },
   { key: "contact",  label: "Contact" },
 ] as const;
 

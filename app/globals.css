@@ -93,9 +93,9 @@ body {
   transform-origin: top;
 }
 
-.v3-row > * { position: relative; z-index: 1; transition: color 0.3s; }
+.v3-row > *:not(.v3-row-bg) { position: relative; z-index: 1; transition: color 0.3s; }
 
-.v3-row:hover > * { color: var(--invert-ink) !important; }
+.v3-row:hover > *:not(.v3-row-bg) { color: var(--invert-ink) !important; }
 
 .v3-arrow {
   transform: translateX(-12px);

@@ -28,13 +28,10 @@ export function Hero({ dark, reduced, onWorkClick, onContactClick }: Props) {
         className="v3-mono"
         style={{
           fontSize: 12, textTransform: "uppercase", letterSpacing: "0.16em",
-          color: "var(--mute)", display: "flex", justifyContent: "space-between",
-          flexWrap: "wrap", gap: 8,
+          color: "var(--mute)",
         }}
       >
-        <span>(Portfolio / 2026)</span>
-        <span>Hyderabad ↗ 17.385° N</span>
-        <span>Move your cursor across the type ↓</span>
+        (Portfolio / 2026)
       </div>
 
       {/* Headline + Globe */}
@@ -50,7 +47,7 @@ export function Hero({ dark, reduced, onWorkClick, onContactClick }: Props) {
           className="v3-display"
           style={{ fontSize: "clamp(80px, 14vw, 240px)", lineHeight: 1.02 }}
         >
-          <div style={{ marginBottom: "0.12em" }}>
+          <div style={{ marginBottom: "0.08em" }}>
             <Flex text="PRUDHVI" />
           </div>
           <div>
@@ -80,14 +77,11 @@ export function Hero({ dark, reduced, onWorkClick, onContactClick }: Props) {
         <div style={{ display: "flex", justifyContent: "flex-end", gap: 16, flexWrap: "wrap" }}>
           <Magnetic strength={0.4} reduced={reduced}>
             <button onClick={onWorkClick} className="v3-mag-btn">
-              Selected work →
+              Selected experience →
             </button>
           </Magnetic>
           <Magnetic strength={0.4} reduced={reduced}>
-            <button
-              onClick={onContactClick}
-              className="v3-mag-btn v3-mag-btn-filled"
-            >
+            <button onClick={onContactClick} className="v3-mag-btn v3-mag-btn-filled">
               Get in touch
             </button>
           </Magnetic>

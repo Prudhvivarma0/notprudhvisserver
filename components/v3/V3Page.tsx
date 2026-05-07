@@ -114,7 +114,7 @@ export function V3Page() {
       <Hero
         dark={dark}
         reduced={reduced}
-        onWorkClick={()    => navTo("work",    "Work")}
+        onWorkClick={()    => navTo("work",    "Projects")}
         onContactClick={() => navTo("contact", "Contact")}
       />
 

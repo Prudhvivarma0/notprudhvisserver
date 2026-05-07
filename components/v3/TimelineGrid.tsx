@@ -1,8 +1,8 @@
 const EXP = [
-  ["2026—", "Art Dubai 2026",       "Digital Products Consultant"],
-  ["2025",  "MCN",                  "Intern · issue triage + automation"],
-  ["2025",  "Greenhouse Foodstuff", "Intern · security & training"],
-  ["2024",  "Urbizassist",          "Intern · IT infra audit"],
+  ["APR 2026 —",        "Art Dubai 2026",       "Digital Products Consultant"],
+  ["APR 2025 — PRESENT","MCN",                  "Intern · issue triage + automation"],
+  ["JAN — MAY 2025",    "Greenhouse Foodstuff", "Intern · security & training"],
+  ["DEC 2024 — FEB 2025","Urbizassist",         "Intern · IT infra audit"],
 ] as const;
 
 export function TimelineGrid() {
@@ -15,7 +15,7 @@ export function TimelineGrid() {
           letterSpacing: "0.16em", color: "var(--mute)", marginBottom: 60,
         }}
       >
-        (03) Time
+        (03) Experience
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 32 }}>

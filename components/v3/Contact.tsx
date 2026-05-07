@@ -28,7 +28,7 @@ export function Contact({ reduced }: Props) {
         className="v3-display"
         style={{ fontSize: "clamp(120px, 22vw, 360px)", margin: "0 0 60px", lineHeight: 0.85 }}
       >
-        <div><Flex text="SAY" /></div>
+        <div style={{ marginBottom: "0.18em" }}><Flex text="SAY" /></div>
         <div><Flex text="HELLO." /></div>
       </h2>
 
@@ -48,11 +48,6 @@ export function Contact({ reduced }: Props) {
             linkedin
           </a>
         </Magnetic>
-        <Magnetic strength={0.3} reduced={reduced}>
-          <a href="https://www.linkedin.com/in/prudhvivarma11/" target="_blank" rel="noopener noreferrer" className="v3-mag-btn">
-            x / twitter
-          </a>
-        </Magnetic>
       </div>
 
       {/* Footer row */}
@@ -67,9 +62,24 @@ export function Contact({ reduced }: Props) {
         }}
       >
         <span>© Prudhvi Varma 2026</span>
-        <span>Built in Hyderabad</span>
+        <span>Built with intention</span>
         <span>Last touched · today</span>
       </div>
+
+      {/* tiny confession */}
+      <p
+        className="v3-mono"
+        style={{
+          marginTop: 24,
+          fontSize: 10,
+          color: "var(--mute)",
+          opacity: 0.45,
+          textAlign: "center",
+          letterSpacing: "0.12em",
+        }}
+      >
+        yes, i asked an ai to design and build this. no, i&rsquo;m not sorry. neither is claude.
+      </p>
     </section>
   );
 }

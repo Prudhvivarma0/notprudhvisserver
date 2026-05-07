@@ -53,7 +53,7 @@ export function About() {
           }}
         >
           <span>Plate I</span>
-          <span>Hyderabad, 2026</span>
+          <span>2026</span>
         </div>
       </div>
 
@@ -65,7 +65,7 @@ export function About() {
         >
           <div style={{ marginBottom: "0.18em" }}>Architect.</div>
           <div style={{ marginBottom: "0.18em" }}>Developer.</div>
-          <div>Entrepreneur.</div>
+          <div>Entrepreneur?</div>
         </h2>
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48 }}>
