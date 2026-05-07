@@ -65,7 +65,7 @@ export function About() {
         >
           <div style={{ marginBottom: "0.18em" }}>Architect.</div>
           <div style={{ marginBottom: "0.18em" }}>Developer.</div>
-          <div>Entrepreneur?</div>
+          <div>Curious. <span style={{ fontSize: "0.45em", verticalAlign: "middle", color: "var(--mute)", letterSpacing: "0.04em" }}>(Pending world record verification.)</span></div>
         </h2>
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48 }}>
