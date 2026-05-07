@@ -1,15 +1,10 @@
-const DISCIPLINES = [
-  ["01", "Cloud Infrastructure"],
-  ["02", "Digital Products"],
-  ["03", "Data Analysis"],
-  ["04", "Automation Pipelines"],
-  ["05", "Edge Networks"],
-  ["06", "Threat Detection"],
-  ["07", "Developer Tooling"],
-  ["08", "Resilient Architectures"],
-] as const;
+import { DEFAULT_CONTENT, SiteContent } from "@/lib/content";
 
-export function DisciplinesGrid() {
+interface Props {
+  disciplines?: SiteContent["disciplines"];
+}
+
+export function DisciplinesGrid({ disciplines = DEFAULT_CONTENT.disciplines }: Props) {
   return (
     <section
       style={{
@@ -33,9 +28,9 @@ export function DisciplinesGrid() {
 
       {/* 4×2 grid */}
       <div className="v3-disciplines-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)" }}>
-        {DISCIPLINES.map(([n, t], i) => (
+        {disciplines.map(({ num, label }, i) => (
           <div
-            key={n}
+            key={num}
             style={{
               padding: "24px 20px 24px 0",
               borderTop: i >= 4 ? "1px solid var(--rule)" : "none",
@@ -48,9 +43,9 @@ export function DisciplinesGrid() {
               className="v3-mono"
               style={{ fontSize: 11, letterSpacing: "0.16em", color: "var(--mute)", flexShrink: 0 }}
             >
-              {n}
+              {num}
             </span>
-            <span style={{ fontSize: 18, lineHeight: 1.2, fontWeight: 400 }}>{t}</span>
+            <span style={{ fontSize: 18, lineHeight: 1.2, fontWeight: 400 }}>{label}</span>
           </div>
         ))}
       </div>

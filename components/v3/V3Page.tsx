@@ -10,6 +10,7 @@ import { WorkList }           from "./WorkList";
 import { TimelineGrid }       from "./TimelineGrid";
 import { CertsAchievements }  from "./CertsAchievements";
 import { Contact }            from "./Contact";
+import { SiteContent, DEFAULT_CONTENT } from "@/lib/content";
 
 type NavKey = "work" | "about" | "timeline" | "contact";
 
@@ -26,7 +27,11 @@ function useReducedMotion() {
   return reduced;
 }
 
-export function V3Page() {
+interface V3PageProps {
+  content?: SiteContent;
+}
+
+export function V3Page({ content = DEFAULT_CONTENT }: V3PageProps) {
   const rootRef  = useRef<HTMLDivElement>(null);
   const reduced  = useReducedMotion();
 
@@ -114,27 +119,28 @@ export function V3Page() {
       <Hero
         dark={dark}
         reduced={reduced}
+        hero={content.hero}
         onWorkClick={()    => navTo("work",    "Projects")}
         onContactClick={() => navTo("contact", "Contact")}
       />
 
       {/* Disciplines band */}
-      <DisciplinesGrid />
+      <DisciplinesGrid disciplines={content.disciplines} />
 
       {/* About */}
-      <About />
+      <About about={content.about} />
 
       {/* Selected Work */}
-      <WorkList />
+      <WorkList projects={content.projects} />
 
       {/* Time / Experience */}
-      <TimelineGrid />
+      <TimelineGrid experience={content.experience} />
 
       {/* Certs + Achievements */}
-      <CertsAchievements />
+      <CertsAchievements certifications={content.certifications} achievements={content.achievements} />
 
       {/* Contact */}
-      <Contact reduced={reduced} />
+      <Contact reduced={reduced} contact={content.contact} />
     </div>
   );
 }

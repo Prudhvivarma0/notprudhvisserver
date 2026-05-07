@@ -1,6 +1,11 @@
 import Image from "next/image";
+import { DEFAULT_CONTENT, SiteContent } from "@/lib/content";
 
-export function About() {
+interface Props {
+  about?: SiteContent["about"];
+}
+
+export function About({ about = DEFAULT_CONTENT.about }: Props) {
   return (
     <section
       id="about"
@@ -54,8 +59,8 @@ export function About() {
             display: "flex", justifyContent: "space-between",
           }}
         >
-          <span>Plate I</span>
-          <span>2026</span>
+          <span>{about.portraitCaption}</span>
+          <span>{about.portraitYear}</span>
         </div>
       </div>
 
@@ -65,17 +70,17 @@ export function About() {
           className="v3-display"
           style={{ fontSize: "clamp(56px, 7vw, 120px)", margin: "0 0 48px", lineHeight: 1.15 }}
         >
-          <div style={{ marginBottom: "0.18em" }}>Architect.</div>
-          <div style={{ marginBottom: "0.18em" }}>Developer.</div>
-          <div>Curious. <span style={{ fontSize: "0.22em", verticalAlign: "middle", color: "var(--mute)", letterSpacing: "0.04em" }}>(Pending world record verification.)</span></div>
+          <div style={{ marginBottom: "0.18em" }}>{about.heading1}</div>
+          <div style={{ marginBottom: "0.18em" }}>{about.heading2}</div>
+          <div>{about.heading3} <span style={{ fontSize: "0.22em", verticalAlign: "middle", color: "var(--mute)", letterSpacing: "0.04em" }}>(Pending world record verification.)</span></div>
         </h2>
 
         <div className="v3-bio-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48 }}>
           <p style={{ fontSize: 18, lineHeight: 1.5, margin: 0 }}>
-            Born and based in Dubai. Deep love for tech and building things. I work on systems that could break any second — cyber, AI, cloud, data. If it can fail, I&rsquo;ve probably touched it.
+            {about.bio1}
           </p>
           <p style={{ fontSize: 18, lineHeight: 1.5, margin: 0 }}>
-            Running joke that I&rsquo;m involved in everything. I&rsquo;m starting to think it&rsquo;s true. I take quiet pleasure in finding the load-bearing wall of a problem and removing everything else around it. Most of my work is the work of removal.
+            {about.bio2}
           </p>
         </div>
       </div>

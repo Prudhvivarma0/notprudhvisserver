@@ -1,20 +1,11 @@
-const CERTS = [
-  { name: "BTL1",                 issuer: "Security Blue Team", label: "DEC 2025" },
-  { name: "ISC2 CC",              issuer: "ISC2",               label: "AUG 2025" },
-  { name: "Splunk SOAR",          issuer: "Splunk",             label: "OCT 2025" },
-  { name: "Art of Investigation", issuer: "Splunk",             label: "OCT 2025" },
-  { name: "Security Ops Analyst", issuer: "Splunk",             label: "OCT 2025" },
-  { name: "Intro to Splunk",      issuer: "Splunk",             label: "OCT 2025" },
-  { name: "Cybersecurity Fundamentals", issuer: "IBM",          label: "JAN 2025" },
-  { name: "SOC Analyst",          issuer: "Udemy",              label: "APR 2024" },
-];
+import { DEFAULT_CONTENT, SiteContent } from "@/lib/content";
 
-const ACHIEVEMENTS = [
-  { name: "1ST PLACE QUALIFIER", issuer: "", label: "ZU × EXPLOITERS CTF" },
-  { name: "3RD PLACE WINNER",    issuer: "", label: "REDTEAM CYBER HACK"  },
-];
+interface Props {
+  certifications?: SiteContent["certifications"];
+  achievements?:   SiteContent["achievements"];
+}
 
-function CertRow({ name, issuer, label }: { name: string; issuer: string; label: string }) {
+function CertRow({ name, issuer, label }: { name: string; issuer?: string; label: string }) {
   return (
     <div style={{ borderBottom: "1px solid var(--rule)", padding: "16px 0", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16 }}>
       <div>
@@ -34,7 +25,10 @@ function CertRow({ name, issuer, label }: { name: string; issuer: string; label:
   );
 }
 
-export function CertsAchievements() {
+export function CertsAchievements({
+  certifications = DEFAULT_CONTENT.certifications,
+  achievements   = DEFAULT_CONTENT.achievements,
+}: Props) {
   return (
     <section
       className="v3-certs-grid"
@@ -50,14 +44,14 @@ export function CertsAchievements() {
         <div className="v3-mono" style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.16em", color: "var(--mute)", marginBottom: 32 }}>
           (04) Certs
         </div>
-        {CERTS.map(c => <CertRow key={c.name} {...c} />)}
+        {certifications.map(c => <CertRow key={c.name} name={c.name} issuer={c.issuer} label={c.label} />)}
       </div>
 
       <div>
         <div className="v3-mono" style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.16em", color: "var(--mute)", marginBottom: 32 }}>
           (05) Achievements
         </div>
-        {ACHIEVEMENTS.map(a => <CertRow key={a.name} {...a} />)}
+        {achievements.map(a => <CertRow key={a.name} name={a.name} label={a.label} />)}
       </div>
     </section>
   );

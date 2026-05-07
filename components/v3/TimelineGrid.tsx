@@ -1,11 +1,10 @@
-const EXP = [
-  ["APR 2026 —",        "Art Dubai",            "Digital Products Consultant"],
-  ["APR 2025 — PRESENT","MCN",                  "Intern · issue triage + automation"],
-  ["JAN — MAY 2025",    "Greenhouse Foodstuff", "Intern · analysis & automation"],
-  ["DEC 2024 — FEB 2025","Urbizassist",         "Intern · analysis & automation"],
-] as const;
+import { DEFAULT_CONTENT, SiteContent } from "@/lib/content";
 
-export function TimelineGrid() {
+interface Props {
+  experience?: SiteContent["experience"];
+}
+
+export function TimelineGrid({ experience = DEFAULT_CONTENT.experience }: Props) {
   return (
     <section id="timeline" className="v3-pad" style={{ padding: "120px 32px", borderTop: "1px solid var(--rule)" }}>
       <div
@@ -19,7 +18,7 @@ export function TimelineGrid() {
       </div>
 
       <div className="v3-timeline-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 32 }}>
-        {EXP.map(([year, org, role], i) => (
+        {experience.map(({ dateRange, org, role }, i) => (
           <div key={i} style={{ borderTop: "1px solid var(--ink)", paddingTop: 24 }}>
             <div
               className="v3-mono"
@@ -28,7 +27,7 @@ export function TimelineGrid() {
                 letterSpacing: "0.16em", color: "var(--mute)", marginBottom: 16,
               }}
             >
-              {year}
+              {dateRange}
             </div>
             <div className="v3-display" style={{ fontSize: 32, lineHeight: 1, marginBottom: 12 }}>
               {org}

@@ -2,10 +2,14 @@
 
 import { Flex }     from "./Flex";
 import { Magnetic } from "./Magnetic";
+import { DEFAULT_CONTENT, SiteContent } from "@/lib/content";
 
-interface Props { reduced: boolean; }
+interface Props {
+  reduced: boolean;
+  contact?: SiteContent["contact"];
+}
 
-export function Contact({ reduced }: Props) {
+export function Contact({ reduced, contact = DEFAULT_CONTENT.contact }: Props) {
   return (
     <section
       id="contact"
@@ -35,17 +39,17 @@ export function Contact({ reduced }: Props) {
 
       <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
         <Magnetic strength={0.3} reduced={reduced}>
-          <a href="mailto:prudhvivarma31@gmail.com" className="v3-mag-btn v3-mag-btn-filled">
-            prudhvivarma31@gmail.com →
+          <a href={`mailto:${contact.email}`} className="v3-mag-btn v3-mag-btn-filled">
+            {contact.email} →
           </a>
         </Magnetic>
         <Magnetic strength={0.3} reduced={reduced}>
-          <a href="https://github.com/Prudhvivarma0" target="_blank" rel="noopener noreferrer" className="v3-mag-btn">
+          <a href={contact.github} target="_blank" rel="noopener noreferrer" className="v3-mag-btn">
             github
           </a>
         </Magnetic>
         <Magnetic strength={0.3} reduced={reduced}>
-          <a href="https://www.linkedin.com/in/prudhvivarma11/" target="_blank" rel="noopener noreferrer" className="v3-mag-btn">
+          <a href={contact.linkedin} target="_blank" rel="noopener noreferrer" className="v3-mag-btn">
             linkedin
           </a>
         </Magnetic>
@@ -62,9 +66,9 @@ export function Contact({ reduced }: Props) {
           letterSpacing: "0.16em", color: "var(--mute)",
         }}
       >
-        <span>© Prudhvi Varma 2026</span>
-        <span>Built with intention</span>
-        <span>Last touched · today</span>
+        <span>{contact.footerLeft}</span>
+        <span>{contact.footerCenter}</span>
+        <span>{contact.footerRight}</span>
       </div>
 
       {/* tiny confession */}
@@ -79,7 +83,7 @@ export function Contact({ reduced }: Props) {
           letterSpacing: "0.12em",
         }}
       >
-        yes, i asked an ai to design and build this. no, i&rsquo;m not sorry. neither is claude.
+        {contact.confession}
       </p>
     </section>
   );
