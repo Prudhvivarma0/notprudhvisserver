@@ -1,8 +1,8 @@
 const EXP = [
   ["APR 2026 —",        "Art Dubai",            "Digital Products Consultant"],
   ["APR 2025 — PRESENT","MCN",                  "Intern · issue triage + automation"],
-  ["JAN — MAY 2025",    "Greenhouse Foodstuff", "Intern · security & training"],
-  ["DEC 2024 — FEB 2025","Urbizassist",         "Intern · IT infra audit"],
+  ["JAN — MAY 2025",    "Greenhouse Foodstuff", "Intern · analysis & automation"],
+  ["DEC 2024 — FEB 2025","Urbizassist",         "Intern · analysis & automation"],
 ] as const;
 
 export function TimelineGrid() {
