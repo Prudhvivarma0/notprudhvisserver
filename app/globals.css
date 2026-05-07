@@ -139,7 +139,8 @@ body {
 
 .v3-wipe-panel-a {
   position: fixed;
-  inset: 0;
+  top: 0; left: 0; right: 0;
+  height: 100dvh;
   background: var(--ink);
   color: var(--bg);
   z-index: 100;
@@ -151,7 +152,8 @@ body {
 
 .v3-wipe-panel-b {
   position: fixed;
-  inset: 0;
+  top: 0; left: 0; right: 0;
+  height: 100dvh;
   background: var(--ink);
   z-index: 99;
   pointer-events: none;
