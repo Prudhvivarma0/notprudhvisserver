@@ -1,7 +1,7 @@
 const DISCIPLINES = [
   ["01", "Cloud Infrastructure"],
-  ["02", "Event Platforms"],
-  ["03", "Web Applications"],
+  ["02", "Digital Products"],
+  ["03", "Data Analysis"],
   ["04", "Automation Pipelines"],
   ["05", "Edge Networks"],
   ["06", "Threat Detection"],
