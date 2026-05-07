@@ -70,10 +70,10 @@ export function About() {
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48 }}>
           <p style={{ fontSize: 18, lineHeight: 1.5, margin: 0 }}>
-            Cloud, data security, enterprise systems, and anything that could fail any second. If it has uptime requirements and trust issues, I&rsquo;ve probably built it. Curiosity does most of the driving.
+            Born and based in Dubai. Deep love for tech and building things. I work on systems that could break any second — cyber, AI, cloud, data. If it can fail, I&rsquo;ve probably touched it.
           </p>
           <p style={{ fontSize: 18, lineHeight: 1.5, margin: 0 }}>
-            Tech is the thing I&rsquo;d still be doing if no one paid me for it. I take quiet pleasure in finding the load-bearing wall of a problem and removing everything else around it. Most of my work is the work of removal.
+            Running joke that I&rsquo;m involved in everything. I&rsquo;m starting to think it&rsquo;s true. I take quiet pleasure in finding the load-bearing wall of a problem and removing everything else around it. Most of my work is the work of removal.
           </p>
         </div>
       </div>
