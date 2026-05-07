@@ -33,6 +33,23 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const db = (env as { DB?: D1Database }).DB;
     if (!db) return NextResponse.json({ error: "No DB binding" }, { status: 500 });
     await saveContent(db, body);
+
+    // Save version snapshot (keep last 20)
+    try {
+      const data = JSON.stringify(body);
+      await db
+        .prepare("INSERT INTO v3_versions (data) VALUES (?)")
+        .bind(data)
+        .run();
+      await db
+        .prepare(
+          "DELETE FROM v3_versions WHERE id NOT IN (SELECT id FROM v3_versions ORDER BY id DESC LIMIT 20)"
+        )
+        .run();
+    } catch {
+      // Non-fatal — version history failure should not block save
+    }
+
     return NextResponse.json({ ok: true });
   } catch (err) {
     return NextResponse.json({ error: String(err) }, { status: 500 });

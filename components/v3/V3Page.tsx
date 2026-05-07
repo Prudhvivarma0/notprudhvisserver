@@ -46,6 +46,19 @@ export function V3Page({ content = DEFAULT_CONTENT }: V3PageProps) {
     if (stored === "dark") setDark(true);
   }, []);
 
+  // ── Analytics tracker ─────────────────────────────────────────────────
+  useEffect(() => {
+    try {
+      fetch("/api/analytics", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ page: "/", referrer: document.referrer }),
+      });
+    } catch {
+      // non-fatal
+    }
+  }, []);
+
   // ── Scrollspy ──────────────────────────────────────────────────────────
   useEffect(() => {
     const ids: NavKey[] = ["about", "work", "timeline", "contact"];
@@ -102,6 +115,8 @@ export function V3Page({ content = DEFAULT_CONTENT }: V3PageProps) {
     setTimeout(() => setWiping(false), 1500);
   };
 
+  const navItems = content.nav?.items ?? DEFAULT_CONTENT.nav.items;
+
   return (
     <div ref={rootRef} style={{ background: "var(--bg)", color: "var(--ink)", minHeight: "100vh", overflowX: "hidden" }}>
       {/* Wipe overlay (two panels) */}
@@ -114,6 +129,7 @@ export function V3Page({ content = DEFAULT_CONTENT }: V3PageProps) {
         activeNav={activeNav}
         onNavClick={navTo}
         logo={content.appearance?.logo}
+        navItems={navItems}
       />
 
       {/* Hero */}

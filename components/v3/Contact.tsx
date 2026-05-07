@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Flex }     from "./Flex";
 import { Magnetic } from "./Magnetic";
 import { DEFAULT_CONTENT, SiteContent } from "@/lib/content";
@@ -10,6 +11,47 @@ interface Props {
 }
 
 export function Contact({ reduced, contact = DEFAULT_CONTENT.contact }: Props) {
+  const [name,    setName]    = useState("");
+  const [email,   setEmail]   = useState("");
+  const [message, setMessage] = useState("");
+  const [status,  setStatus]  = useState<"idle" | "sending" | "ok" | "err">("idle");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus("sending");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, message }),
+      });
+      if (res.ok) {
+        setStatus("ok");
+        setName(""); setEmail(""); setMessage("");
+      } else {
+        setStatus("err");
+      }
+    } catch {
+      setStatus("err");
+    }
+  };
+
+  const inputStyle: React.CSSProperties = {
+    display: "block",
+    width: "100%",
+    background: "transparent",
+    border: "1px solid var(--rule)",
+    color: "var(--ink)",
+    fontFamily: "var(--font-jetbrains), 'JetBrains Mono', monospace",
+    fontSize: 13,
+    padding: "12px 16px",
+    outline: "none",
+    borderRadius: 2,
+    marginBottom: 12,
+    boxSizing: "border-box",
+    letterSpacing: "0.04em",
+  };
+
   return (
     <section
       id="contact"
@@ -37,7 +79,7 @@ export function Contact({ reduced, contact = DEFAULT_CONTENT.contact }: Props) {
         <div><Flex text="HELLO." /></div>
       </h2>
 
-      <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
+      <div style={{ display: "flex", gap: 24, flexWrap: "wrap", marginBottom: contact.showForm ? 64 : 0 }}>
         <Magnetic strength={0.3} reduced={reduced}>
           <a href={`mailto:${contact.email}`} className="v3-mag-btn v3-mag-btn-filled">
             {contact.email} →
@@ -54,6 +96,105 @@ export function Contact({ reduced, contact = DEFAULT_CONTENT.contact }: Props) {
           </a>
         </Magnetic>
       </div>
+
+      {/* Contact form — only shown if showForm is true */}
+      {contact.showForm && (
+        <div style={{ maxWidth: 560, marginBottom: 80 }}>
+          <div
+            className="v3-mono"
+            style={{
+              fontSize: 10, textTransform: "uppercase",
+              letterSpacing: "0.18em", color: "var(--mute)",
+              marginBottom: 24,
+            }}
+          >
+            Or send a message directly
+          </div>
+
+          {status === "ok" ? (
+            <p
+              className="v3-mono"
+              style={{ fontSize: 13, color: "#3a7a38", letterSpacing: "0.06em" }}
+            >
+              Message sent. I&apos;ll get back to you.
+            </p>
+          ) : (
+            <form onSubmit={handleSubmit}>
+              <label
+                className="v3-mono"
+                style={{ display: "block", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.14em", color: "var(--mute)", marginBottom: 6 }}
+              >
+                Name
+              </label>
+              <input
+                type="text"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                required
+                style={inputStyle}
+                onFocus={e => (e.target.style.borderColor = "var(--ink)")}
+                onBlur={e => (e.target.style.borderColor = "var(--rule)")}
+              />
+
+              <label
+                className="v3-mono"
+                style={{ display: "block", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.14em", color: "var(--mute)", marginBottom: 6 }}
+              >
+                Email
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                required
+                style={inputStyle}
+                onFocus={e => (e.target.style.borderColor = "var(--ink)")}
+                onBlur={e => (e.target.style.borderColor = "var(--rule)")}
+              />
+
+              <label
+                className="v3-mono"
+                style={{ display: "block", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.14em", color: "var(--mute)", marginBottom: 6 }}
+              >
+                Message
+              </label>
+              <textarea
+                value={message}
+                onChange={e => setMessage(e.target.value)}
+                required
+                rows={4}
+                style={{ ...inputStyle, resize: "vertical", minHeight: 100, marginBottom: 20 }}
+                onFocus={e => (e.target.style.borderColor = "var(--ink)")}
+                onBlur={e => (e.target.style.borderColor = "var(--rule)")}
+              />
+
+              {status === "err" && (
+                <p
+                  className="v3-mono"
+                  style={{ fontSize: 12, color: "#cc0000", marginBottom: 12, letterSpacing: "0.06em" }}
+                >
+                  Something went wrong. Try the email above.
+                </p>
+              )}
+
+              <button
+                type="submit"
+                disabled={status === "sending"}
+                className="v3-mag-btn"
+                style={{
+                  background: "var(--ink)",
+                  color: "var(--bg)",
+                  cursor: status === "sending" ? "wait" : "pointer",
+                  opacity: status === "sending" ? 0.6 : 1,
+                  border: "none",
+                }}
+              >
+                {status === "sending" ? "Sending…" : "Send →"}
+              </button>
+            </form>
+          )}
+        </div>
+      )}
 
       {/* Footer row */}
       <div

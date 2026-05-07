@@ -26,20 +26,25 @@ export interface SiteContent {
     meta: string;
     desc: string;
     link?: string;
+    visible?: boolean;
+    status?: "Live" | "Archived" | "WIP";
   }>;
   experience: Array<{
     dateRange: string;
     org: string;
     role: string;
+    visible?: boolean;
   }>;
   certifications: Array<{
     name: string;
     issuer: string;
     label: string;
+    visible?: boolean;
   }>;
   achievements: Array<{
     name: string;
     label: string;
+    visible?: boolean;
   }>;
   contact: {
     email: string;
@@ -49,6 +54,7 @@ export interface SiteContent {
     footerCenter: string;
     footerRight: string;
     confession: string;
+    showForm: boolean;
   };
   seo: {
     title: string;
@@ -58,6 +64,16 @@ export interface SiteContent {
   appearance: {
     logo: string;
     accentColor: string;
+    cssVars: {
+      bgLight: string;
+      inkLight: string;
+      muteLight: string;
+      ruleLight: string;
+      bgDark: string;
+      inkDark: string;
+      muteDark: string;
+      ruleDark: string;
+    };
   };
   sections: {
     disciplines: boolean;
@@ -69,6 +85,9 @@ export interface SiteContent {
   };
   media: {
     portrait: string;
+  };
+  nav: {
+    items: Array<{ key: string; label: string }>;
   };
 }
 
@@ -105,62 +124,70 @@ export const DEFAULT_CONTENT: SiteContent = {
       n: "01", title: "Stock Signal Bot", year: "2026", meta: "ai · automation",
       desc: "7-agent AI stock research engine with 24/7 portfolio monitoring and real-time Telegram alerts.",
       link: "https://github.com/Prudhvivarma0/stock-signal-bot",
+      visible: true, status: "Live",
     },
     {
       n: "02", title: "AWS Threat Monitoring", year: "2025", meta: "cloud · security",
       desc: "Cloud-wide architecture across VPCs, GuardDuty and EBS — under-budget by 40%.",
       link: "https://github.com/Prudhvivarma0/AWS-Cloud-monitoring",
+      visible: true, status: "Live",
     },
     {
       n: "03", title: "Web App Penetration Test", year: "2025", meta: "red-team · owasp",
       desc: "Comprehensive pen tests on DVWA targeting CSRF, XSS, SQLi and Brute Force using Kali Linux and Burp Suite.",
       link: "https://github.com/Prudhvivarma0?tab=repositories",
+      visible: true, status: "Live",
     },
     {
       n: "04", title: "US Accidents Dashboard", year: "2025", meta: "data viz · d3.js",
       desc: "Interactive dashboard visualising multi-year US traffic data — choropleth maps, heatmaps, drill-down filters.",
       link: "https://github.com/Prudhvivarma0/F20DVCW2",
+      visible: true, status: "Live",
     },
     {
       n: "05", title: "WiFiGuard", year: "2024", meta: "thesis · cyber-physical",
       desc: "Defensive layer against deauth and rogue-AP attacks using Wi-Fi CSI and Variational Autoencoders.",
       link: "https://github.com/Prudhvivarma0/WiMANS",
+      visible: true, status: "Live",
     },
     {
       n: "06", title: "Brainwave", year: "2024", meta: "full-stack · real-time",
       desc: "Collaborative brainstorming platform with Socket.io messaging, shared whiteboard, and virtual exhibits.",
       link: "https://github.com/Prudhvivarma0/brain-wave",
+      visible: true, status: "Live",
     },
     {
       n: "07", title: "Firewall & Encryption", year: "2024", meta: "network · crypto",
       desc: "Rule-based firewall with IP access control paired with a public-key encryption system using super-increasing sequences.",
       link: "https://github.com/Prudhvivarma0/Public-Key-Encryption-and-Firewall-Management-System",
+      visible: true, status: "Live",
     },
     {
       n: "08", title: "Enterprise Threat Sims", year: "2024", meta: "red-team",
       desc: "Library of attack scenarios stress-testing enterprise blue-team posture for AIG, ANZ, Mastercard and Telstra.",
       link: "https://github.com/Prudhvivarma0?tab=repositories",
+      visible: true, status: "Live",
     },
   ],
   experience: [
-    { dateRange: "APR 2026 —",          org: "Art Dubai",            role: "Digital Products Consultant" },
-    { dateRange: "APR 2025 — PRESENT",  org: "MCN",                  role: "Intern · issue triage + automation" },
-    { dateRange: "JAN — MAY 2025",      org: "Greenhouse Foodstuff", role: "Intern · analysis & automation" },
-    { dateRange: "DEC 2024 — FEB 2025", org: "Urbizassist",          role: "Intern · analysis & automation" },
+    { dateRange: "APR 2026 —",          org: "Art Dubai",            role: "Digital Products Consultant",       visible: true },
+    { dateRange: "APR 2025 — PRESENT",  org: "MCN",                  role: "Intern · issue triage + automation", visible: true },
+    { dateRange: "JAN — MAY 2025",      org: "Greenhouse Foodstuff", role: "Intern · analysis & automation",    visible: true },
+    { dateRange: "DEC 2024 — FEB 2025", org: "Urbizassist",          role: "Intern · analysis & automation",    visible: true },
   ],
   certifications: [
-    { name: "BTL1",                      issuer: "Security Blue Team", label: "DEC 2025" },
-    { name: "ISC2 CC",                   issuer: "ISC2",               label: "AUG 2025" },
-    { name: "Splunk SOAR",               issuer: "Splunk",             label: "OCT 2025" },
-    { name: "Art of Investigation",      issuer: "Splunk",             label: "OCT 2025" },
-    { name: "Security Ops Analyst",      issuer: "Splunk",             label: "OCT 2025" },
-    { name: "Intro to Splunk",           issuer: "Splunk",             label: "OCT 2025" },
-    { name: "Cybersecurity Fundamentals",issuer: "IBM",                label: "JAN 2025" },
-    { name: "SOC Analyst",               issuer: "Udemy",              label: "APR 2024" },
+    { name: "BTL1",                      issuer: "Security Blue Team", label: "DEC 2025", visible: true },
+    { name: "ISC2 CC",                   issuer: "ISC2",               label: "AUG 2025", visible: true },
+    { name: "Splunk SOAR",               issuer: "Splunk",             label: "OCT 2025", visible: true },
+    { name: "Art of Investigation",      issuer: "Splunk",             label: "OCT 2025", visible: true },
+    { name: "Security Ops Analyst",      issuer: "Splunk",             label: "OCT 2025", visible: true },
+    { name: "Intro to Splunk",           issuer: "Splunk",             label: "OCT 2025", visible: true },
+    { name: "Cybersecurity Fundamentals",issuer: "IBM",                label: "JAN 2025", visible: true },
+    { name: "SOC Analyst",               issuer: "Udemy",              label: "APR 2024", visible: true },
   ],
   achievements: [
-    { name: "1ST PLACE QUALIFIER", label: "ZU × EXPLOITERS CTF" },
-    { name: "3RD PLACE WINNER",    label: "REDTEAM CYBER HACK"  },
+    { name: "1ST PLACE QUALIFIER", label: "ZU × EXPLOITERS CTF", visible: true },
+    { name: "3RD PLACE WINNER",    label: "REDTEAM CYBER HACK",  visible: true },
   ],
   contact: {
     email: "prudhvivarma31@gmail.com",
@@ -170,6 +197,7 @@ export const DEFAULT_CONTENT: SiteContent = {
     footerCenter: "Built with intention",
     footerRight: "Last touched · today",
     confession: "yes, i asked an ai to design and build this. no, i'm not sorry. neither is claude.",
+    showForm: true,
   },
   seo: {
     title: "Prudhvi Varma",
@@ -179,6 +207,16 @@ export const DEFAULT_CONTENT: SiteContent = {
   appearance: {
     logo: "PV—2026",
     accentColor: "#4a7048",
+    cssVars: {
+      bgLight:   "#ffffff",
+      inkLight:  "#0a0a0a",
+      muteLight: "#8a8a8a",
+      ruleLight: "#e6e6e6",
+      bgDark:    "#0a0a0a",
+      inkDark:   "#ffffff",
+      muteDark:  "#6a6a6a",
+      ruleDark:  "#1f1f1f",
+    },
   },
   sections: {
     disciplines: true,
@@ -190,6 +228,14 @@ export const DEFAULT_CONTENT: SiteContent = {
   },
   media: {
     portrait: "",
+  },
+  nav: {
+    items: [
+      { key: "work",     label: "Projects"   },
+      { key: "about",    label: "About"      },
+      { key: "timeline", label: "Experience" },
+      { key: "contact",  label: "Contact"    },
+    ],
   },
 };
 
@@ -211,9 +257,16 @@ export async function fetchContent(db: D1Database): Promise<SiteContent> {
       achievements:   parsed.achievements   ?? DEFAULT_CONTENT.achievements,
       contact:        { ...DEFAULT_CONTENT.contact,        ...(parsed.contact        ?? {}) },
       seo:            { ...DEFAULT_CONTENT.seo,            ...(parsed.seo            ?? {}) },
-      appearance:     { ...DEFAULT_CONTENT.appearance,     ...(parsed.appearance     ?? {}) },
+      appearance: {
+        ...DEFAULT_CONTENT.appearance,
+        ...(parsed.appearance ?? {}),
+        cssVars: { ...DEFAULT_CONTENT.appearance.cssVars, ...(parsed.appearance?.cssVars ?? {}) },
+      },
       sections:       { ...DEFAULT_CONTENT.sections,       ...(parsed.sections       ?? {}) },
       media:          { ...DEFAULT_CONTENT.media,          ...(parsed.media          ?? {}) },
+      nav: {
+        items: parsed.nav?.items ?? DEFAULT_CONTENT.nav.items,
+      },
     };
   } catch {
     return DEFAULT_CONTENT;

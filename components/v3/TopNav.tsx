@@ -2,14 +2,19 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const NAV_ITEMS = [
+const DEFAULT_NAV_ITEMS = [
   { key: "work",     label: "Projects"   },
   { key: "about",    label: "About"      },
   { key: "timeline", label: "Experience" },
   { key: "contact",  label: "Contact"    },
-] as const;
+];
 
-type NavKey = typeof NAV_ITEMS[number]["key"];
+type NavKey = "work" | "about" | "timeline" | "contact";
+
+interface NavItem {
+  key: string;
+  label: string;
+}
 
 interface Props {
   dark: boolean;
@@ -17,14 +22,16 @@ interface Props {
   activeNav: NavKey;
   onNavClick: (key: NavKey, label: string) => void;
   logo?: string;
+  navItems?: NavItem[];
 }
 
-export function TopNav({ dark, setDark, activeNav, onNavClick, logo }: Props) {
+export function TopNav({ dark, setDark, activeNav, onNavClick, logo, navItems }: Props) {
+  const items = navItems && navItems.length > 0 ? navItems : DEFAULT_NAV_ITEMS;
   const navRef = useRef<HTMLDivElement>(null);
-  const [navHover, setNavHover]   = useState<NavKey | null>(null);
+  const [navHover, setNavHover]   = useState<string | null>(null);
   const [indicator, setIndicator] = useState({ x: 0, w: 0, opacity: 0 });
 
-  const moveIndicator = (key: NavKey) => {
+  const moveIndicator = (key: string) => {
     if (!navRef.current) return;
     const el = navRef.current.querySelector<HTMLElement>(`[data-nav="${key}"]`);
     if (!el) return;
@@ -78,13 +85,13 @@ export function TopNav({ dark, setDark, activeNav, onNavClick, logo }: Props) {
           letterSpacing: "0.16em",
         }}
       >
-        {NAV_ITEMS.map(({ key, label }) => (
+        {items.map(({ key, label }) => (
           <a
             key={key}
             href={`#${key}`}
             data-nav={key}
             onMouseEnter={() => setNavHover(key)}
-            onClick={(e) => { e.preventDefault(); onNavClick(key, label); }}
+            onClick={(e) => { e.preventDefault(); onNavClick(key as NavKey, label); }}
             style={{
               color: activeNav === key ? "var(--ink)" : "var(--mute)",
               textDecoration: "none",
@@ -143,13 +150,12 @@ export function TopNav({ dark, setDark, activeNav, onNavClick, logo }: Props) {
           paddingTop: 16,
         }}
       >
-        {NAV_ITEMS.map(({ key, label }, i) => (
-          <>
-            {i > 0 && <span key={`sep-${key}`} style={{ color: "var(--rule)" }}>|</span>}
+        {items.map(({ key, label }, i) => (
+          <span key={key} style={{ display: "contents" }}>
+            {i > 0 && <span style={{ color: "var(--rule)" }}>|</span>}
             <a
-              key={key}
               href={`#${key}`}
-              onClick={(e) => { e.preventDefault(); onNavClick(key, label); }}
+              onClick={(e) => { e.preventDefault(); onNavClick(key as NavKey, label); }}
               style={{
                 color: activeNav === key ? "var(--ink)" : "var(--mute)",
                 textDecoration: "none",
@@ -158,7 +164,7 @@ export function TopNav({ dark, setDark, activeNav, onNavClick, logo }: Props) {
             >
               {label}
             </a>
-          </>
+          </span>
         ))}
       </div>
     </header>
