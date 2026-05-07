@@ -70,7 +70,7 @@ export function WorkList({ projects = DEFAULT_PROJECTS }: { projects?: Project[]
   return (
     <section id="work" style={{ padding: "120px 32px", borderTop: "1px solid var(--rule)" }}>
       {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 60 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 16 }}>
         <div className="v3-mono" style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.16em", color: "var(--mute)" }}>
           (02) Selected work · {projects.length}
         </div>
@@ -78,6 +78,9 @@ export function WorkList({ projects = DEFAULT_PROJECTS }: { projects?: Project[]
           Hover ↗
         </div>
       </div>
+      <p className="v3-mono" style={{ fontSize: 12, color: "var(--mute)", letterSpacing: "0.08em", marginBottom: 48, opacity: 0.6 }}>
+        things i built instead of sleeping.
+      </p>
 
       {/* Project rows */}
       <div>

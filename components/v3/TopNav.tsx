@@ -50,10 +50,6 @@ export function TopNav({ dark, setDark, activeNav, onNavClick }: Props) {
         display: "grid",
         gridTemplateColumns: "1fr 1fr 1fr",
         alignItems: "center",
-        position: "sticky",
-        top: 0,
-        background: "var(--bg)",
-        zIndex: 50,
         borderBottom: "1px solid var(--rule)",
         transition: "background 0.3s",
       }}
