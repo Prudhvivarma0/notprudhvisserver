@@ -52,16 +52,6 @@ const DEFAULT_PROJECTS: Project[] = [
     desc: "Library of attack scenarios stress-testing enterprise blue-team posture for AIG, ANZ, Mastercard and Telstra.",
     link: "https://github.com/Prudhvivarma0?tab=repositories",
   },
-  {
-    n: "09", title: "Vigenere Cipher Tool", year: "2024", meta: "cryptography",
-    desc: "Statistical analysis tool using Measure of Roughness to verify key-length guesses for Vigenère-encrypted ciphertext.",
-    link: "https://github.com/Prudhvivarma0/Vigenere-Cipher-Key-Length-Verification-Tool",
-  },
-  {
-    n: "10", title: "Coffee Quality Predictor", year: "2024", meta: "machine learning",
-    desc: "CNN and MLP models for coffee plant health classification and quality prediction — 99% and 93% accuracy respectively.",
-    link: "https://github.com/abdulr2004/F20DL_UG_Group_2",
-  },
 ];
 
 export function WorkList({ projects = DEFAULT_PROJECTS }: { projects?: Project[] }) {
