@@ -87,7 +87,10 @@ export function WorkList({ projects = DEFAULT_PROJECTS }: { projects?: Project[]
           >
             <div className="v3-row-bg" />
             <div className="v3-mono v3-row-num" style={{ fontSize: 13, color: "var(--mute)" }}>{p.n}</div>
-            <div className="v3-display" style={{ fontSize: "clamp(28px, 4vw, 64px)" }}>{p.title}</div>
+            <div>
+              <div className="v3-display" style={{ fontSize: "clamp(28px, 4vw, 64px)" }}>{p.title}</div>
+              <div className="v3-mono" style={{ fontSize: 11, color: "var(--mute)", letterSpacing: "0.06em", marginTop: 6, maxWidth: 560 }}>{p.desc}</div>
+            </div>
             <div className="v3-mono v3-row-meta" style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.12em", color: "var(--mute)" }}>
               {p.meta}<br />{p.year}
             </div>
