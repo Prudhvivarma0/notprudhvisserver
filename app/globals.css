@@ -161,11 +161,10 @@ body {
 
 @media (max-width: 768px) {
   /* TopNav */
-  .v3-topnav {
-    grid-template-columns: 1fr 1fr !important;
-    padding: 16px 20px !important;
-  }
+  .v3-topnav { padding: 16px 20px !important; }
   .v3-topnav-center { display: none !important; }
+  .v3-topnav-mobile { display: flex !important; }
+  .v3-topnav-available { display: none !important; }
 
   /* Hero */
   .v3-hero-grid {

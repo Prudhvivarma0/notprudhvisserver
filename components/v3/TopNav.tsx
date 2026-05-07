@@ -45,107 +45,129 @@ export function TopNav({ dark, setDark, activeNav, onNavClick }: Props) {
 
   return (
     <header
+      className="v3-mono v3-topnav"
       style={{
         padding: "24px 32px",
-        display: "grid",
-        gridTemplateColumns: "1fr 1fr 1fr",
-        alignItems: "center",
         borderBottom: "1px solid var(--rule)",
         transition: "background 0.3s",
       }}
-      className="v3-mono v3-topnav"
     >
-      {/* Logo */}
-      <div style={{ fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase" }}>
-        PV<span style={{ color: "var(--mute)" }}>—2026</span>
+      {/* Top row: logo · nav · right */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr 1fr",
+          alignItems: "center",
+        }}
+      >
+        {/* Logo */}
+        <div style={{ fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase" }}>
+          PV<span style={{ color: "var(--mute)" }}>—2026</span>
+        </div>
+
+        {/* Nav links + indicator (hidden on mobile via CSS) */}
+        <div
+          ref={navRef}
+          onMouseLeave={() => setNavHover(null)}
+          className="v3-topnav-center"
+          style={{
+            position: "relative",
+            display: "flex",
+            justifyContent: "center",
+            gap: 32,
+            fontSize: 12,
+            textTransform: "uppercase",
+            letterSpacing: "0.16em",
+          }}
+        >
+          {NAV_ITEMS.map(({ key, label }) => (
+            <a
+              key={key}
+              href={`#${key}`}
+              data-nav={key}
+              onMouseEnter={() => setNavHover(key)}
+              onClick={(e) => { e.preventDefault(); onNavClick(key, label); }}
+              style={{
+                color: activeNav === key ? "var(--ink)" : "var(--mute)",
+                textDecoration: "none",
+                padding: "6px 0",
+                transition: "color 0.3s",
+              }}
+            >
+              {label}
+            </a>
+          ))}
+          <span
+            aria-hidden
+            style={{
+              position: "absolute",
+              bottom: 0,
+              height: 1,
+              background: "var(--ink)",
+              left: indicator.x,
+              width: indicator.w,
+              opacity: indicator.opacity,
+              transition: "left 0.4s cubic-bezier(.76,0,.24,1), width 0.4s cubic-bezier(.76,0,.24,1)",
+            }}
+          />
+        </div>
+
+        {/* Right: status + theme toggle */}
+        <div
+          style={{
+            fontSize: 12,
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-end",
+            gap: 8,
+          }}
+        >
+          <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: "#4a7048", flexShrink: 0 }} />
+          <span className="v3-topnav-available">AVAILABLE</span>
+          <span style={{ color: "var(--mute)" }}>·</span>
+          <button
+            onClick={toggleTheme}
+            style={{
+              background: "none", border: "none", cursor: "pointer",
+              fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase",
+              color: "var(--mute)", transition: "color 0.2s", fontFamily: "inherit",
+            }}
+            onMouseEnter={e => (e.currentTarget.style.color = "var(--ink)")}
+            onMouseLeave={e => (e.currentTarget.style.color = "var(--mute)")}
+          >
+            {dark ? "LIGHT" : "DARK"}
+          </button>
+        </div>
       </div>
 
-      {/* Nav links + indicator */}
+      {/* Mobile-only nav row */}
       <div
-        ref={navRef}
-        onMouseLeave={() => setNavHover(null)}
-        className="v3-topnav-center"
+        className="v3-topnav-mobile"
         style={{
-          position: "relative",
-          display: "flex",
-          justifyContent: "center",
-          gap: 32,
+          display: "none",
+          gap: 24,
           fontSize: 12,
           textTransform: "uppercase",
           letterSpacing: "0.16em",
+          paddingTop: 16,
         }}
       >
         {NAV_ITEMS.map(({ key, label }) => (
           <a
             key={key}
             href={`#${key}`}
-            data-nav={key}
-            onMouseEnter={() => setNavHover(key)}
             onClick={(e) => { e.preventDefault(); onNavClick(key, label); }}
             style={{
               color: activeNav === key ? "var(--ink)" : "var(--mute)",
               textDecoration: "none",
-              padding: "6px 0",
               transition: "color 0.3s",
             }}
           >
             {label}
           </a>
         ))}
-
-        {/* Animated underline indicator */}
-        <span
-          aria-hidden
-          style={{
-            position: "absolute",
-            bottom: 0,
-            height: 1,
-            background: "var(--ink)",
-            left: indicator.x,
-            width: indicator.w,
-            opacity: indicator.opacity,
-            transition: "left 0.4s cubic-bezier(.76,0,.24,1), width 0.4s cubic-bezier(.76,0,.24,1)",
-          }}
-        />
-      </div>
-
-      {/* Right: status + theme toggle */}
-      <div
-        style={{
-          textAlign: "right",
-          fontSize: 12,
-          letterSpacing: "0.12em",
-          textTransform: "uppercase",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "flex-end",
-          gap: 8,
-        }}
-      >
-        <span
-          style={{
-            display: "inline-block",
-            width: 8, height: 8,
-            borderRadius: "50%",
-            background: "#4a7048",
-            flexShrink: 0,
-          }}
-        />
-        <span>AVAILABLE</span>
-        <span style={{ color: "var(--mute)" }}>·</span>
-        <button
-          onClick={toggleTheme}
-          style={{
-            background: "none", border: "none", cursor: "pointer",
-            fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase",
-            color: "var(--mute)", transition: "color 0.2s",
-            fontFamily: "inherit",
-          }}
-          onMouseEnter={e => (e.currentTarget.style.color = "var(--ink)")}
-          onMouseLeave={e => (e.currentTarget.style.color = "var(--mute)")}
-        >
-          {dark ? "LIGHT" : "DARK"}
-        </button>
       </div>
     </header>
   );
