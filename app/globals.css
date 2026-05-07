@@ -211,6 +211,7 @@ body {
 
   /* Contact */
   .v3-contact-heading { font-size: clamp(64px, 18vw, 160px) !important; }
+  .v3-footer { flex-direction: column !important; gap: 8px !important; margin-top: 60px !important; }
 
   /* General section padding */
   .v3-pad { padding: 80px 20px !important; }

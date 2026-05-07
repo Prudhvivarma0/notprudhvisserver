@@ -53,7 +53,7 @@ export function Contact({ reduced }: Props) {
 
       {/* Footer row */}
       <div
-        className="v3-mono"
+        className="v3-mono v3-footer"
         style={{
           marginTop: 120, paddingTop: 32,
           borderTop: "1px solid var(--rule)",
