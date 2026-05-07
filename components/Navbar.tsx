@@ -1,220 +1,156 @@
 "use client";
 
-import { useTheme } from "next-themes";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { triggerShutter } from "@/components/CursorAndShutter";
 
-const navLinks: { label: string; id: string }[] = [
-  { label: "About",        id: "about"        },
-  { label: "Projects",     id: "projects"     },
-  { label: "Experience",   id: "experience"   },
-  { label: "Achievements", id: "achievements" },
-  { label: "Contact",      id: "contact"      },
+const navLinks = [
+  { label: "PROJECTS",       id: "projects"       },
+  { label: "EXPERIENCE",     id: "experience"     },
+  { label: "CERTIFICATIONS", id: "certifications" },
+  { label: "ACHIEVEMENTS",   id: "achievements"   },
+  { label: "CONTACT",        id: "contact"        },
 ];
 
-function scrollTo(id: string) {
+function scrollToSection(id: string) {
   const el = document.getElementById(id);
-  if (el) {
-    const y = el.getBoundingClientRect().top + window.scrollY - 64;
-    window.scrollTo({ top: y, behavior: "smooth" });
-  }
+  if (!el) return;
+  const y = el.getBoundingClientRect().top + window.scrollY - 80;
+  window.scrollTo({ top: y, behavior: "auto" });
 }
 
-function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
+function handleNav(id: string) {
+  triggerShutter(() => scrollToSection(id));
+}
 
-  return (
-    <button
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      aria-label="Toggle theme"
-      className="w-8 h-8 flex items-center justify-center rounded-md"
-      style={{ color: "var(--muted)", background: "none", border: "none", cursor: "pointer", transition: "color 0.2s" }}
-      onMouseEnter={e => (e.currentTarget.style.color = "var(--accent)")}
-      onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}
-    >
-      {mounted ? (
-        theme === "dark" ? (
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-            fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="12" r="4" />
-            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
-          </svg>
-        ) : (
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-            fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-          </svg>
-        )
-      ) : (
-        <span className="w-[18px] h-[18px]" />
-      )}
-    </button>
-  );
+function toggleTheme() {
+  const html  = document.documentElement;
+  const theme = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+  html.setAttribute("data-theme", theme);
+  localStorage.setItem("portfolio-theme", theme);
 }
 
 export function Navbar() {
-  const [visible,  setVisible]  = useState(true);
-  const [hovered,  setHovered]  = useState<string | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [mounted,  setMounted]  = useState(false);
-  const lastScrollY = useRef(0);
 
-  useEffect(() => { setMounted(true); }, []);
-
-  useEffect(() => {
-    const onScroll = () => {
-      const curr = window.scrollY;
-      setVisible(curr < 50 || curr < lastScrollY.current);
-      lastScrollY.current = curr;
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // Close on Escape
   useEffect(() => {
     if (!menuOpen) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setMenuOpen(false); };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    const close = (e: KeyboardEvent) => { if (e.key === "Escape") setMenuOpen(false); };
+    window.addEventListener("keydown", close);
+    return () => window.removeEventListener("keydown", close);
   }, [menuOpen]);
 
-  // Lock body scroll when overlay is open
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [menuOpen]);
 
-  const handleMobileNav = (id: string) => {
-    setMenuOpen(false);
-    setTimeout(() => scrollTo(id), 150);
-  };
-
   return (
     <>
-      <header
-        style={{
-          position:   "fixed",
-          top: 0, left: 0, right: 0,
-          zIndex:     50,
-          transform:  visible ? "translateY(0)" : "translateY(-100%)",
-          transition: "transform 0.3s cubic-bezier(0.4,0,0.2,1)",
-          borderBottom:         "1px solid var(--muted)",
-          backdropFilter:       "blur(16px)",
-          WebkitBackdropFilter: "blur(16px)",
-          background: "color-mix(in srgb, var(--bg) 80%, transparent)",
-        }}
-      >
-        <nav className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
-          {/* Logo */}
-          <button
-            onClick={() => { setMenuOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }}
-            className="font-display text-lg font-semibold tracking-tight"
-            style={{ color: "var(--text)", background: "none", border: "none", cursor: "pointer", padding: 0, transition: "color 0.2s" }}
-            onMouseEnter={e => (e.currentTarget.style.color = "var(--accent)")}
-            onMouseLeave={e => (e.currentTarget.style.color = "var(--text)")}
-          >
-            prudhvi.
-          </button>
-
-          {/* Desktop nav links */}
-          <div className="hidden md:flex items-center gap-6">
-            {navLinks.map((link) => (
-              <button
-                key={link.id}
-                onClick={() => scrollTo(link.id)}
-                onMouseEnter={() => setHovered(link.id)}
-                onMouseLeave={() => setHovered(null)}
-                className="font-sans text-sm"
-                style={{
-                  color:      hovered === link.id ? "var(--text)" : "var(--muted)",
-                  background: "none", border: "none", cursor: "pointer",
-                  padding: "2px 0", position: "relative", transition: "color 0.2s",
-                }}
-              >
-                {link.label}
-                <span style={{
-                  position: "absolute", bottom: 0, left: 0, right: 0, height: "1px",
-                  background:      "var(--accent)",
-                  opacity:         hovered === link.id ? 1 : 0,
-                  transform:       hovered === link.id ? "scaleX(1)" : "scaleX(0)",
-                  transformOrigin: "left",
-                  transition:      "opacity 0.2s, transform 0.2s",
-                }} />
-              </button>
-            ))}
-            <ThemeToggle />
-          </div>
-
-          {/* Mobile: theme toggle + hamburger */}
-          <div className="flex md:hidden items-center gap-3">
-            <ThemeToggle />
-            <button
-              onClick={() => setMenuOpen(v => !v)}
-              aria-label={menuOpen ? "Close menu" : "Open menu"}
-              className="w-8 h-8 flex flex-col items-center justify-center gap-[5px]"
-              style={{ background: "none", border: "none", cursor: "pointer" }}
-            >
-              {menuOpen ? (
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
-                  stroke="var(--text)" strokeWidth="2" strokeLinecap="round">
-                  <line x1="4" y1="4" x2="16" y2="16" />
-                  <line x1="16" y1="4" x2="4" y2="16" />
-                </svg>
-              ) : (
-                <>
-                  <span style={{ display: "block", width: 20, height: 2, background: "var(--text)", borderRadius: 2 }} />
-                  <span style={{ display: "block", width: 20, height: 2, background: "var(--text)", borderRadius: 2 }} />
-                  <span style={{ display: "block", width: 20, height: 2, background: "var(--text)", borderRadius: 2 }} />
-                </>
-              )}
-            </button>
-          </div>
-        </nav>
-      </header>
-
-      {/* Mobile overlay */}
-      {mounted && (
-        <div
-          onClick={() => setMenuOpen(false)}
+      <nav style={{
+        display: "flex", justifyContent: "space-between", padding: "0 4%",
+        height: "var(--nav-height)", alignItems: "center",
+        position: "fixed", width: "100%", top: 0, zIndex: 1000,
+        background: "rgba(5, 5, 5, 0.95)", backdropFilter: "blur(10px)",
+        borderBottom: "1px solid rgba(255, 135, 0, 0.15)",
+        transition: "background 0.3s",
+      }}>
+        <button
+          onClick={() => triggerShutter(() => window.scrollTo({ top: 0, behavior: "auto" }))}
           style={{
-            position:       "fixed",
-            inset:          0,
-            zIndex:         40,
-            display:        "flex",
-            flexDirection:  "column",
-            alignItems:     "center",
-            justifyContent: "center",
-            gap:            "2rem",
-            backdropFilter:       "blur(20px)",
-            WebkitBackdropFilter: "blur(20px)",
-            background:     "color-mix(in srgb, var(--bg) 95%, transparent)",
-            opacity:        menuOpen ? 1 : 0,
-            transform:      menuOpen ? "translateY(0)" : "translateY(-8px)",
-            pointerEvents:  menuOpen ? "auto" : "none",
-            transition:     "opacity 0.25s ease, transform 0.25s ease",
+            fontWeight: 800, fontSize: "1.3rem", letterSpacing: "2px",
+            color: "var(--text-primary)", background: "none", border: "none",
+            cursor: "none", fontFamily: "var(--font-mono)",
           }}
         >
-          {navLinks.map((link) => (
+          NOT<span style={{ color: "var(--accent-color)" }}>PRUDHVIS</span>SERVER.ORG
+        </button>
+
+        {/* Desktop links */}
+        <div className="nav-desktop" style={{ display: "flex", alignItems: "center" }}>
+          {navLinks.map((link, i) => (
+            <span key={link.id} style={{ display: "flex", alignItems: "center" }}>
+              {i > 0 && <span style={{ color: "var(--text-secondary)", opacity: 0.5, margin: "0 12px" }}>|</span>}
+              <button
+                onClick={() => handleNav(link.id)}
+                style={{
+                  color: "var(--text-primary)", background: "none", border: "none",
+                  cursor: "none", fontFamily: "var(--font-mono)", fontSize: "0.9rem",
+                  fontWeight: "bold", textTransform: "uppercase", letterSpacing: "1px",
+                  transition: "color 0.2s",
+                }}
+                onMouseEnter={e => (e.currentTarget.style.color = "var(--accent-color)")}
+                onMouseLeave={e => (e.currentTarget.style.color = "var(--text-primary)")}
+              >
+                {link.label}
+              </button>
+            </span>
+          ))}
+          <span style={{ color: "var(--text-secondary)", opacity: 0.5, margin: "0 12px" }}>|</span>
+          <button
+            onClick={toggleTheme}
+            style={{
+              color: "var(--text-primary)", background: "none", border: "none",
+              cursor: "none", fontFamily: "var(--font-mono)", fontSize: "0.9rem",
+              fontWeight: "bold", transition: "color 0.2s",
+            }}
+            onMouseEnter={e => (e.currentTarget.style.color = "var(--accent-color)")}
+            onMouseLeave={e => (e.currentTarget.style.color = "var(--text-primary)")}
+          >
+            [ ☀ / ☾ ]
+          </button>
+        </div>
+
+        {/* Mobile hamburger */}
+        <button
+          className="nav-mobile-btn"
+          onClick={() => setMenuOpen(v => !v)}
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          style={{ background: "none", border: "none", cursor: "none", color: "var(--text-primary)", fontSize: "1.6rem" }}
+        >
+          {menuOpen ? "✕" : "☰"}
+        </button>
+      </nav>
+
+      {/* Mobile overlay */}
+      {menuOpen && (
+        <div style={{
+          position: "fixed", inset: 0, zIndex: 999,
+          background: "rgba(5,5,5,0.98)", display: "flex",
+          flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "2rem",
+        }}>
+          {navLinks.map(link => (
             <button
               key={link.id}
-              onClick={(e) => { e.stopPropagation(); handleMobileNav(link.id); }}
-              className="font-display font-bold"
+              onClick={() => { setMenuOpen(false); setTimeout(() => handleNav(link.id), 150); }}
               style={{
-                fontSize:   "clamp(1.75rem, 8vw, 3rem)",
-                color:      "var(--text)",
-                background: "none", border: "none", cursor: "pointer",
-                transition: "color 0.2s",
+                fontSize: "1.6rem", fontWeight: "bold", color: "var(--text-primary)",
+                background: "none", border: "none", cursor: "none",
+                fontFamily: "var(--font-mono)", letterSpacing: "3px", transition: "color 0.2s",
               }}
-              onMouseEnter={e => (e.currentTarget.style.color = "var(--accent)")}
-              onMouseLeave={e => (e.currentTarget.style.color = "var(--text)")}
+              onMouseEnter={e => (e.currentTarget.style.color = "var(--accent-color)")}
+              onMouseLeave={e => (e.currentTarget.style.color = "var(--text-primary)")}
             >
               {link.label}
             </button>
           ))}
+          <button
+            onClick={toggleTheme}
+            style={{ color: "var(--accent-color)", background: "none", border: "none", cursor: "none", fontSize: "1.1rem", fontFamily: "var(--font-mono)" }}
+          >
+            [ ☀ / ☾ ]
+          </button>
         </div>
       )}
+
+      <style>{`
+        .nav-desktop { display: flex; }
+        .nav-mobile-btn { display: none; }
+        @media (max-width: 900px) {
+          .nav-desktop { display: none !important; }
+          .nav-mobile-btn { display: block !important; }
+        }
+        [data-theme="light"] nav { background: rgba(240,240,245,0.98) !important; }
+      `}</style>
     </>
   );
 }

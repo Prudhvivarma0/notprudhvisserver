@@ -1,228 +1,66 @@
-"use client";
-
-import { useState } from "react";
-import { motion } from "framer-motion";
 import type { CertRow, AchievementRow } from "@/lib/db";
 
-// ── Cert data ─────────────────────────────────────────────────────────────────
-
 const DEFAULT_CERTS: CertRow[] = [
-  { id: 1, icon: "🛡️", name: "BTL1 Level 1",              issuer: "Security Blue Team", sort_order: 1, visible: 1 },
-  { id: 2, icon: "🔐", name: "Certified in Cybersecurity", issuer: "ISC2",               sort_order: 2, visible: 1 },
-  { id: 3, icon: "🔍", name: "SOC Analyst",                issuer: "Udemy",              sort_order: 3, visible: 1 },
-  { id: 4, icon: "📊", name: "Intro to Splunk",            issuer: "Splunk",             sort_order: 4, visible: 1 },
-  { id: 5, icon: "📊", name: "Splunk SOAR",                issuer: "Splunk",             sort_order: 5, visible: 1 },
-  { id: 6, icon: "📊", name: "Security Operations",        issuer: "Splunk",             sort_order: 6, visible: 1 },
-  { id: 7, icon: "🕵️", name: "Art of Investigation",       issuer: "Splunk",             sort_order: 7, visible: 1 },
+  { id: 1, sort_order: 1, visible: 1, issuer: "", icon: "", name: "BTL1\nLevel 1" },
+  { id: 2, sort_order: 2, visible: 1, issuer: "", icon: "", name: "ISC2 CC\nCertified" },
+  { id: 3, sort_order: 3, visible: 1, issuer: "", icon: "", name: "SOC Analyst\nUdemy" },
+  { id: 4, sort_order: 4, visible: 1, issuer: "", icon: "", name: "Intro to\nSplunk" },
+  { id: 5, sort_order: 5, visible: 1, issuer: "", icon: "", name: "Splunk\nSOAR" },
+  { id: 6, sort_order: 6, visible: 1, issuer: "", icon: "", name: "Security\nOps" },
+  { id: 7, sort_order: 7, visible: 1, issuer: "", icon: "", name: "Art of\nInvestigation" },
 ];
 
-// ── CTF data ──────────────────────────────────────────────────────────────────
-
-interface CTF {
-  rank:  string;
-  title: string;
-  event: string;
-  date:  string;
-}
-
-const DEFAULT_CTFS: CTF[] = [
-  { rank: "🏆 1st", title: "Place Qualifier", event: "Zayed University × Exploiters CTF", date: "Feb 2025" },
-  { rank: "🥉 3rd", title: "Place Winner",    event: "REDTEAM Cyber Hack CTF",            date: "Feb 2025" },
+const DEFAULT_ACHIEVEMENTS: AchievementRow[] = [
+  { id: 1, sort_order: 1, visible: 1,
+    icon: "🏆", title: "1st Place Qualifier", event: "Zayed University x Exploiters CTF", date: "FEB 2025" },
+  { id: 2, sort_order: 2, visible: 1,
+    icon: "🥉", title: "3rd Place Winner", event: "REDTEAM Cyber Hack CTF", date: "FEB 2025" },
 ];
-
-// ── CertCard ──────────────────────────────────────────────────────────────────
-
-function CertCard({ cert, index }: { cert: CertRow; index: number }) {
-  const [hovered, setHovered] = useState(false);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.4, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        position:             "relative",
-        padding:              "20px",
-        borderRadius:         "0.75rem",
-        backdropFilter:       "blur(12px)",
-        WebkitBackdropFilter: "blur(12px)",
-        background:           "var(--glass)",
-        border:               `1px solid ${hovered ? "var(--accent)" : "var(--edge)"}`,
-        transform:            hovered ? "translateY(-3px)" : "translateY(0)",
-        boxShadow:            hovered
-          ? "0 0 20px color-mix(in srgb, var(--accent) 10%, transparent)"
-          : "none",
-        transition:    "border-color 0.3s cubic-bezier(0.16,1,0.3,1), transform 0.3s cubic-bezier(0.16,1,0.3,1), box-shadow 0.3s cubic-bezier(0.16,1,0.3,1)",
-        overflow:      "hidden",
-        cursor:        "default",
-      }}
-    >
-      {/* Top accent line — expands from center on hover */}
-      <div style={{
-        position:   "absolute",
-        top:        0,
-        left:       "50%",
-        transform:  "translateX(-50%)",
-        height:     "2px",
-        background: "var(--accent)",
-        width:      hovered ? "100%" : "0%",
-        transition: "width 0.35s cubic-bezier(0.16,1,0.3,1)",
-        borderRadius: "0 0 2px 2px",
-      }} />
-
-      {/* Icon */}
-      <div style={{ fontSize: 22, marginBottom: 10, lineHeight: 1 }}>
-        {cert.icon}
-      </div>
-
-      {/* Cert name */}
-      <p
-        className="font-mono font-bold"
-        style={{
-          fontSize:     "clamp(11px, 1vw, 12px)",
-          color:        "var(--text)",
-          lineHeight:   1.4,
-          marginBottom: 6,
-        }}
-      >
-        {cert.name}
-      </p>
-
-      {/* Issuer */}
-      <p
-        className="font-mono"
-        style={{
-          fontSize: "clamp(10px, 0.9vw, 11px)",
-          color:    "var(--muted)",
-          opacity:  0.8,
-        }}
-      >
-        {cert.issuer}
-      </p>
-    </motion.div>
-  );
-}
-
-// ── CTFCard ───────────────────────────────────────────────────────────────────
-
-function CTFCard({ ctf }: { ctf: CTF }) {
-  const [hovered, setHovered] = useState(false);
-  return (
-    <div
-      className="reveal-stagger"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        position:             "relative",
-        padding:              "1.5rem",
-        borderRadius:         "0.5rem",
-        overflow:             "hidden",
-        background:           "var(--bg-card)",
-        backdropFilter:       "blur(12px)",
-        WebkitBackdropFilter: "blur(12px)",
-        border:               `1px solid ${hovered ? "var(--accent)" : "var(--muted)"}`,
-        transform:            hovered ? "translateY(-4px)" : "translateY(0)",
-        boxShadow:            hovered
-          ? "0 0 24px color-mix(in srgb, var(--accent) 12%, transparent)"
-          : "none",
-        transition: "border-color 0.2s, transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s",
-      }}
-    >
-      {/* Top edge glow */}
-      <div
-        style={{
-          position:   "absolute",
-          top: 0, left: 0,
-          height:     "2px",
-          background: "var(--accent)",
-          width:      hovered ? "100%" : "0%",
-          transition: "width 0.3s ease",
-        }}
-      />
-
-      <p
-        className="font-display font-bold mb-1"
-        style={{ fontSize: "clamp(18px, 2vw, 22px)", color: "var(--text)" }}
-      >
-        {ctf.rank} {ctf.title}
-      </p>
-      <p
-        className="font-mono mb-2"
-        style={{ fontSize: "clamp(11px, 1.1vw, 12px)", color: "var(--accent)", opacity: 0.8 }}
-      >
-        {ctf.event}
-      </p>
-      <p
-        className="font-mono"
-        style={{ fontSize: 11, color: "var(--muted)", opacity: 0.5 }}
-      >
-        {ctf.date}
-      </p>
-    </div>
-  );
-}
-
-// ── Achievements ──────────────────────────────────────────────────────────────
 
 export function Achievements({
   certs,
   achievements,
 }: {
-  certs?:        CertRow[];
+  certs?: CertRow[];
   achievements?: AchievementRow[];
 }) {
-  const certList = certs && certs.length > 0 ? certs : DEFAULT_CERTS;
-  const ctfList: CTF[] = achievements && achievements.length > 0
-    ? achievements.map(a => ({ rank: a.icon, title: a.title, event: a.event, date: a.date }))
-    : DEFAULT_CTFS;
+  const certItems = certs && certs.length > 0 ? certs : DEFAULT_CERTS;
+  const achItems  = achievements && achievements.length > 0 ? achievements : DEFAULT_ACHIEVEMENTS;
 
   return (
-    <section id="achievements" className="py-[clamp(60px,8vw,120px)] px-6">
-      <div className="max-w-5xl mx-auto">
-
-        {/* Certifications */}
-        <div className="mb-20">
-          <p className="font-mono text-sm mb-10" style={{ color: "var(--muted)" }}>
-            // 04 ——— certifications
-          </p>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-            {certList.map((cert, i) => (
-              <CertCard key={cert.name} cert={cert} index={i} />
-            ))}
-          </div>
+    <>
+      {/* Certifications */}
+      <section id="certifications">
+        <h2 className="section-header">&lt; CERTIFICATIONS /&gt;</h2>
+        <div className="hex-container">
+          {certItems.map(c => (
+            <div key={c.id} className="hex">
+              <div className="hex-content">
+                {c.name.split("\n").map((line, i) => (
+                  <span key={i}>{line}{i < c.name.split("\n").length - 1 && <br />}</span>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
+      </section>
 
-        {/* CTF Achievements */}
-        <div>
-          <p className="font-mono text-sm mb-6" style={{ color: "var(--muted)" }}>
-            // 05 ——— achievements
-          </p>
-
-          <h2
-            className="font-display font-bold mb-10 reveal"
-            style={{ fontSize: "clamp(24px, 4vw, 36px)", color: "var(--text)" }}
-          >
-            Achievements
-          </h2>
-
-          <div
-            style={{
-              display:             "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 240px), 1fr))",
-              gap:                 "2px",
-            }}
-          >
-            {ctfList.map(ctf => (
-              <CTFCard key={ctf.event} ctf={ctf} />
-            ))}
-          </div>
+      {/* Achievements */}
+      <section id="achievements">
+        <h2 className="section-header">&lt; ACHIEVEMENTS /&gt;</h2>
+        <div className="achievements-grid">
+          {achItems.map(a => (
+            <div key={a.id} className="achievement-card">
+              <span className="trophy">{a.icon}</span>
+              <h3>{a.title}</h3>
+              <p>{a.event}</p>
+              <span style={{ color: "var(--accent-color)", fontSize: "0.85rem", fontWeight: "bold", display: "block", marginTop: "8px" }}>
+                {a.date}
+              </span>
+            </div>
+          ))}
         </div>
-
-      </div>
-    </section>
+      </section>
+    </>
   );
 }
